@@ -1,11 +1,15 @@
 Alaya::Application.routes.draw do
+  
+  
   root :to => 'web_site#index'
-  match 'profile_list', :to => 'web_site#profile_list', via: 'get'
-  match 'profile_detail', :to => 'web_site#profile_detail', via: 'get'
+  match 'profile_list', :to => 'providers#profile_list', via: 'get'
+  match 'profile_detail', :to => 'providers#profile_detail', via: 'get'
   match 'partners', :to => 'web_site#partners', via: 'get'
   match 'about', :to => 'web_site#about', via: 'get'
   match 'contact', :to => 'web_site#contact', via: 'get'
   match 'faq', :to => 'web_site#faq', via: 'get'
+
+  match 'signup', :to => 'providers#new', via: 'get'
 
   get "web_site/index"
   get "web_site/profile_list"
@@ -14,7 +18,8 @@ Alaya::Application.routes.draw do
   get "web_site/about"
   get "web_site/contact"
   get "web_site/faq"
-
+  get "providers/new"
+  get "providers/profile_list"
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
