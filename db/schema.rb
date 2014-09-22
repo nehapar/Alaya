@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140921185645) do
+ActiveRecord::Schema.define(version: 20140922041035) do
 
   create_table "providers", force: true do |t|
     t.string   "name"
@@ -21,10 +21,11 @@ ActiveRecord::Schema.define(version: 20140921185645) do
     t.string   "phone"
     t.string   "abstract"
     t.string   "about"
-    t.string   "speciality"
+    t.string   "specialities"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "password_digest"
+    t.string   "policies"
   end
 
   add_index "providers", ["email"], name: "index_providers_on_email", unique: true
