@@ -1,0 +1,4 @@
+class ChangeExpertiseSpecialitiesToProviders < ActiveRecord::Migration
+  def change
+  end
+end

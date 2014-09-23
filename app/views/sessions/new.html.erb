@@ -1,0 +1,44 @@
+<% provide(:title, "Sign in") %>
+    <!--=== Container ===-->
+    <div class="container content">
+        <div class="row margin-bottom-30">
+            <div class="col-md-10 col-md-offset-1 mb-margin-bottom-30">
+                <% flash.each do |key, value| %>
+                    <div class="alert alert-<%= key %>"><%= value %></div>
+                <% end %>
+                <div class="headline"><h2>Sign In</h2></div>
+                <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas feugiat. Et harum quidem rerum facilis est et expedita distinctio lorem ipsum dolor sit amet, consectetur adipiscing elit landitiis.</p><br>
+                <%= form_for(:session, url: sessions_path) do |f| %>
+                    <div class="row margin-bottom-20">
+                        <%= f.label :email, class: "col-md-6 col-md-offset-3"  %>
+                        <div class="col-md-6 col-md-offset-3">
+                            <%= f.text_field :email, class: "form-control", placeholder: "Email", required: "required" %>
+                        </div>                
+                    </div>
+
+                    <div class="row margin-bottom-20">
+                        <%= f.label :password, class: "col-md-6 col-md-offset-3"  %>
+                        <div class="col-md-6 col-md-offset-3">
+                            <%= f.password_field :password, class: "form-control", placeholder: "Password", required: "required" %>
+                        </div>                
+                    </div>
+
+                    <div class="row margin-bottom-20">
+                        <div class="col-md-6 col-md-offset-3">
+                            <%= f.submit "Sign In", class: "btn-u pull-right" %>
+                        </div>                
+                    </div>
+
+                    <div class="row margin-bottom-20">
+                        <div class="col-md-3 col-md-offset-3">
+                            New Provider? <%= link_to "Sign up now!", signup_path %>
+                        </div>
+                        <div class="col-md-3">
+                            <%= link_to "Forgot your password?", signup_path, class: "pull-right" %>
+                        </div>                
+                    </div>
+                <% end %>
+            </div>
+        </div><!--/row-->        
+    </div>
+    <!--=== End Container ===-->

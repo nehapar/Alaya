@@ -718,7 +718,7 @@ background-color: #717984!important;
 .pricing-dark .btn-u {
 	padding: 5px 60px;
 	background: #fff !important;
-	border: 1px solid #999 !important;
+	border: 1px solid #999;/* !important;*/
 }
 
 

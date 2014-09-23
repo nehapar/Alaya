@@ -11,10 +11,10 @@
                             <div class="col-sm-3">
                                 <div class="tag-box-v3">
                                     <div class="easy-block-v1">
-                                        <img class="img-responsive" src="assets/img/profile_pic/<%= provider.name.downcase.gsub(" ", "_") %>.jpg" alt="<%= provider.name %> - <%= provider.expertise %>">
+                                        <img class="img-responsive" src="assets/img/profile_pic/<%= (provider.first_name + "_" + provider.last_name).downcase %>.jpg" alt="<%= provider.first_name %> - <%= provider.expertise %>">
                                     </div>    
                                     <div class="projects">
-                                        <h4><%= provider.name %></h4>
+                                        <h4><%= provider.first_name %> <%= provider.last_name %></h4>
                                         <ul class="list-unstyled list-inline blog-info-v2">
                                             <li><%= provider.expertise %></li>
                                         </ul>
@@ -31,12 +31,12 @@
                                     </div>    
                                     <div class="project-share">
                                         <div class="col-lg-6 col-lg-offset-3">
-                                            <%= link_to "View Profile", profile_detail_path(:name => provider.name), class: "btn-u-xs btn-u rounded-2x" %>
+                                            <%= link_to "View Profile", profile_detail_path(:id => provider.id), class: "btn-u-xs btn-u rounded-2x" %>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <% if (index + 1) % 4 == 0 & index < @providers.length - 1  %>
+                            <% if (index + 1) % 4 == 0 && index < @providers.length - 1  %>
                                 </div>
                                 <hr>
                                 <div class="row">
@@ -44,8 +44,6 @@
                         <% end %>
                     </div>
                     <hr>
-
-
                 </div>
                 <!--End Profile Body-->
             </div>

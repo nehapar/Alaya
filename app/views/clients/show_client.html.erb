@@ -1,0 +1,63 @@
+<% provide(:title, @client.first_name) %>
+    <!--=== Profile ===-->
+    <div class="profile">	
+        <div class="container content">
+        	<div class="row">
+                <div class="col-md-12">
+                    <!--Profile Body-->
+                    <div class="profile-body">
+                        <div class="profile-bio">
+                            <div class="row">
+                            	<div class="col-sm-12 col-md-offser-0">
+                            		<div class="row margin-bottom-20">
+                                        <div class="col-md-10 col-md-offset-1">
+                                        	<% flash.each do |key, value| %>
+											    <div class="alert alert-<%= key %>"><%= value %></div>
+											<% end %>
+                                            <h1><%= @client.first_name %> <%= @client.last_name %></h1>
+                                        </div>                
+                                    </div>
+                                    <div class="row margin-bottom-20">
+                                        <div class="col-md-5 col-md-offset-1">
+                                            <p><strong>First name</strong></p>
+                                            <h3><%= @client.first_name %></h3>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <p><strong>Last name</strong></p>
+                                            <h3><%= @client.last_name %></h3>
+                                        </div>
+                                    </div>
+                                    <div class="row margin-bottom-20">
+                                    	<div class="col-md-5 col-md-offset-1">
+                                            <p><strong>Email</strong></p>
+                                            <h3><%= @client.email %></h3>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <p><strong>Phone</strong></p>
+                                            <h3><%= @client.phone %></h3>
+                                        </div>
+                                    </div>
+
+									<div class="row margin-bottom-20">
+										<div class="col-md-5 col-md-offset-1">
+                                            <p><strong>Address</strong></p>
+                                            <h3><%= @client.address %></h3>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <p><strong>Weeks pregnant</strong></p>
+                                            <h3><%= @client.weeks_pregnant %></h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>    
+                        </div><!--/end row-->
+                                            
+                        <div class="clearfix margin-bottom-30"></div>
+                        
+                    </div>
+                    <!--End Profile Body-->
+                </div>
+            </div><!--/end row-->
+        </div><!--/container-->    
+    </div>		
+    <!--=== End Profile ===-->

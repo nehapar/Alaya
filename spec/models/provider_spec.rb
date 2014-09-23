@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Provider do
 
-  before { @provider = Provider.new(name: "Example Provider", email: "provider@example.com", 
+  before { @provider = Provider.new(first_name: "Example", last_name: "Provider", email: "provider@example.com", 
     password: "foobar", password_confirmation: "foobar", permission: 1, 
   	expertise: "Massage Therapist, DONA Certified Childbirth Doula", phone: "999 123-4567",
   	abstract: "Kashika is a Massage Therapist and Dona Certified Birth Doula and as an experienced Doula, 
@@ -14,9 +14,10 @@ describe Provider do
   	I am a vegan vegeterian and have been living a holistic natural life for over 15 years. I am happy to become your Doula and 
   	share with you some of the experiences I have learned and techniques used to comfort you along the way. I am a Graduate From National 
   	Holistic Massage Therapy School that includes Prenatal Massage.",
-  	speciality: "My Goal is to support you in having the natural birth experience that you desire. The day you give birth is one of the 
+  	specialities: "My Goal is to support you in having the natural birth experience that you desire. The day you give birth is one of the 
   	most enjoyable days of your life. Your day should be nurtured, respected and empowered. Your ideal of birth is what should happen, 
-  	I hope you have a positive birth day and I will be privileged to be supporting you. Services include but are not limited to:") }
+  	I hope you have a positive birth day and I will be privileged to be supporting you. Services include but are not limited to:",
+    policies: "Some rules" ) }
 
   subject { @provider }
 
@@ -30,12 +31,18 @@ describe Provider do
   it { should respond_to(:phone) }
   it { should respond_to(:abstract) }
   it { should respond_to(:about) }
-  it { should respond_to(:speciality) }
+  it { should respond_to(:specialities) }
+  it { should respond_to(:policies) }
 
   it { should be_valid }
 
-  describe "when name is not present" do
-    before { @provider.name = " " }
+  describe "when first_name is not present" do
+    before { @provider.first_name = " " }
+    it { should_not be_valid }
+  end
+
+  describe "when last_name is not present" do
+    before { @provider.last_name = " " }
     it { should_not be_valid }
   end
 
@@ -77,7 +84,7 @@ describe Provider do
 
   describe "when password is not present" do
     before do
-      @provider = Provider.new(name: "Example Provider", email: "provider@example.com",
+      @provider = Provider.new(first_name: "Example", last_name: "Provider", email: "provider@example.com",
                        password: " ", password_confirmation: " ")
     end
     it { should_not be_valid }

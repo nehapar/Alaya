@@ -1,0 +1,4 @@
+class AddRememberTokenToClients < ActiveRecord::Migration
+  def change
+  end
+end

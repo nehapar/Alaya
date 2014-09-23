@@ -265,7 +265,7 @@
 	font-size: 13px;
 }
 .pricing-bg-colored .btn-u {
-	border: 1px solid #999 !;
+	border: 1px solid #999;/* !;*/
 	background: #fff !important;
 }
 /*Pricing Zoom  

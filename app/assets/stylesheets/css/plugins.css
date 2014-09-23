@@ -274,7 +274,7 @@
 
 /*Owl Pagination*/
 .owl-pagination {
-  text-align: center !important;
+  text-align: center;/* !important;*/
 }
 
 .owl-theme .owl-controls .owl-page.active span,

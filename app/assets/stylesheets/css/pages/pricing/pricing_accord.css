@@ -246,7 +246,7 @@ color: red;
 
 .pricing-accord .nav-tabs > li {
     margin-bottom: -2px;
-    text-align: center !important;
+    text-align: center;/* !important;*/
 
  }
 .pricing-accord  .nav-tabs li a {
@@ -266,7 +266,7 @@ color: red;
 
 }
 .pricing-accord .test {
-	text-align: center !important;
+	text-align: center;/* !important;*/
 	margin: auto !important;
 
 }
@@ -278,7 +278,7 @@ color: red;
 
 }
 .pricing-accord .btn-group  {
-	text-align: center !important!;
+	text-align: center;/* !important!;*/
 	margin: auto !important;
 }
 .testimonials {

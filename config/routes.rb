@@ -1,9 +1,32 @@
 Alaya::Application.routes.draw do
   
+  get "clients/new"
   
+  resources :providers
+  resources :sessions, only: [:new, :create, :destroy]
+  resources :clients
+  
+  match 'show_client',  :to => 'clients#show_client', via: 'get'
+  match 'edit_client',  :to => 'clients#edit', via: 'get'
+  match 'csignup',  :to => 'clients#new', via: 'get'
+  match 'csignin', :to => 'sessions#new', via: 'get'
+  match 'csignout', :to => 'sessions#destroy', via: 'delete'
+
   root :to => 'web_site#index'
   match 'profile_list', :to => 'providers#profile_list', via: 'get'
   match 'profile_detail', :to => 'providers#profile_detail', via: 'get'
+  match 'profile_edit', :to => 'providers#profile_edit', via: 'get'
+  
+  match 'signup', :to => 'providers#new', via: 'get'
+  match 'signin', :to => 'sessions#new', via: 'get'
+  match 'signout', :to => 'sessions#destroy', via: 'delete'
+
+  match 'provider_update_personal', :to => 'providers#update_personal', via: 'post'
+  match 'provider_update_password', :to => 'providers#update_password', via: 'post'
+  match 'provider_update_about', :to => 'providers#update_about', via: 'post'
+  match 'provider_update_specialities', :to => 'providers#update_specialities', via: 'post'
+  match 'provider_update_policies', :to => 'providers#update_policies', via: 'post'
+
   match 'partners', :to => 'web_site#partners', via: 'get'
   match 'about', :to => 'web_site#about', via: 'get'
   match 'contact', :to => 'web_site#contact', via: 'get'
@@ -18,7 +41,7 @@ Alaya::Application.routes.draw do
   get "web_site/about"
   get "web_site/contact"
   get "web_site/faq"
-  get "providers/new"
+  #get "providers/new"
   get "providers/profile_list"
 
   # The priority is based upon order of creation: first created -> highest priority.

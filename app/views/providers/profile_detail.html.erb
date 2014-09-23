@@ -9,17 +9,17 @@
                         <div class="profile-bio">
                             <div class="row">
                                 <div class="col-sm-5 col-md-5">
-                                    <img class="img-responsive md-margin-bottom-10" src="assets/img/profile_pic/<%= @provider.name.downcase.gsub(" ", "_") %>.jpg" alt="<%= @provider.name %> - <%= @provider.expertise %>">
+                                    <img class="img-responsive md-margin-bottom-10" src="assets/img/profile_pic/<%= (@provider.first_name + "_" + @provider.last_name).downcase %>.jpg" alt="<%= @provider.first_name %> - <%= @provider.expertise %>">
                                 </div>
                                 <div class="col-sm-7 col-md-7">
-                                    <h1><%= @provider.name %></h1>
+                                    <h1><%= @provider.first_name %> <%= @provider.last_name %></h1>
                                     <h2><%= @provider.expertise %></h2>
                                     <hr>
                                     <p> </p>
                                 </div>
                             </div>    
                         </div><!--/end row-->
-                        
+                                            
                         <div class="clearfix margin-bottom-30"></div>
                         
                         <!-- Therapist Bio -->

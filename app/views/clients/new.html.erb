@@ -1,0 +1,74 @@
+<% provide(:title, 'Sign up') %>
+
+    <!--=== Container ===-->
+    <div class="container content">
+        <div class="row margin-bottom-30">
+            <div class="col-md-10 col-md-offset-1 mb-margin-bottom-30">
+            	<% flash.each do |key, value| %>
+				    <div class="alert alert-<%= key %>"><%= value %></div>
+				<% end %>
+                <div class="headline"><h2>Sign Up</h2></div>
+                <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas feugiat. Et harum quidem rerum facilis est et expedita distinctio lorem ipsum dolor sit amet, consectetur adipiscing elit landitiis.</p><br>
+                <%= form_for(@client) do |f| %>
+					<div class="row margin-bottom-20">
+						<div class="col-md-3 col-md-offset-3">
+                            <%= f.label :first_name %>&nbsp;<i class="fa fa-asterisk"></i>
+                            <%= f.text_field :first_name, class: "form-control", placeholder: "First name", required: "required" %>
+                        </div>                
+                        
+                        <div class="col-md-3">
+                            <%= f.label :last_name %>&nbsp;<i class="fa fa-asterisk"></i>
+                            <%= f.text_field :last_name, class: "form-control", placeholder: "Last name", required: "required" %>
+                        </div>                
+                    </div>
+					
+					<div class="row margin-bottom-20">
+                    	<div class="col-md-6 col-md-offset-3">
+                    		<%= f.label :email %>&nbsp;<i class="fa fa-asterisk"></i>
+                            <%= f.text_field :email, class: "form-control", placeholder: "Email", required: "required", value: @client.email %>
+                        </div>                
+                    </div>
+
+                    <div class="row margin-bottom-20">
+                        <div class="col-md-6 col-md-offset-3">
+                        	<%= f.label :address  %>
+                            <%= f.text_field :address, class: "form-control", placeholder: "Address" %>
+                        </div>                
+                    </div>
+
+                    <div class="row margin-bottom-20">
+						<div class="col-md-3 col-md-offset-3">
+                            <%= f.label :phone %>
+                            <%= f.text_field :phone, class: "form-control", placeholder: "Phone", required: "required" %>
+                        </div>                
+                        
+                        <div class="col-md-3">
+                            <%= f.label :weeks_pregnant %>
+                            <%= f.text_field :weeks_pregnant, class: "form-control", placeholder: "Weeks pregnant" %>
+                        </div>                
+                    </div>
+
+					<div class="row margin-bottom-20">
+                        <div class="col-md-6 col-md-offset-3">
+                        	<%= f.label :password %>&nbsp;<i class="fa fa-asterisk"></i>
+                            <%= f.password_field :password, class: "form-control", placeholder: "Password", required: "required" %>
+                        </div>                
+                    </div>
+
+					<div class="row margin-bottom-20">
+                        <div class="col-md-6 col-md-offset-3">
+                        	<%= f.label :password_confirmation, "Password confirmation" %>&nbsp;<i class="fa fa-asterisk"></i>
+                            <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Password confirmation", required: "required" %>
+                        </div>                
+                    </div>
+
+                    <div class="row margin-bottom-20">
+                        <div class="col-md-6 col-md-offset-3">
+                            <%= f.submit "Create my account", class: "btn-u pull-right" %>
+                        </div>                
+                    </div>
+				<% end %>
+            </div>
+        </div><!--/row-->        
+    </div>
+    <!--=== End Container ===-->

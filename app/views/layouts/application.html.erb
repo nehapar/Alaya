@@ -65,20 +65,54 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-responsive-collapse">
                     <ul class="nav navbar-nav">
-                        <!-- Sign In -->
-                        <li class="active">
-                            <a href="javascript:void(0);">
-                                <i class="fa fa-sign-in"></i>&nbsp;Sign In
-                            </a>
-                        </li>
-                        <!-- End Sign In -->
-                        <!-- Sign Up -->                        
-                        <li>
-                            <a href="javascript:void(0);">
-                                <i class="fa fa-pencil"></i>&nbsp;Sign Up
-                            </a>
-                        </li>
-                        <!-- End Sign Up -->
+                        <% if signed_in? %>
+                            <li class="active">
+                                <%= link_to profile_edit_path(:id => current_provider.id) do %>
+                                    <i class="fa fa-edit"></i>&nbsp;Edit profile
+                                <% end %>
+                            </li>
+                            <li class="active">
+                                <%= link_to profile_detail_path(:id => current_provider.id) do %>
+                                    <i class="fa fa-eye"></i>&nbsp;View profile
+                                <% end %>
+                            </li>
+                            <li>
+                                <%= link_to signout_path, method: "delete" do %>
+                                    <i class="fa fa-sign-out"></i>&nbsp;Sign Out
+                                <% end %>
+                            </li>
+                        <% elsif csigned_in? %>
+                            <li class="active">
+                                <%= link_to edit_client_path(:id => current_client.id) do %>
+                                    <i class="fa fa-edit"></i>&nbsp;Edit profile
+                                <% end %>
+                            </li>
+                            <li class="active">
+                                <%= link_to show_client_path(:id => current_client.id) do %>
+                                    <i class="fa fa-eye"></i>&nbsp;View profile
+                                <% end %>
+                            </li>
+                            <li>
+                                <%= link_to signout_path, method: "delete" do %>
+                                    <i class="fa fa-sign-out"></i>&nbsp;Sign Out
+                                <% end %>
+                            </li>
+                        <% else %>
+                            <!-- Sign In -->
+                            <li class="active">
+                                <%= link_to signin_path do %>
+                                    <i class="fa fa-sign-in"></i>&nbsp;Sign In
+                                <% end %>
+                            </li>
+                            <!-- End Sign In -->
+                            <!-- Sign Up -->                        
+                            <li>
+                                <%= link_to signup_path do %>
+                                    <i class="fa fa-pencil"></i>&nbsp;Sign Up (Provider)
+                                <% end %>
+                            </li>
+                            <!-- End Sign Up -->
+                        <% end %>
                     </ul>
                 </div><!--/navbar-collapse-->
             </div>    
@@ -86,6 +120,7 @@
         <!-- End Navbar -->
     </div>
     <!--=== End Header ===-->
+    
 
 	<%= yield %>
 
@@ -156,11 +191,13 @@
                 
                 <div class="col-md-3">
                     <!-- Sign Up -->
-                    <div class="posts">
-                        <div class="headline"><h2>Sign Up</h2></div>
-                        <p><input type="text" class="form-control" placeholder="Email Address"></p>
-                        <p><button class="btn-u" type="button">Sign Up</button></p>
-                    </div>
+                    <form action="csignup" method="get">
+                        <div class="posts">
+                            <div class="headline"><h2>Sign Up</h2></div>
+                            <p><input name="email" type="text" class="form-control" placeholder="Email Address"></p>
+                            <p><button class="btn-u" type="submit">Sign Up</button></p>
+                        </div>
+                    </form>
                     <!-- End Sign Up -->
                 </div>
                 <!--/col-md-3-->
