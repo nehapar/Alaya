@@ -11,7 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140923190903) do
+ActiveRecord::Schema.define(version: 20140924223121) do
+
+  create_table "appointments", force: true do |t|
+    t.integer  "provider_id"
+    t.integer  "client_id"
+    t.datetime "start"
+    t.datetime "end"
+    t.integer  "accepted"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "client_observation"
+  end
+
+  add_index "appointments", ["provider_id", "created_at"], name: "index_appointments_on_provider_id_and_created_at"
 
   create_table "clients", force: true do |t|
     t.string   "first_name"
@@ -48,5 +61,12 @@ ActiveRecord::Schema.define(version: 20140923190903) do
 
   add_index "providers", ["email"], name: "index_providers_on_email", unique: true
   add_index "providers", ["remember_token"], name: "index_providers_on_remember_token"
+
+  create_table "services", force: true do |t|
+    t.integer  "provider_id"
+    t.string   "service"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end

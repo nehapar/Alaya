@@ -16,6 +16,12 @@ Alaya::Application.routes.draw do
   match 'profile_list', :to => 'providers#profile_list', via: 'get'
   match 'profile_detail', :to => 'providers#profile_detail', via: 'get'
   match 'profile_edit', :to => 'providers#profile_edit', via: 'get'
+
+  match 'appointments_ajax', :to => 'providers#appointments_ajax', via: 'get'
+  match 'csignin_ajax', :to => 'clients#csignin_ajax', via: 'get'
+  match 'csignup_ajax', :to => 'clients#csignup_ajax', via: 'get'
+  match 'update_info_ajax', :to => 'clients#update_info_ajax', via: 'get'
+  match 'request_appointment_ajax', :to => 'clients#request_appointment_ajax', via: 'get'
   
   match 'signup', :to => 'providers#new', via: 'get'
   match 'signin', :to => 'sessions#new', via: 'get'
@@ -26,6 +32,10 @@ Alaya::Application.routes.draw do
   match 'provider_update_about', :to => 'providers#update_about', via: 'post'
   match 'provider_update_specialities', :to => 'providers#update_specialities', via: 'post'
   match 'provider_update_policies', :to => 'providers#update_policies', via: 'post'
+
+  # static pages working
+  match 'profile_list_static', :to => 'web_site#profile_list', via: 'get'
+  match 'kashika_jackson', :to => 'web_site#kashika_jackson', via: 'get'
 
   match 'partners', :to => 'web_site#partners', via: 'get'
   match 'about', :to => 'web_site#about', via: 'get'

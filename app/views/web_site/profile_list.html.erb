@@ -10,10 +10,14 @@
                         <div class="col-sm-3">
                             <div class="tag-box-v3">
                                 <div class="easy-block-v1">
-                                    <img class="img-responsive" src="assets/img/profile_pic/kashika.png" alt="">
+                                    <%= link_to kashika_jackson_path do %>
+                                        <img class="img-responsive" src="assets/img/profile_pic/kashika_jackson.jpg" alt="">
+                                    <% end %>
                                 </div>    
                                 <div class="projects">
-                                    <h4>Kashika Jackson</h4>
+                                    <%= link_to kashika_jackson_path do %>
+                                        <h4>Kashika Jackson</h4>
+                                    <% end %>
                                     <ul class="list-unstyled list-inline blog-info-v2">
                                         <li>Massage Therapist, DONA Certified Childbirth Doula</li>
                                     </ul>
@@ -29,7 +33,7 @@ medicated natural, medicated natural, VBAC and cesareans births. She believes th
                                 </div>    
                                 <div class="project-share">
                                     <div class="col-lg-6 col-lg-offset-3">
-                                        <a href="profiles/kashika_jackson.html" class="btn-u-xs btn-u rounded-2x">View Profile</a>
+                                        <%= link_to "View Profile", kashika_jackson_path, class: "btn-u-xs btn-u rounded-2x" %>
                                     </div>
                                 </div>
                             </div>

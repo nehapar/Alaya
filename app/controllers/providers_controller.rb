@@ -48,6 +48,18 @@ class ProvidersController < ApplicationController
   	@provider = Provider.find(params[:id])
   end
 
+  def appointments_ajax
+    @provider = Provider.find(params[:id])
+    @appointments = @provider.appointments.where("start >= '" + params[:start] + "' AND end <= '" + params[:end] + "'")
+    container = { "appointments" => @appointments, "status" => "success"}
+    render :json => container.to_json
+    #respond_to do |format|
+    #  format.html { render :layout => false }
+    #  format.json { render :json => @appointments, status: :success }
+    #end
+    #render json: @provider.appointments
+  end
+
   private
 
     def provider_minimum_params
