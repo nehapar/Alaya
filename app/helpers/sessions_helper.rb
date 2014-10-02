@@ -9,6 +9,10 @@ module SessionsHelper
   def signed_in?
     !current_provider.nil?
   end
+
+  def is_admin?
+    signed_in? && current_provider.admin == 1
+  end
   
   def current_provider=(provider)
     @current_provider = provider

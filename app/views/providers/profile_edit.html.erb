@@ -4,48 +4,46 @@
         <div class="container content">
         	<div class="row">
                 <div class="col-md-12">
-                    
                     <!--Profile Body-->
                     <div class="profile-body">
                         <div class="profile-bio">
-                            <div class="row">
-                                
-                                <div class="col-sm-5 col-md-5">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="tag-box-v12">
-                                                <div class="easy-block-v1">
-                                                    <img class="img-responsive" src="assets/img/profile_pic/<%= (@provider.first_name + "_" + @provider.last_name).downcase %>.jpg" alt="<%= @provider.first_name %> - <%= @provider.expertise %>">
-                                                </div>    
-                                                <div class="projects">
-                                                    <h4><%= @provider.first_name %> <%= @provider.last_name %></h4>
-                                                    <ul class="list-unstyled list-inline blog-info-v2">
-                                                        <li><%= @provider.expertise %></li>
-                                                    </ul>
-                                                    <p><%= @provider.abstract %></p>
-                                                    <!--
-                                                    <ul class="list-inline star-vote">
-                                                        <li><i class="color-green fa fa-star"></i></li>
-                                                        <li><i class="color-green fa fa-star"></i></li>
-                                                        <li><i class="color-green fa fa-star"></i></li>
-                                                        <li><i class="color-green fa fa-star-half-o"></i></li>
-                                                        <li><i class="color-green fa fa-star-o"></i></li>
-                                                    </ul>
-                                                    -->
-                                                </div>    
-                                                <div class="project-share">
-                                                    <div class="col-lg-6 col-lg-offset-3">
-                                                        <%= link_to "View Profile", profile_detail_path(:id => @provider.id), class: "btn-u-xs btn-u rounded-2x" %>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+							<% flash.each do |key, value| %>
+								<div class="alert alert-<%= key %>" role="alert"><strong><%= key %>!</strong> <%= value %>
+								   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+								</div>
+							<% end %>
+							<input type="hidden" name="c_provider_id" id="c_provider_id" value="<%= @provider.id %>">
+							<!-- Picture begin -->
+							<div class="row">
+								<div class="col-sm-4 col-md-4 col-md-offset-1">
+									<h1><i class="fa fa-picture-o"></i> Picture</h1>
+									<br>
+									<div class="input-group">
+										<input class="form-control" id="mainImageLabel" placeholder="Chose your picture" disabled="disabled" />
+										<span class="input-group-btn">
+											<div class="fileUpload btn btn-primary">
+												<span>Search</span>
+												<input name="mainImage" onchange="readURL(this, 'mainImagePreview');" type="file" id="mainImage" class="upload" onchange="pictureChange(0)">
+											</div>	
+										</span>
+									</div>
+								</div>
+								<div class="col-sm-2 col-md-2 col-md-offset-1">
+									<% if !@provider.picture_path.nil? %>
+										<img id="mainImagePreview" class="img-responsive" src="<%= @provider.picture_path %>" alt="<%= @provider.first_name %> - <%= @provider.expertise %>">
+									<% else %>
+										<img id="mainImagePreview" class="img-responsive" src="../assets/img/profile_pic/provider_without_picture.png" alt="<%= @provider.first_name %> - <%= @provider.expertise %>">
+									<% end %>									
                                 </div>
-                                <div class="col-sm-7 col-md-7">
+                            </div>
+                            <!-- Picture end -->
+							<hr>
+							<!-- Main begin -->
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12">
                                     <div class="row margin-bottom-20">
                                         <div class="col-md-10 col-md-offset-1">
-                                            <h1>Primary profile</h1>
+                                            <h1><i class="fa fa-tty"></i> Primary profile</h1>
                                         </div>                
                                     </div>
                                     <%= form_for(@provider, url: provider_update_personal_path) do |f| %>
@@ -62,19 +60,23 @@
                                         <div class="row margin-bottom-20">
                                             <%= f.label :expertise, class: "col-md-10 col-md-offset-1" %>
                                             <div class="col-md-10 col-md-offset-1">
-                                                <%= f.text_field :expertise, class: "form-control", placeholder: "Name", value: @provider.expertise, required: "required" %>
+                                                <%= f.text_field :expertise, class: "form-control", placeholder: "Expertise", value: @provider.expertise, required: "required" %>
+                                            </div>                
+                                        </div>
+                                        <div class="row margin-bottom-20">
+                                            <div class="col-md-5 col-md-offset-1">
+												<%= f.label :email %>
+                                                <%= f.text_field :email, class: "form-control", placeholder: "Email", required: "required" %>
+                                            </div>
+                                            <div class="col-md-5 col-md-offset-0">
+												<%= f.label :phone %>
+                                                <%= f.text_field :phone, class: "form-control", placeholder: "Phone" %>
                                             </div>                
                                         </div>
                                         <div class="row margin-bottom-20">
                                             <%= f.label :abstract, class: "col-md-10 col-md-offset-1" %>
                                             <div class="col-md-10 col-md-offset-1">
-                                                <%= text_area(:provider, :abstract, size: "20x8", class: "form-control") %>
-                                            </div>                
-                                        </div>
-                                        <div class="row margin-bottom-20">
-                                            <%= f.label :email, class: "col-md-10 col-md-offset-1"  %>
-                                            <div class="col-md-10 col-md-offset-1">
-                                                <%= f.text_field :email, class: "form-control", placeholder: "Email", required: "required" %>
+                                                <%= text_area(:provider, :abstract, size: "20x8", placeholder: "Abstract to be displayed as advertisement", class: "form-control") %>
                                             </div>                
                                         </div>
                                         <div class="row margin-bottom-20">
@@ -83,174 +85,304 @@
                                             </div>                
                                         </div>
                                     <% end %>
-                                    <hr>
-                                    <%= form_for(@provider, url: provider_update_password_path) do |f| %>
-                                        <div class="row margin-bottom-20">
-                                            <div class="col-md-5 col-md-offset-1">
-                                                <%= f.label :password %>
-                                                <%= f.password_field :password, class: "form-control", placeholder: "Password", required: "required" %>
-                                            </div>                
-                                            <div class="col-md-5">
-                                                <%= f.label :password_confirmation, "Password confirmation" %>
-                                                <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Password confirmation", required: "required" %>
-                                            </div>                
-                                        </div>
-
-                                        <div class="row margin-bottom-20">
-                                            <div class="col-md-10 col-md-offset-1">
-                                                <%= f.submit "Change my password", class: "btn-u pull-right" %>
-                                            </div>                
-                                        </div>
-                                    <% end %>
                                     <p> </p>
                                 </div>
                             </div>    
-                        </div><!--/end row-->
-                        
-                        <div class="clearfix margin-bottom-30"></div>
-                        
-
-                        <div class="shadow-wrapper">
-                            <div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
-                                <h1>Main profile information</h1>
-                            </div>
+                            <!-- Main end -->
+                            <hr>
+                            <!-- About begin -->
+                            <div class="row margin-bottom-20">
+								<div class="col-md-10 col-md-offset-1">
+									<h1><i class="fa fa-user"></i> About</h1>
+								</div>                
+							</div>
+                            <%= form_for(@provider, url: provider_update_about_path) do |f| %>
+								<div class="row margin-bottom-20">
+									<div class="col-md-10 col-md-offset-1">
+										<%= text_area(:provider, :about, size: "20x8", class: "form-control") %>
+									</div>
+								</div>
+								<div class="row margin-bottom-20">
+									<div class="col-md-10 col-md-offset-1">
+										<%= f.submit "Save About", class: "btn-u pull-right" %>
+									</div>
+								</div>
+							<% end %>
+                            <!-- About end -->
+                            <hr>
+                            <!-- Specialties begin -->
+                            <div class="row margin-bottom-20">
+								<div class="col-md-10 col-md-offset-1">
+									<h1><i class="fa fa-briefcase"></i> Specialties</h1>
+								</div>                
+							</div>
+							<%= form_for(@provider, url: provider_update_specialty_text_path) do |f| %>
+								<div class="row margin-bottom-20">
+									<div class="col-md-10 col-md-offset-1">
+										<%= text_area(:provider, :specialty_text, size: "20x4", class: "form-control") %>
+									</div>                
+								</div>
+								<div class="row margin-bottom-20">
+									<div class="col-md-10 col-md-offset-1">
+										<%= f.submit "Save Specialties Text", class: "btn-u pull-right" %>
+									</div>                
+								</div>
+							<% end %>
+							<div class="row margin-bottom-20">
+								<div class="col-md-10 col-md-offset-1">
+									<h1>Specialties</h1>
+									<div id="add_specialty_alert"></div>
+								</div>                
+							</div>
+							<div class="row margin-bottom-20">
+								<div class="col-md-7 col-md-offset-1">
+									<input class="form-control" name="new_specialty" id="new_specialty" type="text" placeholder="New Specialty">
+								</div>
+								<div class="col-md-3">
+									<button type="button" class="btn-u col-md-12" onclick="addSpecialty();">Add New Specialty</button>
+								</div>                
+							</div>
+							<div class="row" id="specialties_list">
+								<div class="col-sm-5 col-sm-offset-1">
+									<% @provider.specialties.all.each_with_index do |specialty, index| %>
+										<% if index < (@provider.specialties.length / 2.0) %>
+											<div class="alert alert-info" role="alert">
+												<i class="fa fa-check color-green"></i> <%= specialty.specialty %>
+												<button type="button" onclick="deleteSpecialty(<%= specialty.id %>);" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+											</div>
+										<% end %> 
+									<% end %>
+								</div>
+								<div class="col-sm-5">
+									<% @provider.specialties.all.each_with_index do |specialty, index| %>
+										<% if index >= (@provider.specialties.length / 2.0) %>
+											<div class="alert alert-info" role="alert">
+												<i class="fa fa-check color-green"></i> <%= specialty.specialty %>
+												<button type="button" onclick="deleteSpecialty(<%= specialty.id %>);" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+											</div>
+										<% end %> 
+									<% end %>
+								</div>
+							</div>
+                            <!-- Specialties end -->
+                            <hr>
+                            <!-- Services begin -->
+                            <div class="row margin-bottom-20">
+								<div class="col-md-10 col-md-offset-1">
+									<h1><i class="fa fa-briefcase"></i> Services Offered</h1>
+								</div>                
+							</div>
+							<%= form_for(@provider, url: provider_update_service_text_path) do |f| %>
+								<div class="row margin-bottom-20">
+									<div class="col-md-10 col-md-offset-1">
+										<%= text_area(:provider, :service_text, size: "20x4", class: "form-control") %>
+									</div>                
+								</div>
+								<div class="row margin-bottom-20">
+									<div class="col-md-10 col-md-offset-1">
+										<%= f.submit "Save Services Text", class: "btn-u pull-right" %>
+									</div>                
+								</div>
+							<% end %>
+							<div class="row margin-bottom-20">
+								<div class="col-md-10 col-md-offset-1">
+									<h1>Services</h1>
+									<div id="add_service_alert"></div>
+								</div>                
+							</div>
+							<div class="row margin-bottom-20">
+								<div class="col-md-7 col-md-offset-1">
+									<input class="form-control" name="new_service" id="new_service" type="text" placeholder="New service">
+								</div>
+								<div class="col-md-3">
+									<button type="button" class="btn-u col-md-12" onclick="addService();">Add New Service</button>
+								</div>                
+							</div>
+							<div class="row" id="services_list">
+								<div class="col-sm-5 col-sm-offset-1">
+									<% @provider.services.all.each_with_index do |service, index| %>
+										<% if index < (@provider.services.length / 2.0) %>
+											<div class="alert alert-info" role="alert">
+												<i class="fa fa-check color-green"></i> <%= service.service %>
+												<button type="button" onclick="deleteService(<%= service.id %>);" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+											</div>
+										<% end %> 
+									<% end %>
+								</div>
+								<div class="col-sm-5">
+									<% @provider.services.all.each_with_index do |service, index| %>
+										<% if index >= (@provider.services.length / 2.0) %>
+											<div class="alert alert-info" role="alert">
+												<i class="fa fa-check color-green"></i> <%= service.service %>
+												<button type="button" onclick="deleteService(<%= service.id %>);" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+											</div>
+										<% end %> 
+									<% end %>
+								</div>
+							</div>
+                            <!-- Services end -->
+                            <hr>
+                            <!-- Certifications begin -->
+                            <div class="row margin-bottom-20">
+								<div class="col-md-10 col-md-offset-1">
+									<h1><i class="fa fa-graduation-cap"></i> Certifications</h1>
+									<div id="add_certification_alert"></div>
+								</div>                
+							</div>
+							<div class="row margin-bottom-20">
+								<div class="col-md-7 col-md-offset-1">
+									<input class="form-control" name="new_certification" id="new_certification" type="text" placeholder="New certification">
+								</div>
+								<div class="col-md-3">
+									<button type="button" class="btn-u col-md-12" onclick="addCertification();">Add New Certification</button>
+								</div>                
+							</div>
+							<div class="row" id="certifications_list">
+								<div class="col-sm-5 col-sm-offset-1">
+									<% @provider.certifications.all.each_with_index do |certification, index| %>
+										<% if index < (@provider.certifications.length / 2.0) %>
+											<div class="alert alert-info" role="alert">
+												<i class="fa fa-check color-green"></i> <%= certification.certification %>
+												<button type="button" onclick="deleteCertification(<%= certification.id %>);" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+											</div>
+										<% end %> 
+									<% end %>
+								</div>
+								<div class="col-sm-5">
+									<% @provider.certifications.all.each_with_index do |certification, index| %>
+										<% if index >= (@provider.certifications.length / 2.0) %>
+											<div class="alert alert-info" role="alert">
+												<i class="fa fa-check color-green"></i> <%= certification.certification %>
+												<button type="button" onclick="deleteCertification(<%= certification.id %>);" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+											</div>
+										<% end %> 
+									<% end %>
+								</div>
+							</div>
+                            <!-- Certifications end -->
+                            <hr>
+                            <!-- Areas end -->
+                            <div class="row margin-bottom-20">
+								<div class="col-md-10 col-md-offset-1">
+									<h1><i class="fa fa-map-marker"></i> Areas Served</h1>
+									<div id="add_area_alert"></div>
+								</div>                
+							</div>
+							<div class="row margin-bottom-20">
+								<div class="col-md-7 col-md-offset-1">
+									<input class="form-control" name="new_area" id="new_area" type="text" placeholder="New area">
+								</div>
+								<div class="col-md-3">
+									<button type="button" class="btn-u col-md-12" onclick="addArea();">Add New Area</button>
+								</div>                
+							</div>
+							<div class="row" id="areas_list">
+								<div class="col-sm-5 col-sm-offset-1">
+									<% @provider.areas.all.each_with_index do |area, index| %>
+										<% if index < (@provider.areas.length / 2.0) %>
+											<div class="alert alert-info" role="alert">
+												<i class="fa fa-check color-green"></i> <%= area.area %>
+												<button type="button" onclick="deleteArea(<%= area.id %>);" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+											</div>
+										<% end %> 
+									<% end %>
+								</div>
+								<div class="col-sm-5">
+									<% @provider.areas.all.each_with_index do |area, index| %>
+										<% if index >= (@provider.areas.length / 2.0) %>
+											<div class="alert alert-info" role="alert">
+												<button type="button" onclick="deleteArea(<%= area.id %>);" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+												<i class="fa fa-check color-green"></i> <%= area.area %>
+											</div>
+										<% end %> 
+									<% end %>
+								</div>
+							</div>
+                            <!-- Areas end -->
+                            <hr>
+                            <!-- Policies begin -->
+                            <div class="row margin-bottom-20">
+								<div class="col-md-10 col-md-offset-1">
+									<h1><i class="fa fa-briefcase"></i> Payment & Policies</h1>
+								</div>                
+							</div>
+                            <%= form_for(@provider, url: provider_update_policies_path) do |f| %>
+								<div class="row margin-bottom-20">
+									<div class="col-md-10 col-md-offset-1">
+										<%= text_area(:provider, :policies, size: "20x8", class: "form-control") %>
+									</div>
+								</div>
+								<div class="row margin-bottom-20">
+									<div class="col-md-10 col-md-offset-1">
+										<%= f.submit "Save Policies", class: "btn-u pull-right" %>
+									</div>
+								</div>
+							<% end %>
+                            <!-- Policies end -->
+                            <hr>
+                            <!-- Review -->
+                            <div class="row margin-bottom-20">
+								<div class="col-md-10 col-md-offset-1">
+									<h1><i class="fa fa-group"></i> Reviews</h1>
+									<div id="add_review_alert"></div>
+								</div>                
+							</div>
+							<div class="row margin-bottom-20">
+								<div class="col-md-10 col-md-offset-1 margin-bottom-20">
+									<textarea class="form-control" name="new_review" id="new_review" placeholder="Review" rows="5"></textarea>
+								</div>
+								<div class="col-md-7 col-md-offset-1">
+									<input class="form-control" name="new_author" id="new_author" type="text" placeholder="Author">
+								</div>
+								<div class="col-md-3">
+									<button type="button" class="btn-u col-md-12" onclick="addReview();">Add New Review</button>
+								</div>                
+							</div>
+							<div class="row" id="reviews_list">
+								<div class="col-sm-10 col-sm-offset-1">
+									<% @provider.reviews.all.each_with_index do |review, index| %>							
+										<div class="alert alert-info" role="alert">
+											<button type="button" onclick="deleteReview(<%= review.id %>);" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+											<blockquote>
+												<%= simple_format("\"" + review.review + "\"", class: 'paragraph_bottom') %>
+												<footer><%= review.author %></footer>
+											</blockquote>
+										</div>
+									<% end %>
+								</div>
+							</div>
+							<!-- End Review -->
                         </div>
-
+                        <!--/end row-->
+						<br>
+                        <!-- Change password -->                        
                         <div class="panel panel-profile">
-                            <div class="panel-heading overflow-h">
-                                <h2 class="panel-title heading-sm pull-left"><i class="fa fa-user"></i>About</h2>
-                            </div>
-                            <div class="panel-body margin-bottom-40">
-                                <%= form_for(@provider, url: provider_update_about_path) do |f| %>
-                                    <div class="row margin-bottom-20">
-                                        <div class="col-md-10 col-md-offset-1">
-                                            <%= text_area(:provider, :about, size: "20x8", class: "form-control") %>
-                                        </div>                
-                                    </div>
-                                    <div class="row margin-bottom-20">
-                                        <div class="col-md-10 col-md-offset-1">
-                                            <%= f.submit "Save about", class: "btn-u pull-right" %>
-                                        </div>                
-                                    </div>
-                                <% end %>
-                            </div>
-                        </div>
-
-                        <!--Specialities-->
-                        <div class="panel panel-profile">
-                            <div class="panel-heading overflow-h">
-                                <h2 class="panel-title heading-sm pull-left"><i class="fa fa-briefcase"></i>Specialities & Services Offered</h2>
-                            </div>
-                            <div class="panel-body margin-bottom-40">
-                                <%= form_for(@provider, url: provider_update_specialities_path) do |f| %>
-                                    <div class="row margin-bottom-20">
-                                        <div class="col-md-10 col-md-offset-1">
-                                            <%= text_area(:provider, :specialities, size: "20x8", class: "form-control") %>
-                                        </div>                
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-5  col-sm-offset-1">
-                                            <ul class="list-unstyled">
-                                                <li><i class="fa fa-check color-green"></i> Prenatal Massage</li>
-                                                <li><i class="fa fa-check color-green"></i> Doula Services </li>
-                                                <li><i class="fa fa-check color-green"></i> Labor Support</li>
-                                                <li><i class="fa fa-check color-green"></i> Birth and Delivery support</li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-sm-5">
-                                            <ul class="list-unstyled">
-                                                <li><i class="fa fa-check color-green"></i> Lactation and Breastfeeding Support</li>
-                                                <li><i class="fa fa-check color-green"></i> Video and Photography upon request</li>
-                                                <li><i class="fa fa-check color-green"></i> Home Postpartum Visit</li>
-                                                <li><i class="fa fa-check color-green"></i> Informational and Emotional Support</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row margin-bottom-20">
-                                        <div class="col-md-10 col-md-offset-1">
-                                            <%= f.submit "Save about", class: "btn-u pull-right" %>
-                                        </div>                
-                                    </div>
-                                <% end %>
+							<div class="panel-body margin-bottom-40">								
+								<div class="row margin-bottom-20">
+									<div class="col-md-10 col-md-offset-1">
+										<h1><i class="fa fa-lock"></i> Change Password</h1>
+									</div>                
+								</div>
+                                <%= form_for(@provider, url: provider_update_password_path) do |f| %>
+									<div class="row margin-bottom-20">
+										<div class="col-md-5 col-md-offset-1">
+											<%= f.label :password %>
+											<%= f.password_field :password, class: "form-control", placeholder: "Password", required: "required" %>
+										</div>                
+										<div class="col-md-5">
+											<%= f.label :password_confirmation, "Password confirmation" %>
+											<%= f.password_field :password_confirmation, class: "form-control", placeholder: "Password confirmation", required: "required" %>
+										</div>
+									</div>
+									<div class="row margin-bottom-20">
+										<div class="col-md-10 col-md-offset-1">
+											<%= f.submit "Change Password", class: "btn-u pull-right" %>
+										</div>
+									</div>
+								<% end %>
                             </div>
                         </div>
-                        <!--End Specialties-->
-
-                        <!--Certifications-->
-                        <div class="panel panel-profile">
-                            <div class="panel-heading overflow-h">
-                                <h2 class="panel-title heading-sm pull-left"><i class="fa fa-briefcase"></i>Certifications</h2>
-                            </div>
-                            <div class="panel-body margin-bottom-40">
-                                <p><p>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <ul class="list-unstyled">
-                                            <li><i class="fa fa-check color-green"></i> Certified Prenatal Massage Therapist</li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <ul class="list-unstyled">
-                                            <li><i class="fa fa-check color-green"></i> DONA Certified Birth Doula</li>
-                                            
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--End Certifications-->
-
-
-                         <!--Areas-->
-                        <div class="panel panel-profile">
-                            <div class="panel-heading overflow-h">
-                                <h2 class="panel-title heading-sm pull-left"><i class="fa fa-briefcase"></i>Areas Served</h2>
-                            </div>
-                            <div class="panel-body margin-bottom-40">
-                                <p></p>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <ul class="list-unstyled">
-                                            <li><i class="fa fa-check color-green"></i> San Jose</li>
-                                            <li><i class="fa fa-check color-green"></i> Santa Cruz</li>
-                                            <li><i class="fa fa-check color-green"></i> South Bay</li>
-                                            <li><i class="fa fa-check color-green"></i> Peninsula</li>
-                                        </ul>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <ul class="list-unstyled">
-                                            <li><i class="fa fa-check color-green"></i> Oakland</li>
-                                            <li><i class="fa fa-check color-green"></i> San Francisco</li>
-                                            
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--End Areas-->
-
-                        
-                        <!-- Appointment -->                        
-                        <div class="panel panel-profile">
-                            <div class="panel-heading overflow-h">
-                                <h2 class="panel-title heading-sm pull-left"><i class="fa fa-briefcase"></i>Schedule an Appointment</h2>
-                                <a href="profile_users.html" class="btn-u btn-u-xs rounded-2x pull-right">Book Now</a>
-                            </div>
-                            <div class="panel-body margin-bottom-40">
-                                <div id="my-calendar"></div>
-                            </div>
-                        </div>
-                        <!-- End Appointment -->
-                        
-                        <!-- Review -->
-                        <div class="shadow-wrapper">
-                            <div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
-                                <center><h2>Reviews</h2></center>
-                                <p></p>
-                            </div>
-                        </div>
-                        <!-- End Review -->
+                        <!-- Change password -->
                     </div>
                     <!--End Profile Body-->
                 </div>

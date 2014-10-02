@@ -15,27 +15,46 @@ Alaya::Application.routes.draw do
   root :to => 'web_site#index'
   match 'profile_list', :to => 'providers#profile_list', via: 'get'
   match 'profile_detail', :to => 'providers#profile_detail', via: 'get'
-  match 'profile_edit', :to => 'providers#profile_edit', via: 'get'
-
+  match 'profile_edit', :to => 'providers#profile_edit' , via: 'get'
+  #match 'profiles/:username', :to => 'providers#profile_detail' , via: 'get'
+  
   match 'appointments_ajax', :to => 'providers#appointments_ajax', via: 'get'
   match 'csignin_ajax', :to => 'clients#csignin_ajax', via: 'get'
   match 'csignup_ajax', :to => 'clients#csignup_ajax', via: 'get'
   match 'update_info_ajax', :to => 'clients#update_info_ajax', via: 'get'
   match 'request_appointment_ajax', :to => 'clients#request_appointment_ajax', via: 'get'
+  match 'get_clients_ajax', :to => 'clients#get_clients_ajax', via: 'get'
+  match 'get_client_information_ajax', :to => 'clients#get_client_information_ajax', via: 'get'
   
   match 'signup', :to => 'providers#new', via: 'get'
   match 'signin', :to => 'sessions#new', via: 'get'
   match 'signout', :to => 'sessions#destroy', via: 'delete'
+  match 'admin', :to => 'providers#admin', via: 'get'
+  match 'admin_delete_appointment', :to => 'providers#admin', via: 'delete'
 
-  match 'provider_update_personal', :to => 'providers#update_personal', via: 'post'
-  match 'provider_update_password', :to => 'providers#update_password', via: 'post'
-  match 'provider_update_about', :to => 'providers#update_about', via: 'post'
-  match 'provider_update_specialities', :to => 'providers#update_specialities', via: 'post'
-  match 'provider_update_policies', :to => 'providers#update_policies', via: 'post'
+  match 'provider_update_personal', :to => 'providers#update_personal', via: 'patch'
+  match 'provider_update_password', :to => 'providers#update_password', via: 'patch'
+  match 'provider_update_about', :to => 'providers#update_about', via: 'patch'
+  match 'provider_update_specialty_text', :to => 'providers#update_specialty_text', via: 'patch'
+  match 'provider_update_service_text', :to => 'providers#update_service_text', via: 'patch'
+  match 'provider_update_policies', :to => 'providers#update_policies', via: 'patch'
+  match 'add_service_ajax', :to => 'providers#add_service_ajax', via: 'get'
+  match 'add_specialty_ajax', :to => 'providers#add_specialty_ajax', via: 'get'
+  match 'add_certification_ajax', :to => 'providers#add_certification_ajax', via: 'get'
+  match 'add_area_ajax', :to => 'providers#add_area_ajax', via: 'get'
+  match 'add_review_ajax', :to => 'providers#add_review_ajax', via: 'get'
+  match 'delete_service_ajax', :to => 'providers#delete_service_ajax', via: 'get'
+  match 'delete_specialty_ajax', :to => 'providers#delete_specialty_ajax', via: 'get'
+  match 'delete_certification_ajax', :to => 'providers#delete_certification_ajax', via: 'get'
+  match 'delete_area_ajax', :to => 'providers#delete_area_ajax', via: 'get'
+  match 'delete_review_ajax', :to => 'providers#delete_review_ajax', via: 'get'
+  
+  
+  match 'appointment_detail', :to => 'providers#appointment_detail', via: 'get'
 
   # static pages working
   match 'profile_list_static', :to => 'web_site#profile_list', via: 'get'
-  match 'kashika_jackson', :to => 'web_site#kashika_jackson', via: 'get'
+  #match 'kashika_jackson', :to => 'web_site#kashika_jackson', via: 'get'
 
   match 'partners', :to => 'web_site#partners', via: 'get'
   match 'about', :to => 'web_site#about', via: 'get'
@@ -53,6 +72,8 @@ Alaya::Application.routes.draw do
   get "web_site/faq"
   #get "providers/new"
   get "providers/profile_list"
+  
+  ProvidersController.load
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -74,7 +95,7 @@ Alaya::Application.routes.draw do
   #     member do
   #       get 'short'
   #       post 'toggle'
-  #     end
+  #     end5
   #
   #     collection do
   #       get 'sold'

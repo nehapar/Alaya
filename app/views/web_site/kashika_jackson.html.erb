@@ -125,7 +125,6 @@
                         <div class="panel panel-profile">
                             <div class="panel-heading overflow-h">
                                 <h2 class="panel-title heading-sm pull-left"><i class="fa fa-briefcase"></i>Schedule an Appointment</h2>
-                                <!-- <a href="profile_users.html" class="btn-u btn-u-xs rounded-2x pull-right">Book Now</a> -->
                             </div>
                             <div class="panel-body margin-bottom-40">
                                 <div id="my-calendar">
@@ -135,8 +134,8 @@
                                             <form id="schedules_periodicity" action="#" method="post">
                                                 <% if csigned_in? %>
                                                     <input type="hidden" name="c_client_id" id="c_client_id" value="<%= current_client.id %>">
-                                                    <input type="hidden" name="c_client_id" id="c_client_first_name" value="<%= current_client.first_name %>">
-                                                    <input type="hidden" name="c_client_id" id="c_client_last_name" value="<%= current_client.last_name %>">
+                                                    <input type="hidden" name="c_client_first_name" id="c_client_first_name" value="<%= current_client.first_name %>">
+                                                    <input type="hidden" name="c_client_last_name" id="c_client_last_name" value="<%= current_client.last_name %>">
                                                     <% if !current_client.phone.empty? && !current_client.phone.nil? && !current_client.address.empty? && !current_client.address.nil? && !current_client.weeks_pregnant.nil? %>
                                                         <input type="hidden" name="c_client_complete" id="c_client_complete" value="1"> 
                                                     <% else %>
@@ -155,24 +154,11 @@
                                                     <strong><span class="glyphicon glyphicon-chevron-right"></span> Periodicity:</strong>
                                                 </label>
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="periodicity" id="p_monthly" value="1" checked>Monthly
+                                                    <input type="radio" onchange="loadSchedule();" name="periodicity" id="p_monthly" value="1" checked>Monthly
                                                 </label>
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="periodicity" id="p_weekly" value="2">Weekly
+                                                    <input type="radio" onchange="loadSchedule();" name="periodicity" id="p_weekly" value="2">Weekly
                                                 </label>
-                                                <!--
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="periodicity" id="p_daily" value="3">Daily
-                                                </label>
-                                                -->
-                                                <label class="radio-inline">
-                                                    <button type="button" onclick="loadSchedule();" class="btn btn-success btn-large" ><span class="glyphicon glyphicon-refresh"></span> Load Schedule</button>
-                                                </label>
-                                                <!--
-                                                <label class="radio-inline pull-right">
-                                                    <button type="button" data-toggle="modal" data-target="#add_schedule" class="btn-u pull-right" >Book Now</button>
-                                                </label>
-                                                -->
                                             </form>
                                         </div>
                                     </div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->  
-<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->  
-<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->  
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
 <head>
     <title>Alaya | <%= yield(:title) %></title>
     <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
@@ -66,28 +66,36 @@
                 <div class="collapse navbar-collapse navbar-responsive-collapse">
                     <ul class="nav navbar-nav">
                         <% if signed_in? %>
-                            <li class="active">
-                                <%= link_to profile_edit_path(:id => current_provider.id) do %>
-                                    <i class="fa fa-edit"></i>&nbsp;Edit profile
-                                <% end %>
-                            </li>
-                            <li class="active">
-                                <%= link_to profile_detail_path(:id => current_provider.id) do %>
-                                    <i class="fa fa-eye"></i>&nbsp;View profile
-                                <% end %>
-                            </li>
+                            <% if is_admin? %>
+                                <li>
+                                    <%= link_to admin_path do %>
+                                        <i class="fa fa-home"></i>&nbsp;Admin home
+                                    <% end %>
+                                </li>
+                            <% else %>
+                                <li>
+                                    <%= link_to profile_edit_path do %>
+                                        <i class="fa fa-edit"></i>&nbsp;Edit profile
+                                    <% end %>
+                                </li>
+                                <li>
+                                    <%= link_to eval(current_provider.profile + '_path') do %>
+                                        <i class="fa fa-eye"></i>&nbsp;View profile
+                                    <% end %>
+                                </li>
+                            <% end %>
                             <li>
                                 <%= link_to signout_path, method: "delete" do %>
                                     <i class="fa fa-sign-out"></i>&nbsp;Sign Out
                                 <% end %>
                             </li>
                         <% elsif csigned_in? %>
-                            <li class="active">
+                            <li>
                                 <%= link_to edit_client_path(:id => current_client.id) do %>
                                     <i class="fa fa-edit"></i>&nbsp;Edit profile
                                 <% end %>
                             </li>
-                            <li class="active">
+                            <li>
                                 <%= link_to show_client_path(:id => current_client.id) do %>
                                     <i class="fa fa-eye"></i>&nbsp;View profile
                                 <% end %>
@@ -99,11 +107,13 @@
                             </li>
                         <% else %>
                             <!-- Sign In -->
-                            <li class="active">
+                            <li>
                                 <%= link_to signin_path do %>
                                     <i class="fa fa-sign-in"></i>&nbsp;Sign In
                                 <% end %>
                             </li>
+
+                            <!-- IMPORTANT: class="active" allows a red semaphore over <li> -->
                             <!-- End Sign In -->
                             <!-- Sign Up -->                        
                             <li>

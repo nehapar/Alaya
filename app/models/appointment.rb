@@ -1,5 +1,6 @@
 class Appointment < ActiveRecord::Base
 	belongs_to :provider
+	belongs_to :client
 	default_scope -> { order('start ASC') }
 	validates :provider_id, presence: true
 	validates :client_id, presence: true

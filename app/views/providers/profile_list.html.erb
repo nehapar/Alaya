@@ -10,11 +10,17 @@
                         <% @providers.each_with_index do |provider, index| %>
                             <div class="col-sm-3">
                                 <div class="tag-box-v3">
-                                    <div class="easy-block-v1">
-                                        <img class="img-responsive" src="assets/img/profile_pic/<%= (provider.first_name + "_" + provider.last_name).downcase %>.jpg" alt="<%= provider.first_name %> - <%= provider.expertise %>">
-                                    </div>    
+									<% if !provider.picture_path.nil? %>
+										<div class="easy-block-v1">
+											<%= link_to eval(provider.profile + '_path') do %>
+												<img class="img-responsive" src="<%= provider.picture_path %>" alt="<%= provider.first_name %> - <%= provider.expertise %>">
+											<% end %>
+										</div>    
+									<% end %>
                                     <div class="projects">
-                                        <h4><%= provider.first_name %> <%= provider.last_name %></h4>
+										<%= link_to eval(provider.profile + '_path') do %>
+											<h4><%= provider.first_name %> <%= provider.last_name %></h4>
+                                        <% end %>
                                         <ul class="list-unstyled list-inline blog-info-v2">
                                             <li><%= provider.expertise %></li>
                                         </ul>
@@ -31,7 +37,8 @@
                                     </div>    
                                     <div class="project-share">
                                         <div class="col-lg-6 col-lg-offset-3">
-                                            <%= link_to "View Profile", profile_detail_path(:id => provider.id), class: "btn-u-xs btn-u rounded-2x" %>
+											
+                                            <%= link_to "View Profile", eval(provider.profile + '_path'), class: "btn-u-xs btn-u rounded-2x" %>
                                         </div>
                                     </div>
                                 </div>

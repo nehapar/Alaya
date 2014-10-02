@@ -5,9 +5,14 @@ class SessionsController < ApplicationController
   def create
   	provider = Provider.find_by(email: params[:session][:email].downcase)
     client = Client.find_by(email: params[:session][:email].downcase)
+
     if provider && provider.authenticate(params[:session][:password])
       sign_in provider
-      redirect_to provider
+      if is_admin?
+        redirect_to admin_path
+      else
+        redirect_to eval(provider.profile + '_path')
+      end
     elsif client && client.authenticate(params[:session][:password])
       csign_in client
       redirect_to client

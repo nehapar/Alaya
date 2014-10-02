@@ -4,6 +4,11 @@
     <div class="container content">
         <div class="row margin-bottom-30">
             <div class="col-md-10 col-md-offset-1 mb-margin-bottom-30">
+				<% flash.each do |key, value| %>
+                    <div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-remove"></span> <strong><%= key %></strong> <%= value %>
+                       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    </div>
+                <% end %>
                 <div class="headline"><h2>Sign Up</h2></div>
                 <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas feugiat. Et harum quidem rerum facilis est et expedita distinctio lorem ipsum dolor sit amet, consectetur adipiscing elit landitiis.</p><br>
                 <%= form_for(@provider) do |f| %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140924223121) do
+ActiveRecord::Schema.define(version: 20141002194307) do
 
   create_table "appointments", force: true do |t|
     t.integer  "provider_id"
@@ -25,6 +25,20 @@ ActiveRecord::Schema.define(version: 20140924223121) do
   end
 
   add_index "appointments", ["provider_id", "created_at"], name: "index_appointments_on_provider_id_and_created_at"
+
+  create_table "areas", force: true do |t|
+    t.integer  "provider_id"
+    t.string   "area"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "certifications", force: true do |t|
+    t.integer  "provider_id"
+    t.string   "certification"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "clients", force: true do |t|
     t.string   "first_name"
@@ -44,12 +58,12 @@ ActiveRecord::Schema.define(version: 20140924223121) do
   create_table "providers", force: true do |t|
     t.string   "first_name"
     t.string   "email"
-    t.integer  "permission"
-    t.string   "expertise",       null: false
+    t.integer  "admin"
+    t.string   "expertise"
     t.string   "phone"
     t.string   "abstract"
     t.string   "about"
-    t.string   "specialities"
+    t.string   "specialty_text"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "password_digest"
@@ -57,14 +71,32 @@ ActiveRecord::Schema.define(version: 20140924223121) do
     t.string   "last_name"
     t.integer  "active"
     t.string   "remember_token"
+    t.string   "picture_path"
+    t.string   "profile"
+    t.string   "service_text"
   end
 
   add_index "providers", ["email"], name: "index_providers_on_email", unique: true
   add_index "providers", ["remember_token"], name: "index_providers_on_remember_token"
 
+  create_table "reviews", force: true do |t|
+    t.integer  "provider_id"
+    t.text     "review"
+    t.string   "author"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "services", force: true do |t|
     t.integer  "provider_id"
     t.string   "service"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "specialties", force: true do |t|
+    t.integer  "provider_id"
+    t.string   "specialty"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

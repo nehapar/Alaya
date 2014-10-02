@@ -214,6 +214,8 @@ Monthly.prototype.print = function() {
 	var content = "";
 	var a_len = this.appointments.length;
 	var o_screen = new Screens();
+	var today = new Date();
+	today.setHours(0, 0, 0, 0);
 
 	content = content + "<div class=\"table-responsive\">";
 	content = content + "	<table class=\"table table-striped table-hover text-center table-bordered\">";
@@ -247,30 +249,34 @@ Monthly.prototype.print = function() {
 			var dummy_2 = new Date(this.c_first_day.getTime());
 			dummy_2.setHours(23, 59, 59, 0);
 
-			content = content + "		<td>";
+			//content = content + "		<td>";
 			for (j = 0; j < a_len; j++) {
 				if (this.appointments[j].start >= dummy_1 && dummy_2 >= this.appointments[j].end) {
 					how_many++;
 				}
 			}
-			if (how_many == 0) {
-				if (this.c_first_day >= this.m_first_day && this.c_first_day <= this.m_last_day) {
-					content = content + "		<a href=\"javascript: showDate(" + dummy_1.getTime() + ");\"><b>" + this.c_first_day.getDate() + "</b></a>";	
+			
+			this.c_first_day.setHours(0, 0, 0, 0);
+			if (how_many < 12 && this.c_first_day.getTime() >= today.getTime()) {
+				if (this.c_first_day.getTime() == today.getTime()) {
+					content = content + "        <td onclick=\"showDate(" + dummy_1.getTime() + ");\" class=\"date_available today\"><b>" + this.c_first_day.getDate() + "</b></td>";
+				}
+				else if (this.c_first_day >= this.m_first_day && this.c_first_day <= this.m_last_day) {
+					content = content + "        <td onclick=\"showDate(" + dummy_1.getTime() + ");\" class=\"date_available\"><b>" + this.c_first_day.getDate() + "</b></td>";
+					//content = content + "		<a href=\"javascript: showDate(" + dummy_1.getTime() + ");\"><b>" + this.c_first_day.getDate() + "</b></a>";	
 				}
 				else {
-					content = content + "		<a href=\"javascript: showDate(" + dummy_1.getTime() + ");\">" + this.c_first_day.getDate() + "</a>";	
+					content = content + "        <td onclick=\"showDate(" + dummy_1.getTime() + ");\" class=\"date_available\">" + this.c_first_day.getDate() + "</td>";
+					//content = content + "		<a href=\"javascript: showDate(" + dummy_1.getTime() + ");\">" + this.c_first_day.getDate() + "</a>";	
 				}
 			}
-			else {
-				if (this.c_first_day >= this.m_first_day && this.c_first_day <= this.m_last_day) {
-					var label_color = how_many > 3 ? "danger" : "warning";
-					content = content +	 "		<a href=\"javascript: showDate(" + dummy_1.getTime() + ");\"><b><span class=\"label label-" + label_color + "\">" + this.c_first_day.getDate() + "</span></b></a>";	
-				}
-				else {
-					content = content + "		<a href=\"javascript: showDate(" + dummy_1.getTime() + ");\"><b><span class=\"label label-" + label_color + "\">" + this.c_first_day.getDate() + "</span></b></a>";	
-				}
+			else if (this.c_first_day.getTime() <= today.getTime()) {
+				//content = content + "        <td onclick=\"showDate(" + dummy_1.getTime() + ");\" class=\"past_day\">" + this.c_first_day.getDate() + "</td>";
+				content = content + "        <td class=\"past_day\">" + this.c_first_day.getDate() + "</td>";
+				//content = content + "		<a href=\"javascript: showDate(" + dummy_1.getTime() + ");\">" + this.c_first_day.getDate() + "</a>";	
 			}
-			content = content + "		</td>";
+			
+			//content = content + "		</td>";
 			this.c_first_day.setDate(this.c_first_day.getDate() + 1);
 		}
 		content = content + "		</tr>";
@@ -300,6 +306,7 @@ Weekly.prototype.print = function() {
 	var o_screen = new Screens();
 	var content = "";
 	var a_len = this.appointments.length;
+	var today = new Date();
 
 	var c_date = new Date(this.c_first_day.getTime());
 	content = content + "<div class=\"table-responsive\">";
@@ -356,14 +363,19 @@ Weekly.prototype.print = function() {
 						useless = true;
 					}
 				}
-				if (has_event) {
+				
+				
+				if (!has_event && !useless && time_start.getTime() > today.getTime()) {
+					label.push("date_available");
+				}
+				else if (has_event) {
 					label.push("date_unavailable");
 				}
-				else if(useless) {
+				else if(useless && time_start.getTime() > today.getTime()) {
 					label.push("date_useless");	
 				}
 				else {
-					label.push("date_available");	
+					label.push("past_day");	
 				}
 				cur_day.setDate(cur_day.getDate() + 1);
 			}
@@ -466,8 +478,12 @@ Daily.prototype.print = function() {
 var m_current_date;
 var o_schedule = new Schedule();
 var request_option = "signup";
+var m_is_admin = false;
 
 var loadSchedule = function() {
+	if ($("#is_admin").val() == "1") {
+		m_is_admin = true;
+	}
 	m_current_date = m_current_date === undefined ? new Date() : m_current_date;
 	var provider_id = $("#c_provider_id").val();
 	var periodicity = parseInt($("input[name=periodicity]:checked", "#schedules_periodicity").val());
@@ -533,10 +549,26 @@ var showDate = function(date) {
 var requestAppointment = function(datetime) {
 	var q_screens = new Screens();
 	var content = "";
+	var today = new Date();
 	m_current_date = new Date(datetime);
+	
 	$("#schedules_title").html("Appointment requesting");
 
-	if ($("#c_client_id").val() != "0" && $("#c_client_complete").val() == "0") {
+	if (m_current_date.getTime() < today.getTime()) {
+		content = content + "        <div class=\"row margin-bottom-30\">";
+		content = content + "            <div class=\"col-md-10 col-md-offset-1 mb-margin-bottom-30\">";
+		content = content + "                <div class=\"headline\"><h2>Invalid date</h2></div>";
+		content = content + "                <p class=\"lead\">This date in valid, please, try another one.<p>";
+		content = content + "           </div>";
+		content = content + "        </div>";
+		$("#schedules_modal_action").html("Close Frame");
+		$("#schedules_modal_action").attr("data-dismiss", "modal");
+	}
+	else if ($("#c_client_id").val() == "0" && $("#c_client_complete").val() == "0" && m_is_admin) {
+		buildNonClientVersion(datetime);
+		return;
+	}
+	else if ($("#c_client_id").val() != "0" && $("#c_client_complete").val() == "0") {
 		content = content + "        <div class=\"row margin-bottom-30\">";
 		content = content + "            <div class=\"col-md-10 col-md-offset-1 mb-margin-bottom-30\">";
 		content = content + "                <div class=\"headline\"><h2>Confirm personal information</h2></div>";
@@ -713,7 +745,7 @@ var signin = function(date) {
 	if (!validateEmail($("#email").val())) {
 		alertMessage("schedules_alert", "Email invalid.", "danger", false);
 		$("#email").focus();
-		return;
+			return;
 	}
 	if (!validatePassword($("#password").val())) {
 		alertMessage("schedules_alert", "Password empty.", "danger", false);
@@ -932,8 +964,13 @@ var sendRequest = function(date) {
 	m_current_date = new Date(date);
 
 	var MS_PER_MINUTE = 60000;
+	
+	//var datestart = new Date(date - 20 * MS_PER_MINUTE);
+	//var dateend = new Date(date + 80 * MS_PER_MINUTE);
+
 	var datestart = new Date(date - 20 * MS_PER_MINUTE);
 	var dateend = new Date(date + 80 * MS_PER_MINUTE);
+	
 	var d_start = datestart.getFullYear() + "-" + ("0" + (datestart.getMonth() + 1)).slice(-2) + "-" + ("0" + datestart.getDate()).slice(-2) + " " + ("0" + datestart.getHours()).slice(-2) + ":" + ("0" + datestart.getMinutes()).slice(-2) + ":00";
 	var d_end = dateend.getFullYear() + "-" + ("0" + (dateend.getMonth() + 1)).slice(-2) + "-" + ("0" + dateend.getDate()).slice(-2) + " " + ("0" + dateend.getHours()).slice(-2) + ":" + ("0" + dateend.getMinutes()).slice(-2) + ":00";
 	var send_confirmation = $('#send_confirmation').prop('checked');
@@ -971,6 +1008,123 @@ var sendRequest = function(date) {
 		}
 	});
 }
+
+var buildNonClientVersion = function(datetime) {
+	var q_screens = new Screens();
+	var content = "";
+	m_current_date = new Date(datetime);
+	$("#schedules_title").html("Appointment requesting");
+
+	$.ajax({
+		type: 'GET',
+		url: '/get_clients_ajax',
+		dataType: "json",
+		success: function(data) {
+			if (data.status == "success") {
+				console.log(data);
+				content = content + "        <div class=\"row margin-bottom-30\">";
+				content = content + "            <div class=\"col-md-10 col-md-offset-1 mb-margin-bottom-30\">";
+				content = content + "                <div class=\"headline\"><h2>Select the client</h2></div>";
+				content = content + "				 <div class=\"row margin-bottom-20\">";
+				content = content + "                    <div class=\"col-md-6 col-md-offset-0\">";
+				content = content + "                		<select name=\"c_client_id_temp\" id=\"c_client_id_temp\" class=\"form-control\" onchange=\"fetchClientInformation();\">";
+				content = content + "                	 		<option value=\"\"></option>";
+				$.each(data.clients, function(i, client) {
+					content = content + "                		<option value=\"" + client.id + "\">" + client.first_name + " " + client.last_name + "</options>";	
+				});
+				content = content + "                	 	</select>";
+				content = content + "                    </div>";
+				content = content + "                    <div class=\"col-md-6 col-md-offset-0 vcenter\">";
+				content = content + "                       <span class=\"pull-right\">New client? <a href=\"javascript: \" >Create</a></span>";
+				content = content + "                    </div>";
+				content = content + "                </div>";
+				content = content + "           </div>";
+				content = content + "        </div>";
+
+				content = content + "        <div id=\"c_client_information\"></div>";
+
+				$("#schedules_modal_action").html("Create Appointment");
+				$("#schedules_modal_action").attr("href", "javascript: ");
+
+				$("#schedulse_modal_content").html(content);
+				$('#schedules_modal').modal('show');
+			}
+			else if (data.status == "fail") {
+				alertMessage("schedules_body_alert", "Be cool, don't dismiss Thiago yet.", "warning", false);
+			}
+		},
+		error: function(data) {
+			console.log("error");
+			console.log(data);
+			alertMessage("schedules_body_alert", "A big problem is going on, dismiss Thiago.", "danger", false);
+		}
+	});		
+};
+
+var adminSubmitRequest = function() {
+	
+};
+
+var fetchClientInformation = function() {
+	var client_id = $("#c_client_id_temp").val();
+	if (client_id !== undefined && client_id !== "") {
+		var content = "";
+
+		$.ajax({
+			type: 'GET',
+			url: '/get_client_information_ajax',
+			dataType: "json",
+			data: {
+				'id': client_id
+			},
+			success: function(data) {
+				if (data.status == "success") {
+					content = content + "<div class=\"row margin-bottom-20\">";
+					content = content + "    <div class=\"col-md-5 col-md-offset-1\">";
+					content = content + "        <label for=\"first_name\">First name <i class=\"fa fa-asterisk\"></i></label>";
+					content = content + "        <input type=\"text\" value=\"" + data.client.first_name + "\" name=\"first_name\" id=\"first_name\" class=\"form-control\" placeholder=\"First name\" required>";
+					content = content + "    </div>";
+					content = content + "    <div class=\"col-md-5\">";
+					content = content + "        <label for=\"last_name\">Last name<i class=\"fa fa-asterisk\"></i></label>";
+					content = content + "        <input type=\"text\" value=\"" + data.client.last_name + "\" name=\"last_name\" id=\"last_name\" class=\"form-control\" placeholder=\"Last name\" required>";
+					content = content + "    </div>";
+					content = content + "</div>";
+					content = content + "<div class=\"row margin-bottom-20\">";
+					content = content + "    <div class=\"col-md-10 col-md-offset-1\">";
+					content = content + "        <label for=\"address\">Address <i class=\"fa fa-asterisk\"></i></label>";
+					content = content + "        <input type=\"text\" value=\"" + data.client.email + "\" name=\"email\" id=\"email\" class=\"form-control\" placeholder=\"Email\" required>";
+					content = content + "    </div>";
+					content = content + "</div>";
+					content = content + "<div class=\"row margin-bottom-20\">";
+					content = content + "    <div class=\"col-md-10 col-md-offset-1\">";
+					content = content + "        <label for=\"address\">Address <i class=\"fa fa-asterisk\"></i></label>";
+					content = content + "        <input type=\"text\" value=\"" + data.client.address + "\" name=\"address\" id=\"address\" class=\"form-control\" placeholder=\"Address\" required>";
+					content = content + "    </div>";
+					content = content + "</div>";
+					content = content + "<div class=\"row margin-bottom-20\">";
+					content = content + "    <div class=\"col-md-5 col-md-offset-1\">";
+					content = content + "        <label for=\"phone\">Phone <i class=\"fa fa-asterisk\"></i></label>";
+					content = content + "        <input type=\"text\" value=\"" + data.client.phone + "\" name=\"phone\" id=\"phone\" class=\"form-control\" placeholder=\"Phone\" required>";
+					content = content + "    </div>";
+					content = content + "    <div class=\"col-md-5\">";
+					content = content + "        <label for=\"weeks_pregnant\">Weeks pregnant <i class=\"fa fa-asterisk\"></i></label>";
+					content = content + "        <input type=\"text\" value=\"" + data.client.weeks_pregnant + "\" name=\"weeks_pregnant\" id=\"weeks_pregnant\" class=\"form-control\" placeholder=\"Weeks pregnant\" required>";
+					content = content + "    </div>";
+					content = content + "</div>";
+					$("#c_client_information").html(content);
+				}
+				else if (data.status == "fail") {
+					alertMessage("schedules_alert", "Be cool, don't dismiss Thiago yet.", "warning", false);
+				}
+			},
+			error: function(data) {
+				console.log("error");
+				console.log(data);
+				alertMessage("schedules_alert", "A big problem is going on, dismiss Thiago.", "danger", false);
+			}
+		});
+	}
+};
 
 var validateEmail = function(email) { 
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -1044,7 +1198,7 @@ var alertMessage = function (id, message, type, append) {
 			type = "warning";
 			icon = "exclamation-sign";
 	}
-	message_to_show = message_to_show + "<div class=\"alert alert-" + type + "\" role=\"alert\"><span class=\"glyphicon glyphicon-" + icon + "\"></span> <strong>" + message_call + "!</strong> " + message;
+	message_to_show = message_to_show + "<div class=\"alert alert-" + type + "\" role=\"alert\"><i class=\"fa fa-" + icon + "\"></i> <strong>" + message_call + "!</strong> " + message;
 	message_to_show = message_to_show + "	<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>";
 	message_to_show = message_to_show + "</div>";
 	if (append) {

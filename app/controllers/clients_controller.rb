@@ -89,6 +89,30 @@ class ClientsController < ApplicationController
     end
   end
 
+  def get_clients_ajax
+    if is_admin?
+      clients = Client.all.order("first_name, last_name")
+      container = { "clients" => clients, "status" => "success"} # :only => [ :id, :name ] <- please, remember this
+      render :json => container.to_json
+    else
+      csign_out
+      sign_out
+      redirect_to root_url
+    end
+  end
+
+  def get_client_information_ajax
+    if is_admin?
+      client = Client.find(params[:id])
+      container = { "client" => client, "status" => "success"} # :only => [ :id, :name ] <- please, remember this
+      render :json => container.to_json
+    else
+      csign_out
+      sign_out
+      redirect_to root_url
+    end
+  end
+
   private
 
     def client_params
