@@ -14,6 +14,7 @@ class ProvidersController < ApplicationController
   
   def new
   	@provider = Provider.new
+  	@provider.email = params[:email]
   end
 
   def show

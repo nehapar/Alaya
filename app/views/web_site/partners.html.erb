@@ -12,21 +12,23 @@
     <!--=== End Search Block ===-->
     
     <!--=== Sign Up Block ===-->
-    <div class="purchase">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-10 col-md-offset-1 fadeInLeft">
-                    <span>Get notified when we launch</span>
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Enter your e-mail here">                            
-                        <div class="input-group-btn">
-                            <button class="btn-u" type="button">Sign Up</button>
+    <form action="signup" method="get">
+        <div class="purchase">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1 fadeInLeft">
+                        <span>Get notified when we launch</span>
+                        <div class="input-group">
+                            <input name="email" type="text" class="form-control" placeholder="Enter your e-mail here" required>                            
+                            <div class="input-group-btn">
+                                <button class="btn-u" type="submit">Sign Up</button>
+                            </div>             
                         </div>
-                    </div>
+                    </div>            
                 </div>
             </div>
         </div>
-    </div>
+    </form>
     <!-- Sign Up Block -->
 
     <!--=== Content ===-->

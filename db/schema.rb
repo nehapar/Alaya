@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141002194307) do
+ActiveRecord::Schema.define(version: 20141003182130) do
 
   create_table "appointments", force: true do |t|
     t.integer  "provider_id"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 20141002194307) do
     t.datetime "updated_at"
     t.string   "password_digest"
     t.string   "remember_token"
+    t.integer  "active"
   end
 
   add_index "clients", ["remember_token"], name: "index_clients_on_remember_token"

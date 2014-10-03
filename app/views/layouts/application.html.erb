@@ -106,21 +106,32 @@
                                 <% end %>
                             </li>
                         <% else %>
+							<!-- IMPORTANT: class="active" allows a red semaphore over <li> -->
+                        
                             <!-- Sign In -->
                             <li>
                                 <%= link_to signin_path do %>
                                     <i class="fa fa-sign-in"></i>&nbsp;Sign In
                                 <% end %>
-                            </li>
-
-                            <!-- IMPORTANT: class="active" allows a red semaphore over <li> -->
+                            </li>    
                             <!-- End Sign In -->
+                            
                             <!-- Sign Up -->                        
                             <li>
-                                <%= link_to signup_path do %>
-                                    <i class="fa fa-pencil"></i>&nbsp;Sign Up (Provider)
+                                <%= link_to csignup_path do %>
+                                    <i class="fa fa-pencil"></i>&nbsp;Sign Up
                                 <% end %>
                             </li>
+                            <!-- End Sign Up -->
+                            
+                            <!-- Sign Up --> 
+                            <!--                       
+                            <li>
+                                <%= link_to signup_path do %>
+                                    <i class="fa fa-medkit"></i>&nbsp;Get Listed (Professionals)
+                                <% end %>
+                            </li>
+                            -->
                             <!-- End Sign Up -->
                         <% end %>
                     </ul>

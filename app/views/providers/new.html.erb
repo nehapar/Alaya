@@ -28,7 +28,7 @@
 					<div class="row margin-bottom-20">
                     	<%= f.label :email, class: "col-md-6 col-md-offset-3"  %>
                         <div class="col-md-6 col-md-offset-3">
-                            <%= f.text_field :email, class: "form-control", placeholder: "Email", required: "required" %>
+                            <%= f.text_field :email, class: "form-control", placeholder: "Email", value: @provider.email, required: "required" %>
                         </div>                
                     </div>
 
@@ -47,8 +47,8 @@
                     </div>
 
                     <div class="row margin-bottom-20">
-                        <div class="col-md-6 col-md-offset-3">
-                            <%= f.submit "Create my account", onclick: "return validateProviderSignup()", class: "btn-u pull-right" %>
+                        <div class="col-md-6 col-md-offset-3" align="center">
+                            <%= f.submit "Create my account", onclick: "return validateProviderSignup()", class: "btn-u" %>
                         </div>                
                     </div>
 				<% end %>
