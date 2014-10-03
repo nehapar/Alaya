@@ -42,21 +42,59 @@ var validateSign = function() {
 };
 
 var validateClientSignup = function() {
-
+	
 };
 
 var validateProviderSignup = function() {
-
+	provider_first_name = $("#provider_first_name").val();
+	provider_last_name = $("#provider_last_name").val();
+	provider_email = $("#provider_email").val();
+	provider_password = $("#provider_password").val();
+	provider_password_confirmation = $("#provider_password_confirmation").val();
+	
+	clearMessage("provider_signup_alert");
+	if (!validNotEmpty(provider_first_name)) {
+		alertMessage("provider_signup_alert", "Type your first name.", "danger", false);
+		$("#provider_first_name").focus();
+		return false;
+	}
+	
+	if (!validNotEmpty(provider_last_name)) {
+		alertMessage("provider_signup_alert", "Type your last name.", "danger", false);
+		$("#provider_last_name").focus();
+		return false;
+	}
+	
+	if (!validEmail(provider_email)) {
+		alertMessage("provider_signup_alert", "Invalid email.", "danger", false);
+		$("#provider_email").focus();
+		return false;
+	}
+	if (!validPassword(provider_password)) {
+		alertMessage("provider_signup_alert", "Invalid password.", "danger", false);
+		$("#provider_password").val("");
+		$("#provider_password_confirmation").val("");
+		$("#provider_password").focus();
+		return false;
+	}
+	if (!validPassword(provider_password_confirmation)) {
+		alertMessage("provider_signup_alert", "Invalid password confirmation.", "danger", false);
+		$("#provider_password").val("");
+		$("#provider_password_confirmation").val("");
+		$("#provider_password").focus();
+		return false;
+	}
+	if (provider_password != provider_password_confirmation) {
+		alertMessage("provider_signup_alert", "Passwords don't match.", "danger", false);
+		$("#provider_password").val("");
+		$("#provider_password_confirmation").val("");
+		$("#provider_password").focus();
+		return false;
+	}
 };
 
-/*
-jQuery("#form").submit(function(e) {
-     var self = this;
-     e.preventDefault();
-     jQuery.fancybox('<div class="box">Some amazing wonderful content</div>', {
-           'onClosed' : function() { 
-                          self.submit();
-                        }
-     });
-     return false; //is superfluous, but I put it here as a fallback
-});*/
+var validateUploadPicture = function() {
+	if (!validNotEmpty($("#mainImageLabel").val())) {
+		return false;
+	}
+};

@@ -4,7 +4,7 @@ $("#mainImage").change(function(){
 
 var pictureChange = function(picture_id) {
 	if (picture_id === 0) {
-		$("#mainImageLabel").val($("#mainImage").val());
+		$("#mainImageLabel").val($("#provider_picture").val());
 	}
 	else {
 		$("#pictureLabelToChange" + picture_id).val($("#pictureToChange" + picture_id).val());

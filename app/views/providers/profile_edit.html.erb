@@ -14,28 +14,36 @@
 							<% end %>
 							<input type="hidden" name="c_provider_id" id="c_provider_id" value="<%= @provider.id %>">
 							<!-- Picture begin -->
-							<div class="row">
-								<div class="col-sm-4 col-md-4 col-md-offset-1">
-									<h1><i class="fa fa-picture-o"></i> Picture</h1>
-									<br>
-									<div class="input-group">
-										<input class="form-control" id="mainImageLabel" placeholder="Chose your picture" disabled="disabled" />
-										<span class="input-group-btn">
-											<div class="fileUpload btn btn-primary">
-												<span>Search</span>
-												<input name="mainImage" onchange="readURL(this, 'mainImagePreview');" type="file" id="mainImage" class="upload" onchange="pictureChange(0)">
-											</div>	
-										</span>
+							<%= form_for(@provider, url: provider_update_picture_path) do |f| %>
+								
+								<div class="row">
+									<div class="col-sm-10 col-md-10 col-md-offset-1">
+										<h1><i class="fa fa-picture-o"></i> Picture</h1>
 									</div>
 								</div>
-								<div class="col-sm-2 col-md-2 col-md-offset-1">
-									<% if !@provider.picture_path.nil? %>
-										<img id="mainImagePreview" class="img-responsive" src="<%= @provider.picture_path %>" alt="<%= @provider.first_name %> - <%= @provider.expertise %>">
-									<% else %>
-										<img id="mainImagePreview" class="img-responsive" src="../assets/img/profile_pic/provider_without_picture.png" alt="<%= @provider.first_name %> - <%= @provider.expertise %>">
-									<% end %>									
-                                </div>
-                            </div>
+								<div class="row">
+									<div class="col-sm-4 col-md-4 col-md-offset-1">
+										<div class="input-group">
+											<input class="form-control" id="mainImageLabel" placeholder="Chose your picture" disabled="disabled" />
+											<span class="input-group-btn">
+												<div class="fileUpload btn btn-primary">
+													<span>Search</span>
+													<%= f.file_field :picture, class: "upload", onchange: "readURL(this, 'mainImagePreview');" %>
+												</div>	
+											</span>
+										</div>
+										<br>
+										<%= f.submit "Upload Picture", class: "btn-u", onclick: "return validateUploadPicture()"  %>
+									</div>
+									<div class="col-sm-2 col-md-2 col-md-offset-4">
+										<% if !@provider.picture_path.nil? %>
+											<img id="mainImagePreview" class="img-responsive img-thumbnail" src="<%= @provider.picture_path %>" alt="<%= @provider.first_name %> - <%= @provider.expertise %>">
+										<% else %>
+											<img id="mainImagePreview" class="img-responsive img-thumbnaile" src="../assets/img/profile_pic/provider_without_picture.png" alt="<%= @provider.first_name %> - <%= @provider.expertise %>">
+										<% end %>									
+									</div>
+								</div>
+                            <% end %>
                             <!-- Picture end -->
 							<hr>
 							<!-- Main begin -->

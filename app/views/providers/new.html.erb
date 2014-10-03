@@ -9,6 +9,7 @@
                        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     </div>
                 <% end %>
+                <div id="provider_signup_alert"></div>
                 <div class="headline"><h2>Sign Up</h2></div>
                 <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas feugiat. Et harum quidem rerum facilis est et expedita distinctio lorem ipsum dolor sit amet, consectetur adipiscing elit landitiis.</p><br>
                 <%= form_for(@provider) do |f| %>
@@ -47,7 +48,7 @@
 
                     <div class="row margin-bottom-20">
                         <div class="col-md-6 col-md-offset-3">
-                            <%= f.submit "Create my account", class: "btn-u pull-right" %>
+                            <%= f.submit "Create my account", onclick: "return validateProviderSignup()", class: "btn-u pull-right" %>
                         </div>                
                     </div>
 				<% end %>

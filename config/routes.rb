@@ -32,6 +32,7 @@ Alaya::Application.routes.draw do
   match 'admin', :to => 'providers#admin', via: 'get'
   match 'admin_delete_appointment', :to => 'providers#admin', via: 'delete'
 
+  match 'provider_update_picture', :to => 'providers#update_picture', via: 'patch'
   match 'provider_update_personal', :to => 'providers#update_personal', via: 'patch'
   match 'provider_update_password', :to => 'providers#update_password', via: 'patch'
   match 'provider_update_about', :to => 'providers#update_about', via: 'patch'

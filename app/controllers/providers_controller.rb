@@ -88,6 +88,34 @@ class ProvidersController < ApplicationController
     end
     redirect_to profile_edit_path
   end
+  
+  def update_picture
+    @provider = current_provider
+    uploaded_io = params[:provider][:picture]
+    
+    filename = uploaded_io.original_filename
+	extension = filename.split('.').last.downcase
+    tmp_file = "#{Rails.root}/public/assets/img/profile_pic/#{@provider.profile}.#{extension}"
+    id = 0
+    while File.exists?(tmp_file) do
+      tmp_file = "#{Rails.root}/public/assets/img/profile_pic/#{@provider.profile}_#{id}.#{extension}"        
+      id += 1
+    end
+    File.open(tmp_file, 'wb') do |f|
+      f.write uploaded_io.read
+    end
+    
+    @provider.picture_path = "../assets/img/profile_pic/" + tmp_file.split('/').last
+    
+	if @provider.save
+      flash[:success] = 'Picture uploaded.'
+    else
+	  @provider.errors.full_messages.each do |message|
+	    flash[:danger] = 'Error: ' + message
+	  end
+    end
+    redirect_to profile_edit_path
+  end
 
   def update
   	@provider = Provider.find(params[:id])
@@ -137,7 +165,7 @@ class ProvidersController < ApplicationController
       redirect_to root_url
     end
   end
-
+  
   #--------------------------------------------------------------------------------------
   # ajax methods
 
