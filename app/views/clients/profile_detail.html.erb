@@ -1,0 +1,154 @@
+<% provide(:title, @client.first_name) %>
+    <!--=== Container ===-->
+    <div class="container content">
+        <div class="row margin-bottom-30">
+            <div class="col-md-10 col-md-offset-1 mb-margin-bottom-30">
+                <% flash.each do |key, value| %>
+                    <div class="alert alert-<%= key %>" role="alert">
+						<%= value %>
+						<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    </div>
+                <% end %>
+
+				<div id="client_edit_alert"></div>
+
+                <div class="headline"><h2>Client Home Page</h2></div>
+                
+                <!-- Requests table begin -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="active"><a href="#personal" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-user"></span> Personal</a></li>
+                    <li class=""><a href="#appointments" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-calendar"></span> Appointments</a></li>
+                    <li class=""><a href="#edit" role="tab" data-toggle="tab"><i class="fa fa-edit"></i> Edit Info</a></li>
+                    <li class=""><a href="#password" role="tab" data-toggle="tab"><i class="fa fa-lock"></i> Password</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="personal">
+						<div class="row">
+							<div class="col-sm-12 col-md-offser-0">
+								<br><br>
+								<div class="row margin-bottom-20">
+									<div class="col-md-10 col-md-offset-1">
+										<h3><i class="fa fa-chevron-right"></i><%= @client.first_name %> <%= @client.last_name %></h3>
+									</div>                
+								</div>
+								<div class="row margin-bottom-20">
+									<div class="col-md-5 col-md-offset-1">
+										<p><strong>First name</strong></p>
+										<h3><%= @client.first_name %></h3>
+									</div>
+									<div class="col-md-5">
+										<p><strong>Last name</strong></p>
+										<h3><%= @client.last_name %></h3>
+									</div>
+								</div>
+								<div class="row margin-bottom-20">
+									<div class="col-md-5 col-md-offset-1">
+										<p><strong>Email</strong></p>
+										<h3><%= @client.email %></h3>
+									</div>
+									<div class="col-md-5">
+										<p><strong>Phone</strong></p>
+										<h3><%= @client.phone %></h3>
+									</div>
+								</div>
+
+								<div class="row margin-bottom-20">
+									<div class="col-md-5 col-md-offset-1">
+										<p><strong>Address</strong></p>
+										<h3><%= @client.address %></h3>
+									</div>
+									<div class="col-md-5">
+										<p><strong>Weeks pregnant</strong></p>
+										<h3><%= @client.weeks_pregnant %></h3>
+									</div>
+								</div>
+							</div>
+						</div>    
+                    </div>
+                    <div class="tab-pane" id="appointments">
+						
+                    </div>
+                    <div class="tab-pane" id="edit">
+						<br><br>
+						<%= form_for(@client, url: client_update_personal_path) do |f| %>
+							<div class="row margin-bottom-20">
+								<div class="col-md-4 col-md-offset-2">
+									<%= f.label :first_name %>
+									<%= f.text_field :first_name, class: "form-control", placeholder: "First name", required: "required" %>
+								</div>                
+								
+								<div class="col-md-4">
+									<%= f.label :last_name %>
+									<%= f.text_field :last_name, class: "form-control", placeholder: "Last name", required: "required" %>
+								</div>                
+							</div>
+							
+							<div class="row margin-bottom-20">
+								<div class="col-md-8 col-md-offset-2">
+									<%= f.label :email %>
+									<%= f.text_field :email, class: "form-control", placeholder: "Email", required: "required", value: @client.email %>
+								</div>                
+							</div>
+
+							<div class="row margin-bottom-20">
+								<div class="col-md-8 col-md-offset-2">
+									<%= f.label :address  %>
+									<%= f.text_field :address, class: "form-control", placeholder: "Address" %>
+								</div>                
+							</div>
+
+							<div class="row margin-bottom-20">
+								<div class="col-md-4 col-md-offset-2">
+									<%= f.label :phone %>
+									<%= f.text_field :phone, class: "form-control", placeholder: "Phone" %>
+								</div>                
+								
+								<div class="col-md-4">
+									<%= f.label :weeks_pregnant %>
+									<%= f.text_field :weeks_pregnant, class: "form-control", placeholder: "Weeks pregnant" %>
+								</div>                
+							</div>
+							
+							<div class="row margin-bottom-20">
+								<div class="col-md-8 col-md-offset-2" align="center">
+									<%= f.submit "Edit my information", onclick: "return validateClientUpdateInfo()", class: "btn-u" %>
+								</div>                
+							</div>
+						<% end %>
+                    </div>
+                    <div class="tab-pane" id="password">
+						<br><br>
+						<%= form_for(@client, url: client_update_password_path) do |f| %>
+							<div class="row margin-bottom-20">
+								<div class="col-md-4 col-md-offset-4">
+									<%= f.label :password_old %>
+									<%= f.password_field :password_old, class: "form-control", placeholder: "Old password", required: "required" %>
+								</div>
+							</div>
+						
+							<div class="row margin-bottom-20">
+								<div class="col-md-4 col-md-offset-4">
+									<%= f.label :password %>
+									<%= f.password_field :password, class: "form-control", placeholder: "New password", required: "required" %>
+								</div>
+							</div>
+							<div class="row margin-bottom-20">
+								<div class="col-md-4 col-md-offset-4">
+									<%= f.label :password_confirmation, "Password confirmation" %>
+									<%= f.password_field :password_confirmation, class: "form-control", placeholder: "New password confirmation", required: "required" %>
+								</div>                
+							</div>
+							
+							<div class="row margin-bottom-20">
+								<div class="col-md-4 col-md-offset-4" align="center">
+									<%= f.submit "Change my password", onclick: "return validateClientUpdatePassword()", class: "btn-u" %>
+								</div>                
+							</div>
+						<% end %>
+                    </div>
+                </div>
+                <!-- Requests table end -->
+            </div>
+        </div><!--/row-->        
+    </div>
+    <!--=== End Container ===-->

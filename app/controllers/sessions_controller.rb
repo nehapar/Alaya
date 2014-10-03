@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
       end
     elsif client && client.authenticate(params[:session][:password])
       csign_in client
-      redirect_to client
+      redirect_to eval(client.profile + '_path')
     else
       flash[:error] = 'Invalid email/password combination' # Not quite right!
       render 'new'

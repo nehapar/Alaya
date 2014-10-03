@@ -6,12 +6,14 @@ Alaya::Application.routes.draw do
   resources :sessions, only: [:new, :create, :destroy]
   resources :clients
   
-  match 'show_client',  :to => 'clients#show_client', via: 'get'
-  match 'edit_client',  :to => 'clients#edit', via: 'get'
+  match 'c_profile_edit', :to => 'clients#profile_edit' , via: 'get'
   match 'csignup',  :to => 'clients#new', via: 'get'
+  match 'csignup_helper',  :to => 'clients#signup_helper', via: 'get'
   match 'csignin', :to => 'sessions#new', via: 'get'
   match 'csignout', :to => 'sessions#destroy', via: 'delete'
-
+  match 'client_update_personal', :to => 'clients#update_personal' , via: 'patch'
+  match 'client_update_password', :to => 'clients#update_password' , via: 'patch'
+  
   root :to => 'web_site#index'
   match 'profile_list', :to => 'providers#profile_list', via: 'get'
   match 'profile_detail', :to => 'providers#profile_detail', via: 'get'
@@ -75,6 +77,7 @@ Alaya::Application.routes.draw do
   get "providers/profile_list"
   
   ProvidersController.load
+  ClientsController.load
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

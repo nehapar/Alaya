@@ -147,7 +147,6 @@ class ProvidersController < ApplicationController
     
     if @provider.save
 	  sign_in @provider
-      #redirect_to provider
       redirect_to :controller => 'providers', :action => 'profile_edit'
     else
 	  if Provider.where("email = '" + @provider.email + "'").length > 0

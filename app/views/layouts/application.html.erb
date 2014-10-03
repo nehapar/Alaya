@@ -91,15 +91,17 @@
                             </li>
                         <% elsif csigned_in? %>
                             <li>
-                                <%= link_to edit_client_path(:id => current_client.id) do %>
-                                    <i class="fa fa-edit"></i>&nbsp;Edit profile
+                                <%= link_to eval(current_client.profile + '_path') do %>
+                                    <i class="fa fa-home"></i>&nbsp;Home
                                 <% end %>
                             </li>
+                            <!--
                             <li>
-                                <%= link_to show_client_path(:id => current_client.id) do %>
-                                    <i class="fa fa-eye"></i>&nbsp;View profile
+                                <%= link_to c_profile_edit_path do %>
+                                    <i class="fa fa-edit"></i>&nbsp;Edit information
                                 <% end %>
                             </li>
+                            -->
                             <li>
                                 <%= link_to signout_path, method: "delete" do %>
                                     <i class="fa fa-sign-out"></i>&nbsp;Sign Out
@@ -148,79 +150,143 @@
     <!--=== Footer ===-->
     <div class="footer">
         <div class="container">
-            <div class="row">
-                <div class="col-md-3 md-margin-bottom-40">
-                    <!-- Alaya -->
-                    <div class="headline"><h2>Alaya</h2></div>  
-                    <p class="margin-bottom-25 md-margin-bottom-40">Taking care of moms</p>    
-                    <!-- End Alaya -->
-                    
-                    <!-- Social Link -->
-                    <ul class="social-icons">
-                        <li><a href="https://www.facebook.com/pages/Alaya/512356292228538?ref=hl" data-original-title="Facebook" class="social_facebook"></a></li>
-                        <li><a href="#" data-original-title="Twitter" class="social_twitter"></a></li>
-                        <li><a href="#" data-original-title="Goole Plus" class="social_googleplus"></a></li>
-                    </ul>
-                    <!-- End Social Link -->
-                </div><!--/col-md-4-->  
+            <div class="row">                
                 
-                <div class="col-md-3 md-margin-bottom-40">
-                    <!-- Categories -->
-                    <div class="posts">
-                        <div class="headline"><h2>Categories</h2></div>
-                        <dl class="dl-horizontal">
-                            <dd>
-                                <p><%= link_to "About", about_path %></p> 
-                            </dd>
-                        </dl>
-                        <dl class="dl-horizontal">
-                            <dd>
-                                <p><%= link_to "F.A.Q", faq_path %></p> 
-                            </dd>
-                        </dl>
-                        <dl class="dl-horizontal">
-                            <dd>
-                                <p><%= link_to "Contact", contact_path %></p> 
-                            </dd>
-                        </dl>
-                    </div>
-                    <!-- End Categories -->                    
-                </div><!--/col-md-4-->
+                <% if !csigned_in? && !signed_in? %>
+					<div class="col-md-3 md-margin-bottom-40">
+						<!-- Alaya -->
+						<div class="headline"><h2>Alaya</h2></div>  
+						<p class="margin-bottom-25 md-margin-bottom-40">Taking care of moms</p>    
+						<!-- End Alaya -->
+						
+						<!-- Social Link -->
+						<ul class="social-icons">
+							<li><a href="https://www.facebook.com/pages/Alaya/512356292228538?ref=hl" data-original-title="Facebook" class="social_facebook"></a></li>
+							<li><a href="#" data-original-title="Twitter" class="social_twitter"></a></li>
+							<li><a href="#" data-original-title="Goole Plus" class="social_googleplus"></a></li>
+						</ul>
+						<!-- End Social Link -->
+					</div><!--/col-md-4-->  
+					
+					<div class="col-md-3 md-margin-bottom-40">
+						<!-- Categories -->
+						<div class="posts">
+							<div class="headline"><h2>Categories</h2></div>
+							<dl class="dl-horizontal">
+								<dd>
+									<p><%= link_to "About", about_path %></p> 
+								</dd>
+							</dl>
+							<dl class="dl-horizontal">
+								<dd>
+									<p><%= link_to "F.A.Q", faq_path %></p> 
+								</dd>
+							</dl>
+							<dl class="dl-horizontal">
+								<dd>
+									<p><%= link_to "Contact", contact_path %></p> 
+								</dd>
+							</dl>
+						</div>
+						<!-- End Categories -->                    
+					</div><!--/col-md-4-->
 
-                <div class="col-md-3">
-                    <!-- Follow Us -->
-                    <div class="posts">
-                        <div class="headline"><h2>Follow Us</h2></div> 
-                        <dl class="dl-horizontal">
-                            <dd>
-                                <p><a href="https://www.facebook.com/pages/Alaya/512356292228538?ref=hl">FaceBook</a></p> 
-                            </dd>
-                        </dl>
-                        <dl class="dl-horizontal">
-                            <dd>
-                                <p><a href="#">Twitter</a></p> 
-                            </dd>
-                        </dl>
-                        <dl class="dl-horizontal">
-                            <dd>
-                                <p><a href="#">Google+</a></p> 
-                            </dd>
-                        </dl>
-                    </div>
-                    <!-- End Follow Us -->
-                </div>
+					<div class="col-md-3">
+						<!-- Follow Us -->
+						<div class="posts">
+							<div class="headline"><h2>Follow Us</h2></div> 
+							<dl class="dl-horizontal">
+								<dd>
+									<p><a href="https://www.facebook.com/pages/Alaya/512356292228538?ref=hl">FaceBook</a></p> 
+								</dd>
+							</dl>
+							<dl class="dl-horizontal">
+								<dd>
+									<p><a href="#">Twitter</a></p> 
+								</dd>
+							</dl>
+							<dl class="dl-horizontal">
+								<dd>
+									<p><a href="#">Google+</a></p> 
+								</dd>
+							</dl>
+						</div>
+						<!-- End Follow Us -->
+					</div>
+					<div class="col-md-3">
+						<!-- Sign Up -->
+						<form action="csignup" method="get">
+							<div class="posts">
+								<div class="headline"><h2>Sign Up</h2></div>
+								<p><input name="email" type="text" class="form-control" placeholder="Email Address"></p>
+								<p><button class="btn-u" type="submit">Sign Up</button></p>
+							</div>
+						</form>
+						<!-- End Sign Up -->
+					</div>
+				<% else %>
+					<div class="col-md-4 md-margin-bottom-40">
+						<!-- Alaya -->
+						<div class="headline"><h2>Alaya</h2></div>  
+						<p class="margin-bottom-25 md-margin-bottom-40">Taking care of moms</p>    
+						<!-- End Alaya -->
+						
+						<!-- Social Link -->
+						<ul class="social-icons">
+							<li><a href="https://www.facebook.com/pages/Alaya/512356292228538?ref=hl" data-original-title="Facebook" class="social_facebook"></a></li>
+							<li><a href="#" data-original-title="Twitter" class="social_twitter"></a></li>
+							<li><a href="#" data-original-title="Goole Plus" class="social_googleplus"></a></li>
+						</ul>
+						<!-- End Social Link -->
+					</div><!--/col-md-4-->  
+					
+					<div class="col-md-4 md-margin-bottom-40">
+						<!-- Categories -->
+						<div class="posts">
+							<div class="headline"><h2>Categories</h2></div>
+							<dl class="dl-horizontal">
+								<dd>
+									<p><%= link_to "About", about_path %></p> 
+								</dd>
+							</dl>
+							<dl class="dl-horizontal">
+								<dd>
+									<p><%= link_to "F.A.Q", faq_path %></p> 
+								</dd>
+							</dl>
+							<dl class="dl-horizontal">
+								<dd>
+									<p><%= link_to "Contact", contact_path %></p> 
+								</dd>
+							</dl>
+						</div>
+						<!-- End Categories -->                    
+					</div><!--/col-md-4-->
+
+					<div class="col-md-4">
+						<!-- Follow Us -->
+						<div class="posts">
+							<div class="headline"><h2>Follow Us</h2></div> 
+							<dl class="dl-horizontal">
+								<dd>
+									<p><a href="https://www.facebook.com/pages/Alaya/512356292228538?ref=hl">FaceBook</a></p> 
+								</dd>
+							</dl>
+							<dl class="dl-horizontal">
+								<dd>
+									<p><a href="#">Twitter</a></p> 
+								</dd>
+							</dl>
+							<dl class="dl-horizontal">
+								<dd>
+									<p><a href="#">Google+</a></p> 
+								</dd>
+							</dl>
+						</div>
+						<!-- End Follow Us -->
+					</div>
+                <% end %>
                 
-                <div class="col-md-3">
-                    <!-- Sign Up -->
-                    <form action="csignup" method="get">
-                        <div class="posts">
-                            <div class="headline"><h2>Sign Up</h2></div>
-                            <p><input name="email" type="text" class="form-control" placeholder="Email Address"></p>
-                            <p><button class="btn-u" type="submit">Sign Up</button></p>
-                        </div>
-                    </form>
-                    <!-- End Sign Up -->
-                </div>
                 <!--/col-md-3-->
             </div>
         </div> 

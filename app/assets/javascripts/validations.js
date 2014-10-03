@@ -142,3 +142,74 @@ var validateUploadPicture = function() {
 		return false;
 	}
 };
+
+var validateClientUpdateInfo = function() {
+	client_first_name = $("#client_first_name").val();
+	client_last_name = $("#client_last_name").val();
+	client_email = $("#client_email").val();
+	client_password = $("#client_password").val();
+	client_password_confirmation = $("#client_password_confirmation").val();
+	client_weeks_pregnant = $("#client_weeks_pregnant").val();
+	
+	clearMessage("client_edit_alert");
+	
+	if (!validNotEmpty(client_first_name)) {
+		alertMessage("client_edit_alert", "Type your first name.", "danger", false);
+		$("#client_first_name").focus();
+		return false;
+	}
+	
+	if (!validNotEmpty(client_last_name)) {
+		alertMessage("client_edit_alert", "Type your last name.", "danger", false);
+		$("#client_last_name").focus();
+		return false;
+	}
+	
+	if (!validEmail(client_email)) {
+		alertMessage("client_edit_alert", "Invalid email.", "danger", false);
+		$("#client_email").focus();
+		return false;
+	}
+	
+	if (validNotEmpty(client_weeks_pregnant) && !validNumber(client_weeks_pregnant)) {
+		alertMessage("client_edit_alert", "Weeks pregnant must be a number.", "danger", false);
+		$("#client_weeks_pregnant").val("");
+		$("#client_weeks_pregnant").focus();
+		return false;
+	}
+}
+
+var validateClientUpdatePassword = function() {
+	client_password_old = $("#client_password_old").val();
+	client_password = $("#client_password").val();
+	client_password_confirmation = $("#client_password_confirmation").val();
+	
+	if (!validPassword(client_password_old)) {
+		alertMessage("client_edit_alert", "Invalid old password.", "danger", false);
+		$("#client_password_old").val("");
+		$("#client_password_old").focus();
+		return false;
+	}
+	
+	if (!validPassword(client_password)) {
+		alertMessage("client_edit_alert", "Invalid password.", "danger", false);
+		$("#client_password").val("");
+		$("#client_password_confirmation").val("");
+		$("#client_password").focus();
+		return false;
+	}
+	if (!validPassword(client_password_confirmation)) {
+		alertMessage("client_edit_alert", "Invalid password confirmation.", "danger", false);
+		$("#client_password").val("");
+		$("#client_password_confirmation").val("");
+		$("#client_password").focus();
+		return false;
+	}
+	if (client_password != client_password_confirmation) {
+		alertMessage("client_edit_alert", "Passwords don't match.", "danger", false);
+		$("#client_password").val("");
+		$("#client_password_confirmation").val("");
+		$("#client_password").focus();
+		return false;
+	}
+};
