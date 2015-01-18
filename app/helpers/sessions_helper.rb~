@@ -1,0 +1,21 @@
+module SessionsHelper
+	def sign_in(provider)
+    remember_token = Provider.new_remember_token
+    cookies.permanent[:remember_token] = remember_token
+    provider.update_attribute(:remember_token, Provider.digest(remember_token))
+    self.current_provider = provider
+  end
+  
+  def current_provider=(provider)
+    @current_provider = provider
+  end
+  
+  def current_provider
+    remember_token = Provider.digest(cookies[:remember_token])
+    @current_provider ||= Providder.find_by(remember_token: remember_token)
+  end
+  
+  def signed_in?
+    !current_provider.nil?
+  end
+end

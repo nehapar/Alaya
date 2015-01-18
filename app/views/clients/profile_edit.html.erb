@@ -1,0 +1,94 @@
+<% provide(:title, current_client.first_name) %>
+
+    <!--=== Container ===-->
+    <div class="container content">
+        <div class="row margin-bottom-30">
+            <div class="col-md-10 col-md-offset-1 mb-margin-bottom-30">
+            	<% flash.each do |key, value| %>
+				    <div class="alert alert-<%= key %>"><%= value %></div>
+				<% end %>
+				<div id="client_edit_alert"></div>
+				<div class="row">
+					<div class="col-md-6 col-md-offset-0">
+						<div class="headline"><h2>Edit your information</h2></div>
+						<%= form_for(@client, url: client_update_personal_path) do |f| %>
+							<div class="row margin-bottom-20">
+								<div class="col-md-5 col-md-offset-1">
+									<%= f.label :first_name %>
+									<%= f.text_field :first_name, class: "form-control", placeholder: "First name", required: "required" %>
+								</div>                
+								
+								<div class="col-md-5">
+									<%= f.label :last_name %>
+									<%= f.text_field :last_name, class: "form-control", placeholder: "Last name", required: "required" %>
+								</div>                
+							</div>
+							
+							<div class="row margin-bottom-20">
+								<div class="col-md-10 col-md-offset-1">
+									<%= f.label :email %>
+									<%= f.text_field :email, class: "form-control", placeholder: "Email", required: "required", value: @client.email %>
+								</div>                
+							</div>
+
+							<div class="row margin-bottom-20">
+								<div class="col-md-10 col-md-offset-1">
+									<%= f.label :address  %>
+									<%= f.text_field :address, class: "form-control", placeholder: "Address" %>
+								</div>                
+							</div>
+
+							<div class="row margin-bottom-20">
+								<div class="col-md-5 col-md-offset-1">
+									<%= f.label :phone %>
+									<%= f.text_field :phone, class: "form-control", placeholder: "Phone" %>
+								</div>                
+								
+								<div class="col-md-5">
+									<%= f.label :weeks_pregnant %>
+									<%= f.text_field :weeks_pregnant, class: "form-control", placeholder: "Weeks pregnant" %>
+								</div>                
+							</div>
+							
+							<div class="row margin-bottom-20">
+								<div class="col-md-10 col-md-offset-1" align="center">
+									<%= f.submit "Edit my information", onclick: "return validateClientUpdateInfo()", class: "btn-u" %>
+								</div>                
+							</div>
+						<% end %>
+					</div>
+					<div class="col-md-6 col-md-offset-0">
+						<div class="headline"><h2>Change your password</h2></div>
+						<%= form_for(@client, url: client_update_password_path) do |f| %>
+							<div class="row margin-bottom-20">
+								<div class="col-md-8 col-md-offset-2">
+									<%= f.label :password_old %>
+									<%= f.password_field :password_old, class: "form-control", placeholder: "Old password", required: "required" %>
+								</div>
+							</div>
+						
+							<div class="row margin-bottom-20">
+								<div class="col-md-8 col-md-offset-2">
+									<%= f.label :password %>
+									<%= f.password_field :password, class: "form-control", placeholder: "New password", required: "required" %>
+								</div>
+							</div>
+							<div class="row margin-bottom-20">
+								<div class="col-md-8 col-md-offset-2">
+									<%= f.label :password_confirmation, "Password confirmation" %>
+									<%= f.password_field :password_confirmation, class: "form-control", placeholder: "New password confirmation", required: "required" %>
+								</div>                
+							</div>
+							
+							<div class="row margin-bottom-20">
+								<div class="col-md-10 col-md-offset-1" align="center">
+									<%= f.submit "Change my password", onclick: "return validateClientUpdatePassword()", class: "btn-u" %>
+								</div>                
+							</div>
+						<% end %>
+					</div>
+				</div>
+            </div>
+        </div><!--/row-->        
+    </div>
+    <!--=== End Container ===-->

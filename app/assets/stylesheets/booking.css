@@ -1,0 +1,46 @@
+.date_available {
+    cursor: pointer;
+    cursor: hand;
+}
+
+.date_available:hover {
+    cursor: pointer;
+    cursor: hand;
+    background: #b2bcd1 !important;
+}
+
+.date_unavailable {
+	cursor: not-allowed;
+	background: #e74c3c !important;
+	border: 1px solid #e74c3c !important;
+}
+
+.date_unavailable:hover {
+	cursor: not-allowed;
+	background: #e74c3c !important;
+	border: 1px solid #e74c3c !important;
+}
+
+.date_useless {
+	cursor: not-allowed;
+}
+
+.date_useless:hover {
+	cursor: not-allowed;
+}
+
+.past_day {
+	background: #f8efef !important;
+	cursor: not-allowed;
+    color: #e3bfbf !important;
+}
+
+.past_day:hover {
+	cursor: not-allowed;
+    background: #f8efef !important;
+    color: #e3bfbf !important;
+}
+
+.today {
+	border: 2px solid #e74c3c !important;
+}

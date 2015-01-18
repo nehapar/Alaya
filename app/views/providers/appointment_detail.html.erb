@@ -1,0 +1,99 @@
+<% provide(:title, "Appointment detailed") %>
+    <!--=== Container ===-->
+    <div class="container content">
+        <div class="row margin-bottom-30">
+            <div class="col-md-10 col-md-offset-1 mb-margin-bottom-30">
+                <% flash.each do |key, value| %>
+                    <div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-remove"></span> <strong><%= key %></strong> <%= value %>
+                       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    </div>
+                <% end %>
+
+                <% if !@alert.nil? %>
+                    <div class="alert alert-<%= @alert["type"] %>" role="alert"><span class="glyphicon glyphicon-remove"></span> <strong><%= @alert["strong"] %></strong> <%= @alert["message"] %>
+                       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    </div>
+                <% end %>
+
+                <div class="headline"><h2>Appointment detailed</h2></div>
+                
+                <div class="row">
+                    <div class="col-sm-5 col-sm-offset-1">
+                        <p class="lead"><strong>Client:</strong> <%= @appointment.client.first_name %> <%= @appointment.client.last_name %></p>
+                    </div>
+                    <div class="col-sm-5 col-sm-offset-0">
+                        <p class="lead"><small><strong>Phone:</strong> <%= @appointment.client.phone %></small></p>
+                        <p class="lead"><small><strong>Email:</strong> <%= @appointment.client.email %></small></p>
+                        <p class="lead"><small><strong>Address:</strong> <%= @appointment.client.address %></small></p>
+                        <p class="lead"><small><strong>Weeks pregnant:</strong> <%= @appointment.client.weeks_pregnant %></small></p>
+                        <p class="lead"><small><strong>Client observation:</strong></p>
+                        <p class="lead"><%= @appointment.client_observation %></small></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <hr>
+                    </div>
+                </div>
+                <div class="row margin-bottom-20">
+                    <div class="col-sm-5 col-sm-offset-1">
+                        <p class="lead"><strong>Provider:</strong> <%= @appointment.provider.first_name %> <%= @appointment.provider.last_name %></p>
+                    </div>
+                    <div class="col-sm-5 col-sm-offset-0">
+                        <p class="lead"><small><strong>Phone:</strong> <%= @appointment.provider.phone %></small></p>
+                        <p class="lead"><small><strong>Email:</strong> <%= @appointment.provider.email %></small></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <hr>
+                    </div>
+                </div>
+                <div class="row margin-bottom-20">
+                    <div class="col-sm-5 col-sm-offset-1">
+                        <p class="lead"><strong>Date:</strong> <%= (@appointment.start + 20.minutes).strftime("%A, %B %dth, %Y") %></p>
+                    </div>
+                    <div class="col-sm-5 col-sm-offset-0">
+                        <p class="lead"><strong>Hour:</strong> <%= (@appointment.start + 20.minutes).strftime("%H:%M") %></p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <hr>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-5 col-sm-offset-1">
+                        <p class="lead"><strong>Accepted:</strong> <%= @appointment.accepted == 1 ? "Yes" : "No" %></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <hr>
+                    </div>
+                </div>
+
+                <div class="row margin-bottom-20">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <%= link_to admin_path, class: "btn btn-info" do %>
+                            <span class="glyphicon glyphicon-arrow-left"></span> Admin
+                        <% end %>
+                        <a  href="#"></a>
+                        <div class="pull-right">
+                            <%= link_to admin_path(:accept_appointment_id => @appointment.id), class: "btn btn-success" do %>
+                                <span class="glyphicon glyphicon-thumbs-up"></span> Accept
+                            <% end %>
+                            <%= link_to admin_delete_appointment_path(:deny_appointment_id => @appointment.id), :method => 'delete', class: "btn btn-danger" do %>
+                                <span class="glyphicon glyphicon-thumbs-down"></span> Deny
+                            <% end %>
+                            <a class="btn btn-primary" href="#"><span class="glyphicon glyphicon-edit"></span> Edit</a>
+                        </div>
+                    </div>                
+                </div>
+
+            </div>
+        </div><!--/row-->        
+    </div>
+    <!--=== End Container ===-->

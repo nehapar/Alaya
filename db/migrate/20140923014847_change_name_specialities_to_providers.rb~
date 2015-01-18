@@ -1,0 +1,4 @@
+class ChangeNameSpecialitiesToProviders < ActiveRecord::Migration
+  def change
+  end
+end
