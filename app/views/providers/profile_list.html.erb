@@ -1,79 +1,208 @@
 <% provide(:title, 'Profile List') %>
-
+  <style>
+    .rounded {
+      margin-top: -50px;
+    }
+    .read-more {
+      margin-top: -15px;
+    }
+  </style>
 
 	<!--=== Filter Block ===-->
 	<div class="purchase">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-10 col-md-offset-1 fadeInLeft">
+				  <h1 align="center">Consultants within your area</h1>
+					<!--
 					<span>Type a few words about what you are searching for&#8230;</span>
 					<div class="input-group">
-						<input name="filter" type="text" class="form-control" placeholder="Type a few letters or words" required>                            
+						<input name="filter" id="filter" type="text" class="form-control" placeholder="Type a few letters or words" onkeyup="filterAction(this)" required>
 						<div class="input-group-btn">
 							<button class="btn-u" type="submit">Filter</button>
-						</div>             
+						</div>       
 					</div>
-				</div>            
+					-->
+				</div>      
 			</div>
+			<div id="filter_results" class="filter-results"></div>
 		</div>
 	</div>
-    <!-- Filter Block -->
+  <!-- Filter Block -->
 
-    <!--=== Profile ===-->
-    <div class="profile container content">
-        <div class="row">
-            <div class="col-md-12">
-                <!--Profile Body-->
-                <div class="profile-body">
-                    <!--Projects-->
-                    <div class="row">
-                        <% @providers.each_with_index do |provider, index| %>
-                            <div class="col-sm-3">
-                                <div class="tag-box-v3">
+  <!--=== Profile ===-->
+  <div class="profile container content">
+    <div class="row">
+      <div class="col-md-12">
+        <!--Profile Body-->
+        <div class="profile-body">
+          <!--Projects-->
+          <div class="row" style="margin-top: 50px;">
+            <% @providers.each_with_index do |provider, index| %>
+              <div class="col-sm-3" style="height: 300px; margin-bottom: 150px;">
+                <div class="tag-box-v3">
 									<% if !provider.picture_path.nil? %>
-										<div class="easy-block-v1">
+										<!--
+										<div class="easy-block-v1 flip-image" id="picture_<%= provider.id %>" onmouseover="changeToText(<%= provider.id %>);">
 											<%= link_to eval(provider.profile + '_path') do %>
-												<img class="img-responsive" src="<%= provider.picture_path %>" alt="<%= provider.first_name %> - <%= provider.expertise %>">
+											  <div id="profile-img-<%= provider.id %>-container">
+											    <img class="img-responsive" src="<%= provider.picture_path %>" alt="<%= provider.first_name %> - <%= provider.expertise %>" style="height: 300px;">
+											    
+											  </div>
 											<% end %>
-										</div>    
+										</div>
+										-->
+										<div id="profile-img-<%= provider.id %>-container" class="rounded easy-block-v1" align="center" style="cursor: pointer;" data-toggle="modal"data-target="#description_<%= provider.id %>"></div>
 									<% end %>
-                                    <div class="projects">
-										<%= link_to eval(provider.profile + '_path') do %>
-											<h4><%= provider.first_name %> <%= provider.last_name %></h4>
-                                        <% end %>
-                                        <ul class="list-unstyled list-inline blog-info-v2">
-                                            <li><%= provider.expertise %></li>
-                                        </ul>
-                                        <p><%= provider.abstract %></p>
-                                        <!--
-                                        <ul class="list-inline star-vote">
-                                            <li><i class="color-green fa fa-star"></i></li>
-                                            <li><i class="color-green fa fa-star"></i></li>
-                                            <li><i class="color-green fa fa-star"></i></li>
-                                            <li><i class="color-green fa fa-star-half-o"></i></li>
-                                            <li><i class="color-green fa fa-star-o"></i></li>
-                                        </ul>
-                                        -->
-                                    </div>    
-                                    <div class="project-share">
-                                        <div class="col-lg-6 col-lg-offset-3">
-											
-                                            <%= link_to "View Profile", eval(provider.profile + '_path'), class: "btn-u-xs btn-u rounded-2x" %>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <% if (index + 1) % 4 == 0 && index < @providers.length - 1  %>
-                                </div>
-                                <hr>
-                                <div class="row">
-                            <% end %>
-                        <% end %>
+									
+									<!--
+									<div id="text_<%= provider.id %>" class=" flip-text" style="display: none; height: 300px;" onmouseout="changeToPicture(<%= provider.id %>);">
+									-->
+									
+									<div id="text_<%= provider.id %>" class=" flip-text">
+                    <div class="projects" style="height: 250px;">
+  										<h4 align="center" style="cursor: pointer;" data-toggle="modal"data-target="#description_<%= provider.id %>"><%= provider.first_name %> <%= provider.last_name %></h4>
+                      <ul class="list-unstyled list-inline blog-info-v2"  align="center">
+                        <li><%= provider.expertise %></li>
+                      </ul>
+                      <p><%= provider.abstract.nil? ? "" : (provider.abstract.length > 200 ? provider.abstract[0..199] + "..." : provider.abstract) %></p>
+                      <!--
+                      <ul class="list-inline star-vote">
+                        <li><i class="color-green fa fa-star"></i></li>
+                        <li><i class="color-green fa fa-star"></i></li>
+                        <li><i class="color-green fa fa-star"></i></li>
+                        <li><i class="color-green fa fa-star-half-o"></i></li>
+                        <li><i class="color-green fa fa-star-o"></i></li>
+                      </ul>
+                      -->
                     </div>
-                    <hr>
+                    <!--
+                    <div class="project-share">
+                      <div class="col-lg-10 col-lg-offset-1" align="center">
+                        <%= link_to "Read more", eval(provider.profile + '_path'), class: "btn-block btn-u btn-u-lg rounded-2x" %>
+                      </div>
+                    </div>
+                    -->
+                    <div class="col-lg-10 col-lg-offset-1 read-more" align="center">
+                      <a href="#" class="btn-block btn-u btn-u-md rounded-2x" data-toggle="modal"data-target="#description_<%= provider.id %>">Read more</a>
+                    </div>
+                  </div>
                 </div>
-                <!--End Profile Body-->
+              </div>
+              <% if (index + 1) % 4 == 0 && index < @providers.length - 1  %>
+                </div>
+                
+                <div class="row">
+              <% end %>
+              
+              
+              
+            <% end %>
+          </div>
+          <hr>
+        </div>
+        <!--End Profile Body-->
+      </div>
+    </div><!--/end row-->
+  </div><!--/container-->  
+  <% @providers.each_with_index do |provider, index| %>
+    <div class="modal fade" id="description_<%= provider.id %>" tabindex="-1" role="dialog" aria-labelledby="descriptionLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header" style="border-bottom: 0px solid #000;">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            
+          </div>
+            <div class="modal-body">  
+              <div class="row">
+              <div class="col-sm-10 col-sm-offset-1">
+                <div class="row margin-bottom-20">
+        					<div class="col-md-12 col-md-offset-0">
+        						<div class="headline"><h2><%= provider.first_name %> <%= provider.last_name %> <small><%= provider.expertise %></small></h2></div>
+        					</div>                
+        				</div>
+        				<div class="row margin-bottom-20">
+        					<p><%= provider.abstract %></p>               
+        				</div>
+                <p align="center"><%= link_to "Book an appointment", eval(provider.profile + '_path'), class: "btn-u btn-u-md rounded-2x" %></p>
+              </div>
             </div>
-        </div><!--/end row-->
-    </div><!--/container-->    
-    <!--=== End Profile ===-->
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <!--=== End Profile ===-->
+  
+  <script>
+    var cur_id = 0;
+    var changeToText = function(id) {
+      if (cur_id != id) {
+        $(".flip-text").hide();
+        $(".flip-image").show();
+        $("#picture_" + id).fadeOut(function() {
+          $("#text_" + id).show();
+        });//.hide();
+        cur_id = id;
+      }
+    };
+    var changeToPicture = function(id) {
+      if (cur_id != id) {
+        $(".flip-text").hide();
+        $(".flip-image").show();
+        $("#text_" + id).fadeOut(function() {
+          $("#picture_" + id).show();  
+        });//.hide();
+        cur_id = id;
+      }                    
+    };
+    
+    var profile_images = [
+                          <% @providers.each_with_index do |provider, index| %>
+                            <% if index < @providers.length - 1 %>
+                              <% if !provider.picture_path.nil? %>
+                                [<%= provider.id %>, "<%= provider.picture_path %>", new Image()],
+                              <% else %>
+                                [<%= provider.id %>, "", new Image()],
+                              <% end %>
+                            <% else %>
+                              <% if !provider.picture_path.nil? %>
+                                [<%= provider.id %>, "<%= provider.picture_path %>", new Image()]
+                              <% else %>
+                                [<%= provider.id %>, "", new Image()]
+                              <% end %>
+                            <% end %>
+                          <% end %>
+                          ];
+    
+    var onloadImage = function() {
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
+      var square_size = this.width > this.height ? this.height : this.width;
+      sx = this.width/2 - square_size/2;
+      sy = this.height/2 - square_size/2;
+      swidth = square_size;
+      sheight = square_size;
+      
+      var border = 5;
+      var img_h = 100;
+      var img_w = 100;
+      
+      canvas.width = img_w;// + 4 * border;
+      canvas.height = img_h;// + 4 * border;
+      
+      //ctx.drawImage(this, 0, 0, this.width, this.height * img_w.0 / this.width > img_h ? img_h.0 * this.width / img_w.0 : this.height, 0, this.height * img_w.0 / this.width > img_h ? 0 : (img_h - this.height * img_w.0 / this.width) / 2.0, img_w, this.height * img_w.0 / this.width > img_h ? img_h : this.height * img_w.0 / this.width);
+      //ctx.save();
+      ctx.beginPath();
+      ctx.arc(img_w/2, img_w/2, img_w/2 - border, 0, Math.PI * 2, true);
+      
+      ctx.closePath();
+      ctx.clip();
+      //ctx.drawImage(this, 0, 0, this.width, this.height * img_w / this.width > img_h ? img_h * this.width / img_w : this.height, 0, this.height * img_w / this.width > img_h ? 0 : (img_h - this.height * img_w / this.width) / 2, img_w, this.height * img_w / this.width > img_h ? img_h : this.height * img_w / this.width);
+      ctx.drawImage(this, sx, sy, swidth, sheight, 0, 0, img_w, img_h);
+      ctx.lineWidth = 3;//border;
+      ctx.strokeStyle = '#ffffff';//;'#003300';
+      ctx.stroke();
+      $("#" + this.id + "-container").append(canvas);
+    };
+  </script>

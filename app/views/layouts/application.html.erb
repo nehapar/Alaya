@@ -4,8 +4,9 @@
 <!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
 <head>
     <title>Alaya | <%= yield(:title) %></title>
+    
     <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
-  	<%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  	
   	<%= csrf_meta_tags %>
 
     <!-- Meta -->
@@ -64,79 +65,90 @@
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse navbar-responsive-collapse">
-                    <ul class="nav navbar-nav">
-                        <% if signed_in? %>
-                            <% if is_admin? %>
+                    <div id="nav_links">
+                        <ul class="nav navbar-nav">
+                            <% if yield(:title) == "Welcome" %>
+                              <li>
+                                  <a href="#" data-section="why-alaya">WHY ALAYA?</a>
+                              </li>
+                              <li>
+                                  <a href="#" data-section="how-does-it-work">HOW DOES IT WORK?</a>
+                              </li>
+                            <% end %>
+                            
+                            <% if signed_in? %>
+                                <% if is_admin? %>
+                                    <li>
+                                        <%= link_to admin_path do %>
+                                            <i class="fa fa-home"></i>&nbsp;Admin home
+                                        <% end %>
+                                    </li>
+                                <% else %>
+                                    <li>
+                                        <%= link_to profile_edit_path do %>
+                                            <i class="fa fa-edit"></i>&nbsp;Edit profile
+                                        <% end %>
+                                    </li>
+                                    <li>
+                                        <%= link_to eval(current_provider.profile + '_path') do %>
+                                            <i class="fa fa-eye"></i>&nbsp;View profile
+                                        <% end %>
+                                    </li>
+                                <% end %>
                                 <li>
-                                    <%= link_to admin_path do %>
-                                        <i class="fa fa-home"></i>&nbsp;Admin home
+                                    <%= link_to signout_path, method: "delete" do %>
+                                        <i class="fa fa-sign-out"></i>&nbsp;Sign Out
+                                    <% end %>
+                                </li>
+                            <% elsif csigned_in? %>
+                                <li>
+                                    <%= link_to eval(current_client.profile + '_path') do %>
+                                        <i class="fa fa-home"></i>&nbsp;Home
+                                    <% end %>
+                                </li>
+                                <!--
+                                <li>
+                                    <%= link_to c_profile_edit_path do %>
+                                        <i class="fa fa-edit"></i>&nbsp;Edit information
+                                    <% end %>
+                                </li>
+                                -->
+                                <li>
+                                    <%= link_to signout_path, method: "delete" do %>
+                                        <i class="fa fa-sign-out"></i>&nbsp;Sign Out
                                     <% end %>
                                 </li>
                             <% else %>
+    							<!-- IMPORTANT: class="active" allows a red semaphore over <li> -->
+                            
+                                <!-- Sign In -->
                                 <li>
-                                    <%= link_to profile_edit_path do %>
-                                        <i class="fa fa-edit"></i>&nbsp;Edit profile
+                                    <%= link_to signin_path do %>
+                                        <i class="fa fa-sign-in"></i>&nbsp;Sign In
+                                    <% end %>
+                                </li>    
+                                <!-- End Sign In -->
+                                
+                                <!-- Sign Up -->                        
+                                <li>
+                                    <%= link_to csignup_path do %>
+                                        <i class="fa fa-pencil"></i>&nbsp;Sign Up
                                     <% end %>
                                 </li>
+                                <!-- End Sign Up -->
+                                
+                                <!-- Sign Up --> 
+                                <!--                       
                                 <li>
-                                    <%= link_to eval(current_provider.profile + '_path') do %>
-                                        <i class="fa fa-eye"></i>&nbsp;View profile
+                                    <%= link_to signup_path do %>
+                                        <i class="fa fa-medkit"></i>&nbsp;Get Listed (Professionals)
                                     <% end %>
                                 </li>
+                                -->
+                                <!-- End Sign Up -->
                             <% end %>
-                            <li>
-                                <%= link_to signout_path, method: "delete" do %>
-                                    <i class="fa fa-sign-out"></i>&nbsp;Sign Out
-                                <% end %>
-                            </li>
-                        <% elsif csigned_in? %>
-                            <li>
-                                <%= link_to eval(current_client.profile + '_path') do %>
-                                    <i class="fa fa-home"></i>&nbsp;Home
-                                <% end %>
-                            </li>
-                            <!--
-                            <li>
-                                <%= link_to c_profile_edit_path do %>
-                                    <i class="fa fa-edit"></i>&nbsp;Edit information
-                                <% end %>
-                            </li>
-                            -->
-                            <li>
-                                <%= link_to signout_path, method: "delete" do %>
-                                    <i class="fa fa-sign-out"></i>&nbsp;Sign Out
-                                <% end %>
-                            </li>
-                        <% else %>
-							<!-- IMPORTANT: class="active" allows a red semaphore over <li> -->
-                        
-                            <!-- Sign In -->
-                            <li>
-                                <%= link_to signin_path do %>
-                                    <i class="fa fa-sign-in"></i>&nbsp;Sign In
-                                <% end %>
-                            </li>    
-                            <!-- End Sign In -->
-                            
-                            <!-- Sign Up -->                        
-                            <li>
-                                <%= link_to csignup_path do %>
-                                    <i class="fa fa-pencil"></i>&nbsp;Sign Up
-                                <% end %>
-                            </li>
-                            <!-- End Sign Up -->
-                            
-                            <!-- Sign Up --> 
-                            <!--                       
-                            <li>
-                                <%= link_to signup_path do %>
-                                    <i class="fa fa-medkit"></i>&nbsp;Get Listed (Professionals)
-                                <% end %>
-                            </li>
-                            -->
-                            <!-- End Sign Up -->
-                        <% end %>
-                    </ul>
+                        </ul>
+                    </div>
                 </div><!--/navbar-collapse-->
             </div>    
         </div>            
@@ -144,10 +156,9 @@
     </div>
     <!--=== End Header ===-->
     
-
-	<%= yield %>
-
-    <!--=== Footer ===-->
+    <%= yield %>
+	
+	<!--=== Footer ===-->
     <div class="footer">
         <div class="container">
             <div class="row">                
@@ -307,9 +318,11 @@
         </div> 
     </div> 
     <!--=== End Copyright ===-->
+    
 </div><!--/End Wrapepr-->
 
 <!-- JS Global Compulsory -->           
+<%= javascript_include_tag "application", "data-turbolinks-track" => true %>
 <script type="text/javascript" src="assets/plugins/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" src="assets/plugins/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script> 
@@ -321,16 +334,35 @@
 <!-- JS Page Level -->           
 <script type="text/javascript" src="assets/js/app.js"></script>
 <script type="text/javascript">
-    jQuery(document).ready(function() {
+    $(document).ready(function() {
         App.init();
         App.initCounter();
         //App.initParallaxBg();
         $('html, body').animate({scrollTop : 0},500);
         loadSchedule();
+        $("a[data-section]").click(function(e) {
+      			e.preventDefault();
+      			var offSet = 50;
+      			$('html, body').animate({
+      				  scrollTop: $("#" + $(this).data("section")).offset().top// - offSet
+      			}, 1000);
+      			$("li.active").toggleClass("active");
+      			$(this).parent().toggleClass("active");
+    		});
+    		
+    		<% if yield(:title) == "Profile List" %>
+      		var i;
+          for (i = 0; i < profile_images.length; i++) {
+            profile_images[i][2].src = profile_images[i][1];
+            profile_images[i][2].id = "profile-img-" + profile_images[i][0];
+            profile_images[i][2].onload = onloadImage;
+          }
+        <% end %>
     });
 </script>
 <!--[if lt IE 9]>
     <script src="assets/plugins/respond.js"></script>
 <![endif]-->
+<%= debug(params) if Rails.env.development? %>
 </body>
 </html> 

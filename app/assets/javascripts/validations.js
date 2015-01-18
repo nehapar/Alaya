@@ -102,13 +102,11 @@ var validateProviderSignup = function() {
 		$("#provider_first_name").focus();
 		return false;
 	}
-	
 	if (!validNotEmpty(provider_last_name)) {
 		alertMessage("provider_signup_alert", "Type your last name.", "danger", false);
 		$("#provider_last_name").focus();
 		return false;
 	}
-	
 	if (!validEmail(provider_email)) {
 		alertMessage("provider_signup_alert", "Invalid email.", "danger", false);
 		$("#provider_email").focus();
@@ -212,4 +210,23 @@ var validateClientUpdatePassword = function() {
 		$("#client_password").focus();
 		return false;
 	}
+};
+
+var validateProviderEdit = function() {
+	if (!validNotEmpty($("#provider_first_name").val())) {
+		alertMessage("admin_page_message", "First name is required.", "danger", false);
+		$("#provider_first_name").focus();
+		return false;
+	}
+	if (!validNotEmpty($("#provider_last_name").val())) {
+		alertMessage("admin_page_message", "Last name is required.", "danger", false);
+		$("#provider_last_name").focus();
+		return false;
+	}
+	if (!validEmail($("#provider_email").val())) {
+		alertMessage("admin_page_message", "Email is required.", "danger", false);
+		$("#provider_email").focus();
+		return false;
+	}
+	return true;	
 };

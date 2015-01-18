@@ -259,19 +259,19 @@ Monthly.prototype.print = function() {
 			this.c_first_day.setHours(0, 0, 0, 0);
 			if (how_many < 12 && this.c_first_day.getTime() >= today.getTime()) {
 				if (this.c_first_day.getTime() == today.getTime()) {
-					content = content + "        <td onclick=\"showDate(" + dummy_1.getTime() + ");\" class=\"date_available today\"><b>" + this.c_first_day.getDate() + "</b></td>";
+					content = content + "        <td onClick=\"showDate(" + dummy_1.getTime() + ");\" class=\"date_available today\"><b>" + this.c_first_day.getDate() + "</b></td>";
 				}
 				else if (this.c_first_day >= this.m_first_day && this.c_first_day <= this.m_last_day) {
-					content = content + "        <td onclick=\"showDate(" + dummy_1.getTime() + ");\" class=\"date_available\"><b>" + this.c_first_day.getDate() + "</b></td>";
+					content = content + "        <td onClick=\"showDate(" + dummy_1.getTime() + ");\" class=\"date_available\"><b>" + this.c_first_day.getDate() + "</b></td>";
 					//content = content + "		<a href=\"javascript: showDate(" + dummy_1.getTime() + ");\"><b>" + this.c_first_day.getDate() + "</b></a>";	
 				}
 				else {
-					content = content + "        <td onclick=\"showDate(" + dummy_1.getTime() + ");\" class=\"date_available\">" + this.c_first_day.getDate() + "</td>";
+					content = content + "        <td onClick=\"showDate(" + dummy_1.getTime() + ");\" class=\"date_available\">" + this.c_first_day.getDate() + "</td>";
 					//content = content + "		<a href=\"javascript: showDate(" + dummy_1.getTime() + ");\">" + this.c_first_day.getDate() + "</a>";	
 				}
 			}
 			else if (this.c_first_day.getTime() <= today.getTime()) {
-				//content = content + "        <td onclick=\"showDate(" + dummy_1.getTime() + ");\" class=\"past_day\">" + this.c_first_day.getDate() + "</td>";
+				//content = content + "        <td onClick=\"showDate(" + dummy_1.getTime() + ");\" class=\"past_day\">" + this.c_first_day.getDate() + "</td>";
 				content = content + "        <td class=\"past_day\">" + this.c_first_day.getDate() + "</td>";
 				//content = content + "		<a href=\"javascript: showDate(" + dummy_1.getTime() + ");\">" + this.c_first_day.getDate() + "</a>";	
 			}
@@ -393,11 +393,11 @@ Weekly.prototype.print = function() {
 				time_end = new Date(cur_day.getTime());
 				time_start.setHours(i, j, 0, 0);
 				time_end.setHours(i, j + 15, 0, 0);
-				var onclick = "";
+				var onClick = "";
 				if (label[k] == "date_available") {
-					onclick = "onclick=\"requestAppointment(" + time_start.getTime() + ")\"";
+					onClick = "onClick=\"requestAppointment(" + time_start.getTime() + ")\"";
 				}
-				content = content + "			<td " + onclick + " class=\"" + label[k] + "\">";
+				content = content + "			<td " + onClick + " class=\"" + label[k] + "\">";
 				content = content + "				";
 				content = content + "			</td>";
 				cur_day.setDate(cur_day.getDate() + 1);
@@ -489,9 +489,11 @@ var loadSchedule = function() {
 	var periodicity = parseInt($("input[name=periodicity]:checked", "#schedules_periodicity").val());
 	switch (periodicity) {
 		case 1:
+			$("#periodicity_options").hide();
 			o_schedule.monthly(provider_id, m_current_date);
 			break;
 		case 2:
+			$("#periodicity_options").show();
 			o_schedule.weekly(provider_id, m_current_date);
 			break;
 		case 3:
@@ -577,18 +579,17 @@ var requestAppointment = function(datetime) {
 		content = content + "                    <div class=\"row margin-bottom-20\">";
 		content = content + "                        <div class=\"col-md-10 col-md-offset-1\">";
 		content = content + "                            <label for=\"address\">Address <i class=\"fa fa-asterisk\"></i></label>";
-		content = content + "                            <input type=\"text\" name=\"address\" id=\"address\" class=\"form-control\" placeholder=\"Address\" required>";
+		content = content + "                            <input type=\"text\" name=\"client[address]\" id=\"address\" class=\"form-control\" placeholder=\"Address\" required>";
 		content = content + "                        </div>";
 		content = content + "                    </div>";
 		content = content + "                    <div class=\"row margin-bottom-20\">";
 		content = content + "						<div class=\"col-md-5 col-md-offset-1\">";
 		content = content + "                            <label for=\"phone\">Phone <i class=\"fa fa-asterisk\"></i></label>";
-		content = content + "                            <input type=\"text\" name=\"phone\" id=\"phone\" class=\"form-control\" placeholder=\"Phone\" required>";
+		content = content + "                            <input type=\"text\" name=\"client[phone]\" id=\"phone\" class=\"form-control\" placeholder=\"Phone\" required>";
 		content = content + "                        </div>";
-		content = content + "                        ";
 		content = content + "                        <div class=\"col-md-5\">";
 		content = content + "                            <label for=\"weeks_pregnant\">Weeks pregnant <i class=\"fa fa-asterisk\"></i></label>";
-		content = content + "                            <input type=\"text\" name=\"weeks_pregnant\" id=\"weeks_pregnant\" class=\"form-control\" placeholder=\"Weeks pregnant\" required>";
+		content = content + "                            <input type=\"text\" name=\"client[weeks_pregnant]\" id=\"weeks_pregnant\" class=\"form-control\" placeholder=\"Weeks pregnant\" required>";
 		content = content + "                        </div>";
 		content = content + "                    </div>";
 		content = content + "				</form>";
@@ -599,9 +600,11 @@ var requestAppointment = function(datetime) {
 		$("#schedules_modal_action").attr("href", "javascript: updateInfo(" + datetime + ");");
 	}
 	else if ($("#c_client_id").val() != "0") {
+		$("#schedules_title").html("Message for " + $("#c_provider_first_name").val() + " " + $("#c_provider_last_name").val());
+		
 		content = content + "        <div class=\"row margin-bottom-30\">";
 		content = content + "            <div class=\"col-md-10 col-md-offset-1 mb-margin-bottom-30\">";
-		content = content + "                <div class=\"headline\"><h2>Book confirmation</h2></div>";
+		content = content + "                <div class=\"headline\"><h2>Booking Confirmation</h2></div>";
 		content = content + "                <p class=\"lead\">Please confirm your request for an appointment with:<p>";
 
 		content = content + "                <blockquote>";
@@ -609,7 +612,7 @@ var requestAppointment = function(datetime) {
 		content = content + "                	<footer>" + $("#c_provider_expertise").val() + "</footer>";
 		content = content + "                </blockquote>";
 
-		content = content + "                <p class=\"lead\">When: <strong>" + m_current_date.getHours() + "h" + ("0" + m_current_date.getMinutes()).slice(-2) + (m_current_date.getHours() < 12 ? " am" : "") + "</strong> on <strong>" + q_screens.month(m_current_date.getMonth() + 1) + " " + m_current_date.getDate() + "th, " + m_current_date.getFullYear() + "</strong></p>";
+		content = content + "                <p class=\"lead\">When: <strong>" + (m_current_date.getHours() > 12 ? m_current_date.getHours() - 12 : m_current_date.getHours()) + ":" + ("0" + m_current_date.getMinutes()).slice(-2) + (m_current_date.getHours() < 12 ? " am" : " pm") + "</strong> on <strong>" + q_screens.month(m_current_date.getMonth() + 1) + " " + m_current_date.getDate() + get_nth_suffix(m_current_date.getDate()) + ", " + m_current_date.getFullYear() + "</strong></p>";
 		content = content + "                <form action=\"request_appointment\" method=\"post\">";
 		
 		content = content + "                    <div class=\"row margin-bottom-20\">";
@@ -773,6 +776,7 @@ var signin = function(date) {
 					$("#c_client_complete").val(0);
 				}
 				clearMessage("schedules_alert");
+				changeNavLinksSignedIn(data.client.profile);
 				requestAppointment(date);
 			}
 			else if (data.status == "fail") {
@@ -882,6 +886,7 @@ var signup = function(date) {
 					$("#c_client_complete").val(0);
 				}
 				clearMessage("schedules_alert");
+				changeNavLinksSignedIn(data.client.profile);
 				requestAppointment(date);
 			}
 			else if (data.status == "email_exists") {
@@ -930,9 +935,9 @@ var updateInfo = function(date) {
 		url: '/update_info_ajax',
 		dataType: "json",
 		data: { 
-			'phone': $("#phone").val(),
-			'address': $("#address").val(),
-			'weeks_pregnant': $("#weeks_pregnant").val()
+			'client[phone]': $("#phone").val(),
+			'client[address]': $("#address").val(),
+			'client[weeks_pregnant]': $("#weeks_pregnant").val()
 		},
 		success: function(data) {
 			if (data.status == "success") {
@@ -991,7 +996,7 @@ var sendRequest = function(date) {
 			if (data.status == "success") {
 				$("#schedules_modal").modal("hide");
 				$('.modal-backdrop').remove();
-				alertMessage("schedules_body_alert", "Appointment requested, soon we'll contact you with more information.", "success", false);
+				alertMessage("schedules_body_alert", "Thank you for requesting an appointment. You will be contacted within a few hours about a confirmation.", "success", false);
 				$('html, body').animate({ scrollTop: $("#schedules_body_alert").offset().top }, 2000);
 				
 				//$('#p_weekly').attr('checked',true);
@@ -1171,6 +1176,15 @@ var clearMessage = function(id) {
 	$("#" + id).html("");
 };
 
+var changeNavLinksSignedIn = function(profile) {
+	var content = "";
+	content = content + "<ul class=\"nav navbar-nav\">";
+	content = content + "	<li><a href=\"/" + profile + "\"><i class=\"fa fa-home\"></i>&nbsp;Home</a></li>";
+	content = content + "    <li><a data-method=\"delete\" href=\"/signout\" rel=\"nofollow\"><i class=\"fa fa-sign-out\"></i>&nbsp;Sign Out</a></li>";
+    content = content + "</ul>";
+    $("#nav_links").html(content);
+};
+
 var alertMessage = function (id, message, type, append) {
 	var message_to_show = "";
 	var message_call = "";
@@ -1207,4 +1221,24 @@ var alertMessage = function (id, message, type, append) {
 	else {
 		$("#" + id).html(message_to_show);
 	}
+	$('html, body').animate({
+    	scrollTop: $("#" + id).offset().top - 60
+  	}, 500);
 };
+
+var get_nth_suffix = function(date) {
+   switch (date) {
+     case 1:
+     case 21:
+     case 31:
+        return 'st';
+     case 2:
+     case 22:
+        return 'nd';
+     case 3:
+     case 23:
+        return 'rd';
+     default:
+        return 'th';
+   }
+ };

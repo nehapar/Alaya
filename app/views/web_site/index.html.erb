@@ -1,133 +1,146 @@
 <% provide(:title, 'Welcome') %>
-    <!--=== Search Block ===-->
-    <div class="search-block parallaxBg">
-        <div class="container">
-            <div class="col-md-12">
-                <h1><b>Find Pregnancy Massage Therapists and Lactation Consultants in your area. <br />
-                Book a home visit today!</b><br /><br /></h1>
+  <!--=== Search Block ===-->
+  <div class="search-block parallaxBg">
+    <div class="container">
+      <div class="col-md-12">
+        <h1><b>Find Pregnancy Massage Therapists and Lactation Consultants in your area. <br />
+        Book a home visit today!</b><br /><br /></h1>
 
-                <div class="input-group">
-                    <span class="input-group-btn">
-                        <%= link_to "San Francisco Bay Area", profile_list_path, class: "btn-u btn-u-lg rounded" %>
-                    </span>
-                </div>
-            </div>
-        </div>    
-    </div><!--/container-->     
-    <!--=== End Search Block ===-->
-    
-    
-    <!--=== Sign Up Block ===-->
-    <form action="csignup" method="get">
-        <div class="purchase">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-10 col-md-offset-1 fadeInLeft">
-                        <span>Get notified when we launch</span>
-                        <div class="input-group">
-                            <input name="email" type="text" class="form-control" placeholder="Enter your e-mail here" required>                            
-                            <div class="input-group-btn">
-                                <button class="btn-u" type="submit">Sign Up</button>
-                            </div>             
-                        </div>
-                    </div>            
-                </div>
-            </div>
+        <div class="input-group">
+          <span class="input-group-btn">
+            <%= link_to "San Francisco Bay Area", profile_list_path, class: "btn-u btn-u-lg rounded" %>
+          </span>
         </div>
-    </form>
-    <!-- Sign Up Block -->
-    
-    
-    <div class="container content">  
-        <!--Title Box-->       
-        <div class="title-box col-sm-8 col-sm-offset-2 no-border">
-            <div class="title-box-text">WHY ALAYA?</div>
-            <div class="tag-box tag-box-v1 tag-box-v0 box-shadow shadow-effect-1 no-margin-bottom">
-                <span>You are a mom or are going to be one very soon.
-                 <br />Do you really want to get dressed and battle traffic to go to a salon?
-                 <br /> Why not have a massage therapist come home to you?</span>
-            </div>
-        </div>
-        
-        <!-- Promo Box -->    
-        <div class="row">
-            <div class="col-md-4">
-                <div class="promo-box">
-                    <i class="fa fa-xlg fa-thumbs-up"></i>
-                    <strong>Trust & Safety</strong>
-                    <p>All professionals listed here have gone through a background check and license verification process. They also carry liability insurance. We take safety very seriously and do all we can to make this a safe platform for our clients and professionals.</p>                
-                </div>        
-            </div>
-
-            <div class="col-md-4">
-                <div class="promo-box">
-                    <i class="fa fa-xlg fa-home"></i>
-                    <strong>Don't leave home</strong>
-                    <p>Sometimes you just don't want to leave home! Every pregnant woman and new mom should have the option of being able to get a massage at home. Save your time spent driving for something else. Read a book. Take a nap. Take another nap! Pamper yourself a little.</p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="promo-box">        
-                    <i class="fa fa-xlg fa-smile-o"></i>
-                    <strong>Convenient</strong>
-                    <p>Your days of playing phone tag are over. Book and schedule appointments at your convenience. After hours, early hours, anytime, anyday.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--=== End Content ===-->
-
-    <!--=== Content ===-->
-    <div class="container content no-border">
-        <!--Title Box-->        
-        <div class="title-box col-sm-6 col-sm-offset-3 no-border">
-            <div class="title-box-text">HOW DOES IT WORKS?</div>
-        </div>
-        <!-- End Ttitle Box -->  
-        
-        <!-- Promo Box -->    
-        <div class="row">
-            <div class="col-md-4">
-                <div class="promo-box">
-                    <i class="fa fa-xlg fa-search"></i>
-                    <strong>1. Search</strong>
-                    <p>Browse profiles of licensed prenatal massage therapists in your area. Filter by availability, service type & price. Read reviews from other customers. Pick a therapist to suit your budget.</p>                
-                </div>        
-            </div>
-
-            <div class="col-md-4">
-                <div class="promo-box">
-                    <i class="fa fa-xlg fa-calendar"></i>
-                    <strong>2. Book</strong>
-                    <p>Request an appointment with your preferred massage therapist. Receive an email/SMS confirmation and helpful reminders before the therapist comes home.</p>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="promo-box">        
-                    <i class="fa fa-xlg fa-credit-card"></i>
-                    <strong>3. Pay</strong>
-                    <p>Your credit card will be charged after your service is complete. No need to hunt for checks or run to the ATM for cash.</p>
-                </div>
-            </div>
-        </div>
-        <!-- End Promo Box -->
-    </div>
-        
-    <!--=== Professional Block ===-->
+      </div>
+    </div>  
+  </div><!--/container-->   
+  <!--=== End Search Block ===-->
+  
+  
+  <!--=== Sign Up Block ===-->
+  <form action="csignup" method="get">
     <div class="purchase">
-        <div class="container">
-            <div class="row">
-                <div class="title-box col-sm-10 col-sm-offset-1 no-border">
-                    <div class="title-box-text">Are You A Massage Therapist or Lactation Consultant?</div>
-                    <div class="col">
-                        <p>Make yourself searchable to moms who want your service. Post your profile and be available to get booked. Whether you are a seasoned professional or just starting out, Alaya is perfect for you.</p>
-                    </div>
-                    <br />
-                    <%= link_to "Learn More", partners_path, class: "btn-u btn-u-lg rounded" %>
-                </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1 fadeInLeft">
+            <span>Get notified when we launch</span>
+            <div class="input-group">
+              <input name="email" type="text" class="form-control" placeholder="Enter your e-mail here" required>              
+              <div class="input-group-btn">
+                <button class="btn-u" type="submit">Sign Up</button>
+              </div>       
             </div>
+          </div>      
         </div>
+      </div>
     </div>
-    <!-- Professional Block -->
+  </form>
+  <!-- Sign Up Block -->
+  
+  
+  <div class="container content" id="why-alaya">  
+    <!--Title Box-->     
+    <div class="title-box col-sm-8 col-sm-offset-2 no-border">
+      <div class="title-box-text">WHY ALAYA?</div>
+      <div class="tag-box tag-box-v1 tag-box-v0 box-shadow shadow-effect-1 no-margin-bottom">
+        <span>You are a mom or are going to be one very soon.
+         <br />Do you really want to get dressed and battle traffic to go to a salon?
+         <br /> Why not have a massage therapist come home to you?</span>
+      </div>
+    </div>
+    
+    <!-- Promo Box -->  
+    <div class="row">
+      <div class="col-md-4">
+        <div class="promo-box">
+          <i class="fa fa-xlg fa-thumbs-up"></i>
+          <strong>Trust & Safety</strong>
+          <p>All professionals listed here have gone through a background check and license verification process. They also carry liability insurance. We take safety very seriously and do all we can to make this a safe platform for our clients and professionals.</p>        
+        </div>    
+      </div>
+
+      <div class="col-md-4">
+        <div class="promo-box">
+          <i class="fa fa-xlg fa-home"></i>
+          <strong>Don't leave home</strong>
+          <p>Sometimes you just don't want to leave home! Every pregnant woman and new mom should have the option of being able to get a massage at home. Save your time spent driving for something else. Read a book. Take a nap. Take another nap! Pamper yourself a little.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="promo-box">    
+          <i class="fa fa-xlg fa-smile-o"></i>
+          <strong>Convenient</strong>
+          <p>Your days of playing phone tag are over. Book and schedule appointments at your convenience. After hours, early hours, anytime, anyday.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--=== End Content ===-->
+
+  <!--=== Content ===-->
+  <div class="container content no-border" id="how-does-it-work">
+    <!--Title Box-->    
+    <div class="title-box col-sm-6 col-sm-offset-3 no-border">
+      <div class="title-box-text">HOW DOES IT WORK?</div>
+    </div>
+    <!-- End Ttitle Box -->  
+    
+    <!-- Promo Box -->  
+    <div class="row">
+      <div class="col-md-4">
+        <div class="promo-box">
+          <i class="fa fa-xlg fa-search"></i>
+          <strong>1. Search</strong>
+          <p>Browse profiles of licensed prenatal massage therapists in your area. Filter by availability, service type & price. Read reviews from other customers. Pick a therapist to suit your budget.</p>        
+        </div>    
+      </div>
+
+      <div class="col-md-4">
+        <div class="promo-box">
+          <i class="fa fa-xlg fa-calendar"></i>
+          <strong>2. Book</strong>
+          <p>Request an appointment with your preferred massage therapist. Receive an email/SMS confirmation and helpful reminders before the therapist comes home.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="promo-box">    
+          <i class="fa fa-xlg fa-credit-card"></i>
+          <strong>3. Pay</strong>
+          <p>Your credit card will be charged after your service is complete. No need to hunt for checks or run to the ATM for cash.</p>
+        </div>
+      </div>
+    </div>
+    <!-- End Promo Box -->
+  </div>
+    
+  <!--=== Professional Block ===-->
+  <div class="purchase">
+    <div class="container">
+      <div class="row">
+        <div class="title-box col-sm-10 col-sm-offset-1 no-border">
+          <div class="title-box-text">For Professionals</div>
+          <div class="col">
+            <p>Make yourself searchable to moms who want your service. Post your profile and be available for appointments. Whether you are a seasoned professional or just starting out, Alaya is perfect for you.</p>
+          </div>
+          <br />
+          <%= link_to "Learn More", partners_path, class: "btn-u btn-u-lg rounded" %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Professional Block -->
+
+  <script>
+		  /* scroll to page */
+  		$("a[data-section]").click(function(e) {
+  			e.preventDefault();
+  			var offSet = 50;
+  			$('html, body').animate({
+  				scrollTop: $("#" + $(this).data("section") + "page").offset().top - offSet
+  			}, 1000);
+  			$("li.active").toggleClass("active");
+  			$(this).parent().toggleClass("active");
+  		});
+	  </script>

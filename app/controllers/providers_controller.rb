@@ -1,11 +1,11 @@
 class ProvidersController < ApplicationController
   
   def self.load
-	Alaya::Application.routes.draw do
-	  Provider.where("admin = 0").each do |provider|
-		get "/#{provider.profile}", :to => "providers#profile_detail", defaults: { id: provider.id }
-	  end
-	end
+	  Alaya::Application.routes.draw do
+  	  Provider.where("admin = 0").each do |provider|
+  		  get "/#{provider.profile}", :to => "providers#profile_detail", defaults: { id: provider.id }
+  	  end
+  	end
   end
   
   def self.reload
@@ -27,65 +27,65 @@ class ProvidersController < ApplicationController
   end
 
   def profile_detail
-	@provider = Provider.find(params[:id])
+	  @provider = Provider.find(params[:id])
   end
 
   def update_personal
-	@provider = current_provider
-	if @provider.update_attributes(provider_personal)
+  	@provider = current_provider
+  	if @provider.update_attributes(provider_personal)
       flash[:success] = 'Personal information updated.'
     else
-	  @provider.errors.full_messages.each do |message|
-	    flash[:danger] = 'Error: ' + message
-	  end
+	    @provider.errors.full_messages.each do |message|
+	      flash[:danger] = 'Error: ' + message
+	    end
     end
     redirect_to profile_edit_path
   end
 
   def update_about
     @provider = current_provider
-	if @provider.update_attributes(provider_about)
+	  if @provider.update_attributes(provider_about)
       flash[:success] = 'About information updated.'
     else
-	  @provider.errors.full_messages.each do |message|
-	    flash[:danger] = 'Error: ' + message
-	  end
+	    @provider.errors.full_messages.each do |message|
+	      flash[:danger] = 'Error: ' + message
+	    end
     end
     redirect_to profile_edit_path
   end
 
   def update_specialty_text
     @provider = current_provider
-	if @provider.update_attributes(provider_specialty_text)
+	  if @provider.update_attributes(provider_specialty_text)
       flash[:success] = 'Specialty text information updated.'
     else
-	  @provider.errors.full_messages.each do |message|
-	    flash[:danger] = 'Error: ' + message
-	  end
+	    @provider.errors.full_messages.each do |message|
+	      flash[:danger] = 'Error: ' + message
+	    end
     end
     redirect_to profile_edit_path
   end
   
   def update_service_text
     @provider = current_provider
-	if @provider.update_attributes(provider_service_text)
+	  if @provider.update_attributes(provider_service_text)
       flash[:success] = 'Service text information updated.'
     else
-	  @provider.errors.full_messages.each do |message|
-	    flash[:danger] = 'Error: ' + message
-	  end
+	    @provider.errors.full_messages.each do |message|
+	      flash[:danger] = 'Error: ' + message
+	    end
     end
     redirect_to profile_edit_path
   end
   
   def update_policies
     @provider = current_provider
-	if @provider.update_attributes(provider_policies)
+	  if @provider.update_attributes(provider_policies)
       flash[:success] = 'Policies information updated.'
     else
-	  @provider.errors.full_messages.each do |message|
-	    flash[:danger] = 'Error: ' + message
-	  end
+	    @provider.errors.full_messages.each do |message|
+	      flash[:danger] = 'Error: ' + message
+	    end
     end
     redirect_to profile_edit_path
   end
@@ -95,7 +95,7 @@ class ProvidersController < ApplicationController
     uploaded_io = params[:provider][:picture]
     
     filename = uploaded_io.original_filename
-	extension = filename.split('.').last.downcase
+    extension = filename.split('.').last.downcase
     tmp_file = "#{Rails.root}/public/assets/img/profile_pic/#{@provider.profile}.#{extension}"
     id = 0
     while File.exists?(tmp_file) do
@@ -108,12 +108,12 @@ class ProvidersController < ApplicationController
     
     @provider.picture_path = "../assets/img/profile_pic/" + tmp_file.split('/').last
     
-	if @provider.save
+    if @provider.save
       flash[:success] = 'Picture uploaded.'
     else
-	  @provider.errors.full_messages.each do |message|
-	    flash[:danger] = 'Error: ' + message
-	  end
+      @provider.errors.full_messages.each do |message|
+        flash[:danger] = 'Error: ' + message
+      end
     end
     redirect_to profile_edit_path
   end
@@ -213,47 +213,105 @@ class ProvidersController < ApplicationController
     end
   end
   
+  def provider_services_ajax
+    if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
+  	  provider = Provider.find(params[:provider_id])
+  	  if !provider.nil?
+  	    container = { "services" => provider.services.all, "status" => "success"}
+  	  else
+  	    container = { "services" => nil, "status" => "fail"}
+  	  end
+  	  render :json => container.to_json
+    else
+	    redirect_to root_url
+    end
+  end
+  
+  def update_service_text_ajax
+    if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
+  	  provider = Provider.find(params[:provider_id])
+  	  provider.service_text = params[:service_text]
+  	  if provider.save
+  	    container = { "services" => provider.services.all, "status" => "success"}
+  	  else
+  	    container = { "services" => nil, "status" => "fail"}
+  	  end
+  	  render :json => container.to_json
+    else
+	    redirect_to root_url
+    end
+  end
+  
   def add_specialty_ajax
     if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
-	  provider = Provider.find(params[:provider_id])
-	  if !provider.nil?
-	    specialty = Specialty.new
-	    specialty.provider_id = provider.id
-	    specialty.specialty = params[:specialty]
-	    if specialty.save
-	      container = { "specialties" => provider.specialties.all, "status" => "success"}
-	    else
-		  container = { "specialties" => nil, "status" => "fail"}
-	    end
-	    render :json => container.to_json
-	  else
-	    provider.errors.full_messages.each do |message|
-	      flash[:danger] = 'Error: ' + message
-	    end
-	  end
+  	  provider = Provider.find(params[:provider_id])
+  	  if !provider.nil?
+  	    specialty = Specialty.new
+  	    specialty.provider_id = provider.id
+  	    specialty.specialty = params[:specialty]
+  	    if specialty.save
+  	      container = { "specialties" => provider.specialties.all, "status" => "success"}
+  	    else
+  		    container = { "specialties" => nil, "status" => "fail"}
+  	    end
+  	    render :json => container.to_json
+  	  else
+  	    provider.errors.full_messages.each do |message|
+  	      flash[:danger] = 'Error: ' + message
+  	    end
+  	  end
     else
-	  redirect_to root_url
+	    redirect_to root_url
     end
   end
   
   def delete_specialty_ajax
     if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
-	  provider = Provider.find(params[:provider_id])
-	  if !provider.nil?
-	    specialty = Specialty.find(params[:specialty_id])
-	    if specialty.destroy
-	      container = { "specialties" => provider.specialties.all, "status" => "success"}
-	    else
-		  container = { "specialties" => nil, "status" => "fail"}
-	    end
-	    render :json => container.to_json
-	  else
-	    provider.errors.full_messages.each do |message|
-	      flash[:danger] = 'Error: ' + message
-	    end
-	  end
+  	  provider = Provider.find(params[:provider_id])
+  	  if !provider.nil?
+  	    specialty = Specialty.find(params[:specialty_id])
+  	    if specialty.destroy
+  	      container = { "specialties" => provider.specialties.all, "status" => "success"}
+  	    else
+  		  container = { "specialties" => nil, "status" => "fail"}
+  	    end
+  	    render :json => container.to_json
+  	  else
+  	    provider.errors.full_messages.each do |message|
+  	      flash[:danger] = 'Error: ' + message
+  	    end
+  	  end
     else
-	  redirect_to root_url
+	    redirect_to root_url
+    end
+  end
+  
+  def provider_specialties_ajax
+    if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
+  	  provider = Provider.find(params[:provider_id])
+  	  if !provider.nil?
+  	    container = { "specialties" => provider.specialties.all, "status" => "success"}
+  	  else
+  	    container = { "specialties" => nil, "status" => "fail"}
+  	  end
+  	  render :json => container.to_json
+    else
+	    redirect_to root_url
+    end
+  end
+  
+  def update_specialty_text_ajax
+    if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
+  	  provider = Provider.find(params[:provider_id])
+  	  provider.specialty_text = params[:specialty_text]
+  	  if provider.save
+  	    container = { "specialties" => provider.specialties.all, "status" => "success"}
+  	  else
+  	    container = { "specialties" => nil, "status" => "fail"}
+  	  end
+  	  render :json => container.to_json
+    else
+	    redirect_to root_url
     end
   end
   
@@ -301,6 +359,50 @@ class ProvidersController < ApplicationController
     end
   end
   
+  def provider_certifications_ajax
+    if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
+  	  provider = Provider.find(params[:provider_id])
+  	  if !provider.nil?
+  	    container = { "certifications" => provider.certifications.all, "status" => "success"}
+  	  else
+  	    container = { "certifications" => nil, "status" => "fail"}
+  	  end
+  	  render :json => container.to_json
+    else
+	    redirect_to root_url
+    end
+  end
+  
+  def update_certification_text_ajax
+    if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
+  	  provider = Provider.find(params[:provider_id])
+  	  provider.certification_text = params[:certification_text]
+  	  if provider.save
+  	    container = { "certifications" => provider.certifications.all, "status" => "success"}
+  	  else
+  	    container = { "certifications" => nil, "status" => "fail"}
+  	  end
+  	  render :json => container.to_json
+    else
+	    redirect_to root_url
+    end
+  end
+  
+  def update_policies_text_ajax
+    if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
+  	  provider = Provider.find(params[:provider_id])
+  	  provider.policies = params[:policies]
+  	  if provider.save
+  	    container = { "status" => "success"}
+  	  else
+  	    container = { "status" => "fail"}
+  	  end
+  	  render :json => container.to_json
+    else
+	    redirect_to root_url
+    end
+  end
+  
   def add_area_ajax
     if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
 	  provider = Provider.find(params[:provider_id])
@@ -345,6 +447,53 @@ class ProvidersController < ApplicationController
     end
   end
   
+  def provider_areas_ajax
+    if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
+  	  provider = Provider.find(params[:provider_id])
+  	  if !provider.nil?
+  	    container = { "areas" => provider.areas.all, "status" => "success"}
+  	  else
+  	    container = { "areas" => nil, "status" => "fail"}
+  	  end
+  	  render :json => container.to_json
+    else
+	    redirect_to root_url
+    end
+  end
+  
+  def update_area_text_ajax
+    if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
+  	  provider = Provider.find(params[:provider_id])
+  	  provider.area_text = params[:area_text]
+  	  if provider.save
+  	    container = { "areas" => provider.areas.all, "status" => "success"}
+  	  else
+  	    container = { "areas" => nil, "status" => "fail"}
+  	  end
+  	  render :json => container.to_json
+    else
+	    redirect_to root_url
+    end
+  end
+  
+  def change_provider_password_ajax
+    if is_admin?
+  	  provider = Provider.find(params[:provider_id])
+  	  if !provider.nil?
+  	    if provider.update_attributes(provider_update_password)
+  	      container = { "status" => "success"}
+  	    else
+  		    container = { "status" => "fail"}
+  	    end
+  	  else
+  	    container = { "status" => "fail"}
+  	  end
+  	  render :json => container.to_json
+    else
+	    redirect_to root_url
+    end
+  end
+  
   def add_review_ajax
     if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
 	  provider = Provider.find(params[:provider_id])
@@ -371,22 +520,22 @@ class ProvidersController < ApplicationController
   
   def delete_review_ajax
     if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
-	  provider = Provider.find(params[:provider_id])
-	  if !provider.nil?
-	    review = Review.find(params[:review_id])
-	    if review.destroy
-	      container = { "reviews" => provider.reviews.all, "status" => "success"}
-	    else
-		  container = { "reviews" => nil, "status" => "fail"}
-	    end
-	    render :json => container.to_json
-	  else
-	    provider.errors.full_messages.each do |message|
-	      flash[:danger] = 'Error: ' + message
-	    end
-	  end
+  	  provider = Provider.find(params[:provider_id])
+  	  if !provider.nil?
+  	    review = Review.find(params[:review_id])
+  	    if review.destroy
+  	      container = { "reviews" => provider.reviews.all, "status" => "success"}
+  	    else
+  		    container = { "reviews" => nil, "status" => "fail"}
+  	    end
+  	    render :json => container.to_json
+  	  else
+  	    provider.errors.full_messages.each do |message|
+  	      flash[:danger] = 'Error: ' + message
+  	    end
+  	  end
     else
-	  redirect_to root_url
+	    redirect_to root_url
     end
   end
 
@@ -396,13 +545,145 @@ class ProvidersController < ApplicationController
     container = { "appointments" => @appointments, "status" => "success"}
     render :json => container.to_json
   end
+  
+  def filter_provider_ajax
+    filter = params[:filter]
+    results = Array.new
+    
+    categories = ["Areas", "Services", "Specialties"]
+    
+    #--- services
+    services = Service.where("service like '%#{filter}%'").order("service")
+    services.each do |s|
+      if results.length > 0
+        has_result = false
+        results.each do |r|
+          if r[:text] == s.service
+            has_result = true
+            r[:id] = "#{r[:id]}|#{s.provider_id}"
+          end
+        end
+        if !has_result
+          result = { :id => s.provider_id, :text => s.service, :category => "Services" }
+          results.push(result)
+        end
+      else
+        result = { :id => s.provider_id, :text => s.service, :category => "Services" }
+        results.push(result)
+      end
+    end
+    
+    #--- specialties
+    specialties = Specialty.where("specialty like '%#{filter}%'").order("specialty")
+    specialties.each do |s|
+      if results.length > 0
+        has_result = false
+        results.each do |r|
+          if r[:text] == s.specialty
+            has_result = true
+            r[:id] = "#{r[:id]}|#{s.provider_id}"
+          end
+        end
+        if !has_result
+          result = { :id => s.provider_id, :text => s.specialty, :category => "Specialties" }
+          results.push(result)
+        end
+      else
+        result = { :id => s.provider_id, :text => s.specialty, :category => "Specialties" }
+        results.push(result)
+      end
+    end
+    
+    #--- areas
+    areas = Area.where("area like '%#{filter}%'").order("area")
+    areas.each do |a|
+      if results.length > 0
+        has_result = false
+        results.each do |r|
+          if r[:text] == a.area
+            has_result = true
+            r[:id] = "#{r[:id]}|#{a.provider_id}"
+          end
+        end
+        if !has_result
+          result = { :id => a.provider_id, :text => a.area, :category => "Areas" }
+          results.push(result)
+        end
+      else
+        result = { :id => a.provider_id, :text => a.area, :category => "Areas" }
+        results.push(result)
+      end
+    end
+    if results.length > 0
+      container = { "results" => results, "status" => "success", "categories" => categories }
+    else
+      container = { "results" => nil, "status" => "fail", "categories" => nil }
+    end
+    render :json => container.to_json
+  end
+  
+  def provider_info_ajax
+    if !signed_in? || !is_admin?
+      redirect_to root_url
+    end
+    provider = Provider.find(params[:provider_id])
+    if !provider.nil?
+      container = { "provider" => provider.without_secure_info, "specialties" => provider.specialties.all, "status" => "success" }
+    else
+      container = { "provider" => nil, "status" => "fail" }
+    end
+    render :json => container.to_json
+  end
+  
+  def upload_picture_ajax
+    if !signed_in? || !is_admin?
+      redirect_to root_url
+    end
+    provider = Provider.find(params[:provider_id])
+    if !provider.nil?
+      uploaded_io = params[:image]
+      
+      filename = uploaded_io.original_filename
+      extension = filename.split('.').last.downcase
+      tmp_file = "#{Rails.root}/public/assets/img/profile_pic/#{provider.profile}.#{extension}"
+      id = 0
+      while File.exists?(tmp_file) do
+        tmp_file = "#{Rails.root}/public/assets/img/profile_pic/#{provider.profile}_#{id}.#{extension}"        
+        id += 1
+      end
+      File.open(tmp_file, 'wb') do |f|
+        f.write uploaded_io.read
+      end
+      provider.picture_path = "../assets/img/profile_pic/" + tmp_file.split('/').last
+      if provider.save
+        container = { "provider_id" => provider.id, "status" => "success"}
+      else
+        container = { "status" => "fail", "error" => provider.errors.full_messages}
+      end
+    else
+      container = { "status" => "fail", "error" => provider.errors.full_messages}
+    end
+    render :json => container.to_json
+  end
+  
+  def update_provider_info_ajax
+    if !signed_in? || !is_admin?
+      redirect_to root_url
+    end
+    provider = Provider.find(params[:provider_id])
+    if provider.update_attributes(provider_personal_update)
+      container = { "provider_id" => provider.id, "status" => "success"}
+    else
+      container = { "status" => "fail", "error" => provider.errors.full_messages}
+    end
+    render :json => container.to_json
+  end
 
   #--------------------------------------------------------------------------------------
   # admin methods
 
   def admin
     if !signed_in? || !is_admin?
-      csign_out
       redirect_to root_url
     end
 
@@ -417,22 +698,22 @@ class ProvidersController < ApplicationController
         @alert = {"strong" => "Error!", "type" => "danger", "message" => "Appointment not accepted."}
       end
     elsif params.has_key?(:deny_appointment_id)
-	  appointment = Appointment.find(params[:deny_appointment_id])
-	  if appointment.destroy
-	    @alert = {"strong" => "Success!", "type" => "success", "message" => "Appointment denied and deleted."}
-	  else
-	    @alert = {"strong" => "Error!", "type" => "danger", "message" => "It was not possible to deny and delete the appointment."}
-	  end
+  	  appointment = Appointment.find(params[:deny_appointment_id])
+  	  if appointment.destroy
+  	    @alert = {"strong" => "Success!", "type" => "success", "message" => "Appointment denied and deleted."}
+  	  else
+  	    @alert = {"strong" => "Error!", "type" => "danger", "message" => "It was not possible to deny and delete the appointment."}
+  	  end
     end
 
     @admin = current_provider 
     @appointments_not_accepted = Appointment.where("accepted = 0")
     @providers = Provider.where("admin = 0").order("first_name, last_name ASC")
+    #@providers = Provider.order("first_name, last_name ASC")
   end
 
   def appointment_detail
     if !signed_in? || !is_admin?
-      csign_out
       redirect_to root_url
     end
     @appointment = Appointment.find(params[:id])
@@ -454,6 +735,10 @@ class ProvidersController < ApplicationController
       params.require(:provider).permit(:first_name, :last_name, :email, :expertise, :abstract, :phone)	
     end
     
+    def provider_personal_update
+      params.require(:provider).permit(:first_name, :last_name, :email, :expertise, :abstract, :about, :phone, :admin)	
+    end
+    
     def provider_about
       params.require(:provider).permit(:about)	
     end
@@ -468,5 +753,9 @@ class ProvidersController < ApplicationController
     
     def provider_policies
       params.require(:provider).permit(:policies)	
+    end
+    
+    def provider_update_password
+      params.require(:provider).permit(:password, :password_confirmation)
     end
 end

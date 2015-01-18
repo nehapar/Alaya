@@ -6,34 +6,43 @@ Alaya::Application.routes.draw do
   resources :sessions, only: [:new, :create, :destroy]
   resources :clients
   
+  root :to => 'web_site#index'
+  
+  # clients
   match 'c_profile_edit', :to => 'clients#profile_edit' , via: 'get'
   match 'csignup',  :to => 'clients#new', via: 'get'
   match 'csignup_helper',  :to => 'clients#signup_helper', via: 'get'
-  match 'csignin', :to => 'sessions#new', via: 'get'
-  match 'csignout', :to => 'sessions#destroy', via: 'delete'
   match 'client_update_personal', :to => 'clients#update_personal' , via: 'patch'
   match 'client_update_password', :to => 'clients#update_password' , via: 'patch'
-  
-  root :to => 'web_site#index'
-  match 'profile_list', :to => 'providers#profile_list', via: 'get'
-  match 'profile_detail', :to => 'providers#profile_detail', via: 'get'
-  match 'profile_edit', :to => 'providers#profile_edit' , via: 'get'
-  #match 'profiles/:username', :to => 'providers#profile_detail' , via: 'get'
-  
-  match 'appointments_ajax', :to => 'providers#appointments_ajax', via: 'get'
   match 'csignin_ajax', :to => 'clients#csignin_ajax', via: 'get'
   match 'csignup_ajax', :to => 'clients#csignup_ajax', via: 'get'
   match 'update_info_ajax', :to => 'clients#update_info_ajax', via: 'get'
   match 'request_appointment_ajax', :to => 'clients#request_appointment_ajax', via: 'get'
   match 'get_clients_ajax', :to => 'clients#get_clients_ajax', via: 'get'
   match 'get_client_information_ajax', :to => 'clients#get_client_information_ajax', via: 'get'
+  match 'client_delete_appointment_ajax', :to => 'clients#delete_appointment_ajax', via: 'get'
   
+  # providers
+  
+  match 'profile_list', :to => 'providers#profile_list', via: 'get'
+  match 'profile_detail', :to => 'providers#profile_detail', via: 'get'
+  match 'profile_edit', :to => 'providers#profile_edit' , via: 'get'
+  match 'upload_provider_picture', :to => 'providers#upload_picture_ajax', via: 'post'
+  match 'provider_info', :to => 'providers#provider_info_ajax', via: 'get'
+  
+  match 'provider_specialties', :to => 'providers#provider_specialties_ajax', via: 'get'
+  match 'update_specialty_text', :to => 'providers#update_specialty_text_ajax', via: 'get'
+  match 'provider_services', :to => 'providers#provider_services_ajax', via: 'get'
+  match 'update_service_text', :to => 'providers#update_service_text_ajax', via: 'get'
+  match 'update_policies_text', :to => 'providers#update_policies_text_ajax', via: 'get'
+  match 'provider_certifications', :to => 'providers#provider_certifications_ajax', via: 'get'
+  match 'provider_areas', :to => 'providers#provider_areas_ajax', via: 'get'
+  match 'update_provider_info', :to => 'providers#update_provider_info_ajax', via: 'get'
+  match 'change_provider_password', :to => 'providers#change_provider_password_ajax', via: 'get'
+  match 'appointments_ajax', :to => 'providers#appointments_ajax', via: 'get'
   match 'signup', :to => 'providers#new', via: 'get'
-  match 'signin', :to => 'sessions#new', via: 'get'
-  match 'signout', :to => 'sessions#destroy', via: 'delete'
   match 'admin', :to => 'providers#admin', via: 'get'
   match 'admin_delete_appointment', :to => 'providers#admin', via: 'delete'
-
   match 'provider_update_picture', :to => 'providers#update_picture', via: 'patch'
   match 'provider_update_personal', :to => 'providers#update_personal', via: 'patch'
   match 'provider_update_password', :to => 'providers#update_password', via: 'patch'
@@ -51,20 +60,23 @@ Alaya::Application.routes.draw do
   match 'delete_certification_ajax', :to => 'providers#delete_certification_ajax', via: 'get'
   match 'delete_area_ajax', :to => 'providers#delete_area_ajax', via: 'get'
   match 'delete_review_ajax', :to => 'providers#delete_review_ajax', via: 'get'
-  
-  
   match 'appointment_detail', :to => 'providers#appointment_detail', via: 'get'
-
-  # static pages working
+  match 'filter_provider_ajax', :to => 'providers#filter_provider_ajax', via: 'get'
+  match 'signup', :to => 'providers#new', via: 'get'
+  
+  #sessions
+  
+  match 'csignin', :to => 'sessions#new', via: 'get'
+  match 'csignout', :to => 'sessions#destroy', via: 'delete'
+  match 'signin', :to => 'sessions#new', via: 'get'
+  match 'signout', :to => 'sessions#destroy', via: 'delete'
+  
+  # web site
   match 'profile_list_static', :to => 'web_site#profile_list', via: 'get'
-  #match 'kashika_jackson', :to => 'web_site#kashika_jackson', via: 'get'
-
   match 'partners', :to => 'web_site#partners', via: 'get'
   match 'about', :to => 'web_site#about', via: 'get'
   match 'contact', :to => 'web_site#contact', via: 'get'
   match 'faq', :to => 'web_site#faq', via: 'get'
-
-  match 'signup', :to => 'providers#new', via: 'get'
 
   get "web_site/index"
   get "web_site/profile_list"
@@ -73,8 +85,6 @@ Alaya::Application.routes.draw do
   get "web_site/about"
   get "web_site/contact"
   get "web_site/faq"
-  #get "providers/new"
-  get "providers/profile_list"
   
   ProvidersController.load
   ClientsController.load

@@ -1,5 +1,5 @@
 class Client < ActiveRecord::Base
-  has_many :appointments
+  has_many :appointments, dependent: :destroy
   has_many :providers, :through => :appointments
 
   before_save { self.email = email.downcase }
@@ -23,6 +23,31 @@ class Client < ActiveRecord::Base
 
   def reload_routes
     ClientsController.reload
+  end
+  
+  def clean_for_ajax
+    return self.slice(:id, :first_name, :last_name, :phone, :address, :weeks_pregnant, :profile)
+  end
+  
+  def create_adjusts
+    self.active = 1
+    if self.last_name.include? "'"
+      self.profile = self.first_name.downcase + "_" + self.last_name.downcase.gsub("'","")
+    else
+      self.profile = self.first_name.downcase + "_" + self.last_name.downcase
+    end
+    if self.profile.include? " "
+      self.profile = self.profile.gsub(" ","_")
+    end
+    if self.profile.include? "-"
+      self.profile = self.profile.gsub("-","_")
+    end
+    id = 0
+    profile = self.profile
+    while Client.where("profile = '#{self.profile}'").length > 0 do
+      self.profile = "#{profile}_#{id}"        
+      id += 1
+    end
   end
 
   private

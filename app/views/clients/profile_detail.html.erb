@@ -32,22 +32,22 @@
                                         <th>Date &#38; Time</th>
                                         <th>Evaluate</th>
                                         <th>Reschedule</th>
-                                        <th>Cancel</th>
+                                        <!-- <th>Cancel</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <% @client.appointments.each_with_index do |appointment, index| %>
-                                        <tr>
+                                        <tr id="appointment_<%= appointment.id %>">
                                             <td>
 												<%= link_to eval("#{appointment.provider.profile}_path") do %>
 														<%= appointment.provider.first_name %> <%= appointment.provider.last_name %></td>
 												<% end %>
                                             <td><%= appointment.provider.expertise %></td>
                                             <td><%= (appointment.start + 20.minutes).strftime("%H:%M:%S - %A, %B %dth, %Y") %></td>
-                                            <td align="center"><a href="#"><i class="fa fa-comments-o"></i></a></td>
+                                            <td align="center"><a href="#"><i class="fa fa-heart-o"></i></a></td>
                                             <td align="center"><a href="javascript: reschedule(<%= appointment.id %>);"><i class="fa fa-history fa-flip-horizontal"></i></a></td>
-                                            <td align="center"><a href="#"><i class="fa fa-remove"></i></a></td>
-                                        </tr>
+                                            <!-- <td align="center"><a href="javascript: deleteAppointment(<%= appointment.id %>);"><i class="fa fa-remove"></i></a></td> -->
+                                       </tr>
                                     <% end %>
                                 </tbody>
                             </table>
@@ -74,7 +74,7 @@
 							</div>
 						<% end %>
 						<div class="row">
-							<div class="col-md-10 col-md-offset-1">
+							<div class="col-md-12 col-md-offset-0">
 								<%= link_to "Schedule an appointment today!", profile_list_path, class: "btn-u pull-right" %>
 							</div>
 						</div>
