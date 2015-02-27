@@ -13,5 +13,6 @@
 // put an equal symbol "=" imediately after the comment if someday it is need
 //= require jquery
 //= require jquery_ujs
+//= require jasny-bootstrap
 // require turbolinks
 //= require_tree .

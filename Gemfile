@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '4.0.8'
 gem 'bcrypt-ruby', '3.1.2'
-
+gem 'jasny_bootstrap_extension_rails'
 
 group :development, :test do
   gem 'sqlite3', '1.3.8'
@@ -34,6 +34,7 @@ group :production do
   gem 'rails_12factor', '0.0.2'
 end
 
+gem 'mandrill-api'
 gem 'cloudinary'
 
 # Use ActiveModel has_secure_password

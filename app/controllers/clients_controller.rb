@@ -5,11 +5,11 @@ class ClientsController < ApplicationController
   # new routes after a client sign up.
   # There are callers on the routes file, at config/routes.rb
   def self.load
-	Alaya::Application.routes.draw do
-	  Client.where("active = 1").each do |client|
-		get "/#{client.profile}", :to => "clients#profile_detail", defaults: { id: client.id }
-	  end
-	end
+  	Alaya::Application.routes.draw do
+  	  Client.where("active = 1").each do |client|
+  		get "/#{client.profile}", :to => "clients#dashboard", defaults: { id: client.id }
+  	  end
+  	end
   end
   
   # It reloads routes for the clients home pages
@@ -28,15 +28,15 @@ class ClientsController < ApplicationController
     @client = Client.new(client_params)
     @client.create_adjusts
     if @client.save
-  	  flash[:success] = "Welcome to Alaya!"
+  	  flash.now[:success] = "Welcome to Alaya!"
   	  csign_in @client
   	  # for any reason, the sign up process is not finished at this point
   	  # so, it forces a redirect to another method that takes care of
   	  # finilize the job
   	  # !!!!!!!!!!!!! Need to be fixed !!!!!!!!!!!!!
-      redirect_to csignup_helper_path
+      redirect_to profile_list_path #csignup_helper_path
     else
-      flash[:error] = 'Sorry, it was not possible to register you.'
+      flash.now[:error] = 'Sorry, it was not possible to register you.'
       render 'new'
     end
   end
@@ -45,7 +45,9 @@ class ClientsController < ApplicationController
   # !!!!!!!!!!!!! Need to be fixed !!!!!!!!!!!!!
   def signup_helper
   	if csigned_in?
+  	  
   	  redirect_to eval(current_client.profile + "_path")
+  	  
   	else
   	  redirect_to root_url
   	end
@@ -54,7 +56,7 @@ class ClientsController < ApplicationController
   # This method check if who is requesting some client home page is
   # the client itself by checking if the session params match
   # if does not match, so redirects to home page
-  def profile_detail
+  def dashboard
     if csigned_in? && current_client.id == params[:id]
       @client = Client.find(params[:id])
     else
@@ -83,10 +85,10 @@ class ClientsController < ApplicationController
   def update_personal
     @client = current_client
     if @client.update_attributes(client_information)
-      flash[:success] = 'Information updated.'
+      flash.now[:success] = 'Information updated.'
     else
       @client.errors.full_messages.each do |message|
-        flash[:danger] = 'Error: ' + message
+        flash.now[:danger] = 'Error: ' + message
       end
     end
     redirect_to eval(current_client.profile + "_path")
@@ -99,14 +101,14 @@ class ClientsController < ApplicationController
     if @client && @client.authenticate(params[:client][:password_old])
       # so update to the new one
       if @client.update_attributes(client_update_password)
-        flash[:success] = 'Password updated.'
+        flash.now[:success] = 'Password updated.'
       else
         @client.errors.full_messages.each do |message|
-          flash[:danger] = 'Error: ' + message
+          flash.now[:danger] = 'Error: ' + message
         end
       end
     else
-      flash[:danger] = 'Error: wrong old password.'
+      flash.now[:danger] = 'Error: wrong old password.'
     end
     redirect_to eval(current_client.profile + "_path")
   end
@@ -210,8 +212,8 @@ class ClientsController < ApplicationController
       container = { "client" => client, "status" => "success"} # :only => [ :id, :name ] <- please, remember this
       render :json => container.to_json
     else
-      csign_out
-      sign_out
+      #csign_out
+      #sign_out
       redirect_to root_url
     end
   end
@@ -235,6 +237,36 @@ class ClientsController < ApplicationController
     end
     render :json => container.to_json
   end
+  
+  def update_client_information_ajax
+    if is_admin? or (csigned_in? && current_client.id == Integer(params[:client_id]))
+      client = Client.find(params[:client_id])
+      if client.update_attributes(client_params_by_client)
+        container = { "status" => "success" }
+        render :json => container.to_json
+      else
+        container = { "status" => "fail" }
+        render :json => container.to_json
+      end
+    else
+      redirect_to root_url
+    end
+  end
+  
+  def client_simple_info_ajax
+    if is_admin? or (csigned_in? && current_client.id == Integer(params[:client_id]))
+      client = Client.find(params[:client_id])
+      if !client.nil?
+        container = { "client" => client.clean_for_ajax, "status" => "success" }
+        render :json => container.to_json
+      else
+        container = { "status" => "fail" }
+        render :json => container.to_json
+      end
+    else
+      redirect_to root_url
+    end
+  end
 
   private
     # these methods are used to check if a post request is providing
@@ -242,6 +274,10 @@ class ClientsController < ApplicationController
     
     def client_params
       params.require(:client).permit(:first_name, :last_name, :email, :phone, :address, :weeks_pregnant, :password, :password_confirmation)
+    end
+    
+    def client_params_by_client
+      params.require(:client).permit(:first_name, :last_name, :phone, :address, :weeks_pregnant)
     end
     
     def client_information

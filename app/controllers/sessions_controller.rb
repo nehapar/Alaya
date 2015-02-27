@@ -1,4 +1,7 @@
 class SessionsController < ApplicationController
+  
+  
+  
   def new
   end
 
@@ -8,16 +11,22 @@ class SessionsController < ApplicationController
 
     if provider && provider.authenticate(params[:session][:password])
       sign_in provider
+      params[:session][:remember_me] == '1' ? remember(provider) : forget(provider)
       if is_admin?
         redirect_to admin_path
       else
-        redirect_to eval(provider.profile + '_path')
+        redirect_to provider_dashboard_path # eval(provider.profile + '_path')
       end
     elsif client && client.authenticate(params[:session][:password])
       csign_in client
-      redirect_to eval(client.profile + '_path')
+      params[:session][:remember_me] == '1' ? remember(client) : forget(client)
+      if client.appointments.where(['start >= ?', DateTime.now]).length > 0
+        redirect_to eval(client.profile + '_path')
+      else
+        redirect_to profile_list_path
+      end
     else
-      flash[:error] = 'Invalid email/password combination' # Not quite right!
+      flash.now[:error] = 'Invalid email/password combination' # Not quite right!
       render 'new'
     end
   end
@@ -29,5 +38,20 @@ class SessionsController < ApplicationController
       csign_out
     end
     redirect_to root_url
+  end
+  
+  def password_recovery_ajax
+    user = Provider.find_by(email: params[:email])
+    if user.nil?
+      user = Client.find_by(email: params[:email])
+    end
+    if !user.nil?
+      #UserMailer.password_recovery(user).deliver
+      password_recovery_email(user)
+      container = { "status" => "success" }
+    else
+      container = { "status" => "fail" }
+    end
+    render :json => container.to_json
   end
 end

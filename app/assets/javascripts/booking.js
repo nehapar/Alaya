@@ -612,7 +612,6 @@ var requestAppointment = function(datetime) {
 		content = content + "                	<footer>" + $("#c_provider_expertise").val() + "</footer>";
 		content = content + "                </blockquote>";
 
-		content = content + "                <p class=\"lead\">When: <strong>" + (m_current_date.getHours() > 12 ? m_current_date.getHours() - 12 : m_current_date.getHours()) + ":" + ("0" + m_current_date.getMinutes()).slice(-2) + (m_current_date.getHours() < 12 ? " am" : " pm") + "</strong> on <strong>" + q_screens.month(m_current_date.getMonth() + 1) + " " + m_current_date.getDate() + get_nth_suffix(m_current_date.getDate()) + ", " + m_current_date.getFullYear() + "</strong></p>";
 		content = content + "                <form action=\"request_appointment\" method=\"post\">";
 		
 		content = content + "                    <div class=\"row margin-bottom-20\">";
@@ -1172,10 +1171,6 @@ var validateName = function(name) {
     return false;
 };
 
-var clearMessage = function(id) {
-	$("#" + id).html("");
-};
-
 var changeNavLinksSignedIn = function(profile) {
 	var content = "";
 	content = content + "<ul class=\"nav navbar-nav\">";
@@ -1185,10 +1180,13 @@ var changeNavLinksSignedIn = function(profile) {
     $("#nav_links").html(content);
 };
 
+
+var current_messages = [];
 var alertMessage = function (id, message, type, append) {
 	var message_to_show = "";
 	var message_call = "";
 	var icon = "";
+	clearMessages();
 	append = append === undefined ? false : append;
 	switch (type) {
 		case "success":
@@ -1212,9 +1210,11 @@ var alertMessage = function (id, message, type, append) {
 			type = "warning";
 			icon = "exclamation-sign";
 	}
-	message_to_show = message_to_show + "<div class=\"alert alert-" + type + "\" role=\"alert\"><i class=\"fa fa-" + icon + "\"></i> <strong>" + message_call + "!</strong> " + message;
+	//message_to_show = message_to_show + "<div class=\"alert alert-" + type + "\" role=\"alert\"><i class=\"fa fa-" + icon + "\"></i> <strong>" + message_call + "!</strong> " + message;
+	message_to_show = message_to_show + "<div class=\"alert alert-" + type + "\" role=\"alert\"><strong>" + message_call + "!</strong> " + message;
 	message_to_show = message_to_show + "	<button type=\"button\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>";
 	message_to_show = message_to_show + "</div>";
+	current_messages.push(id);
 	if (append) {
 		$("#" + id).append(message_to_show);
 	}
@@ -1224,6 +1224,19 @@ var alertMessage = function (id, message, type, append) {
 	$('html, body').animate({
     	scrollTop: $("#" + id).offset().top - 60
   	}, 500);
+};
+
+var clearMessage = function(id) {
+	$("#" + id).html("");
+	clearMessages();
+};
+
+var clearMessages = function() {
+	var i = 0;
+	for (i = 0; i < current_messages.length; i++) {
+		$("#" + current_messages[i]).html("");
+	}
+	current_messages = [];
 };
 
 var get_nth_suffix = function(date) {

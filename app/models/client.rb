@@ -14,6 +14,17 @@ class Client < ActiveRecord::Base
   def Client.new_remember_token
     SecureRandom.urlsafe_base64
   end
+  
+  # Remembers a user in the database for use in persistent sessions.
+  def remember
+    self.remember_token = Client.new_remember_token
+    update_attribute(:remember_token, Client.digest(remember_token))
+  end
+  
+  # Forgets a user.
+  def forget
+    update_attribute(:remember_token, nil)
+  end
 
   def Client.digest(token)
     Digest::SHA1.hexdigest(token.to_s)
@@ -26,7 +37,7 @@ class Client < ActiveRecord::Base
   end
   
   def clean_for_ajax
-    return self.slice(:id, :first_name, :last_name, :phone, :address, :weeks_pregnant, :profile)
+    return self.slice(:id, :first_name, :last_name, :email, :phone, :address, :weeks_pregnant, :profile)
   end
   
   def create_adjusts
@@ -49,6 +60,20 @@ class Client < ActiveRecord::Base
       id += 1
     end
   end
+  
+  def send_password_reset
+	  generate_token(:password_reset_token)
+	  self.password_reset_sent_at = Time.zone.now
+	  save!
+	  UserMailer.password_recovery_email(self)
+	  #UserMailer.password_recovery(self).deliver
+  end
+	
+	def generate_token(column)
+	  begin
+	    self[column] = SecureRandom.urlsafe_base64
+	  end while Client.exists?(column => self[column])
+	end
 
   private
 

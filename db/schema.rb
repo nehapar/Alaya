@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141011003552) do
+ActiveRecord::Schema.define(version: 20150225052155) do
 
   create_table "appointments", force: true do |t|
     t.integer  "provider_id"
@@ -53,6 +53,8 @@ ActiveRecord::Schema.define(version: 20141011003552) do
     t.string   "remember_token"
     t.integer  "active"
     t.string   "profile"
+    t.string   "password_reset_token"
+    t.datetime "password_reset_sent_at"
   end
 
   add_index "clients", ["remember_token"], name: "index_clients_on_remember_token"
@@ -76,6 +78,8 @@ ActiveRecord::Schema.define(version: 20141011003552) do
     t.string   "picture_path"
     t.string   "profile"
     t.string   "service_text"
+    t.string   "password_reset_token"
+    t.datetime "password_reset_sent_at"
   end
 
   add_index "providers", ["email"], name: "index_providers_on_email", unique: true

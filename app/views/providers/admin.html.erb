@@ -1,178 +1,179 @@
 <% provide(:title, @admin.first_name) %>
-    <!--=== Container ===-->
-    <div class="container content">
-        <div class="row margin-bottom-30">
-            <div class="col-md-10 col-md-offset-1 mb-margin-bottom-30">
-                <div id="admin_page_message"></div>
-                <% flash.each do |key, value| %>
-                    <div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-remove"></span> <strong><%= key %></strong> <%= value %>
-                       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    </div>
-                <% end %>
+  <!--=== Container ===-->
+  <div class="container content">
+    <div class="row margin-bottom-30">
+      <div class="col-md-10 col-md-offset-1 mb-margin-bottom-30">
+        <div id="top_page_message"></div>
+        <% flash.each do |key, value| %>
+          <div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-remove"></span> <strong><%= key %></strong> <%= value %>
+             <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          </div>
+        <% end %>
 
-                <% if !@alert.nil? %>
-                    <div class="alert alert-<%= @alert["type"] %>" role="alert"><span class="glyphicon glyphicon-remove"></span> <strong><%= @alert["strong"] %></strong> <%= @alert["message"] %>
-                       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    </div>
-                <% end %>
+        <% if !@alert.nil? %>
+          <div class="alert alert-<%= @alert["type"] %>" role="alert"><span class="glyphicon glyphicon-remove"></span> <strong><%= @alert["strong"] %></strong> <%= @alert["message"] %>
+             <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          </div>
+        <% end %>
 
-                <div class="headline"><h2>System Admin</h2></div>
-                
-                <!-- Requests table begin -->
-                <ul class="nav nav-tabs" role="tablist">
-                    <li class="active"><a href="#requests" role="tab" data-toggle="tab"><i class="fa fa-inbox"></i> Requests</a></li>
-                    <li class=""><a href="#schedule" role="tab" data-toggle="tab"><i class="fa fa-calendar"></i> Schedule</a></li>
-                    <li class=""><a href="#providers" role="tab" data-toggle="tab"><i class="fa fa-user-md"></i> Providers</a></li>
-                    <li class=""><a href="#clients" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Clients</a></li>
-                    <li class=""><a href="#config" role="tab" data-toggle="tab"><i class="fa fa-cog"></i> Configuration</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="requests">
-                        <% if @appointments_not_accepted.length > 0 %>
-                            <h2>Request waiting for acceptance</h2>
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Provider</th>
-                                        <th>Client</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Date</th>
-                                        <th>Accept</th>
-                                        <th>Details</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% @appointments_not_accepted.each_with_index do |appointment, index| %>
-                                        <tr>
-                                            <td><%= appointment.provider.first_name %> <%= appointment.provider.last_name %></td>
-                                            <td><%= appointment.client.first_name %> <%= appointment.client.last_name %></td>
-                                            <td><%= appointment.client.email %></td>
-                                            <td><%= appointment.client.phone %></td>
-                                            <td><%= (appointment.start + 20.minutes).strftime("%H:%M:%S - %A, %B %dth, %Y") %></td>
-                                            <td align="center">
-                                                <%= link_to admin_path(:accept_appointment_id => appointment.id) do %>
-                                                    <span class="glyphicon glyphicon-thumbs-up" title="Accept request"></span>
-                                                <% end %>
-                                            </td>
-                                            <td align="center">
-                                                <%= link_to appointment_detail_path(:id => appointment.id) do %>
-                                                    <span class="glyphicon glyphicon-circle-arrow-right" title="Detailed request"></span>
-                                                <% end %>
-                                            </td>
-                                        </tr>
-                                    <% end %>
-                                    
-                                </tbody>
-                            </table>
-                        <% else %>
-                            <h2>There are not requests waiting for acceptance</h2>
+        <div class="headline"><h2>System Admin</h2></div>
+        
+        <!-- Requests table begin -->
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="active"><a href="#requests" role="tab" data-toggle="tab"><i class="fa fa-inbox"></i> Requests</a></li>
+          <li class=""><a href="#" role="tab" data-toggle="tab"><i class="fa fa-calendar"></i> Past Requests</a></li>
+          <li class=""><a href="#schedule" role="tab" data-toggle="tab"><i class="fa fa-calendar"></i> Schedule</a></li>
+          <li class=""><a href="#providers" role="tab" data-toggle="tab"><i class="fa fa-user-md"></i> Providers</a></li>
+          <li class=""><a href="#clients" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Clients</a></li>
+          <li class=""><a href="#config" role="tab" data-toggle="tab"><i class="fa fa-cog"></i> Configuration</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="requests">
+            <% if @appointments_not_accepted.length > 0 %>
+              <h2>Request waiting for acceptance</h2>
+              <table class="table table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th>Provider</th>
+                    <th>Client</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Date</th>
+                    <th>Accept</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @appointments_not_accepted.each_with_index do |appointment, index| %>
+                    <tr>
+                      <td><%= appointment.provider.first_name %> <%= appointment.provider.last_name %></td>
+                      <td><%= appointment.client.first_name %> <%= appointment.client.last_name %></td>
+                      <td><%= appointment.client.email %></td>
+                      <td><%= appointment.client.phone %></td>
+                      <td><%= (appointment.start + 20.minutes).strftime("%H:%M:%S - %A, %B %dth, %Y") %></td>
+                      <td align="center">
+                        <%= link_to admin_path(:accept_appointment_id => appointment.id) do %>
+                          <span class="glyphicon glyphicon-thumbs-up" title="Accept request"></span>
                         <% end %>
-                    </div>
-                    <div class="tab-pane" id="schedule">
-                        <h2>Scheduling monitor</h2>
+                      </td>
+                      <td align="center">
+                        <%= link_to appointment_detail_path(:id => appointment.id) do %>
+                          <span class="glyphicon glyphicon-circle-arrow-right" title="Detailed request"></span>
+                        <% end %>
+                      </td>
+                    </tr>
+                  <% end %>
+                  
+                </tbody>
+              </table>
+            <% else %>
+              <h2>There are not requests waiting for acceptance</h2>
+            <% end %>
+          </div>
+          <div class="tab-pane" id="schedule">
+            <h2>Scheduling monitor</h2>
 
-                        <div class="row margin-bottom-20">
-                            <form id="schedules_periodicity" action="#" method="post">
-                                <div class="col-md-4 col-md-offset-0">
-                                    <label for="c_provider_id"><strong><span class="glyphicon glyphicon-chevron-right"></span> Provider:</strong></label>
-                                    <select name="c_provider_id" id="c_provider_id" class="form-control">
-                                        <% @providers.each_with_index do |provider, index| %>
-                                            <option value="<%= provider.id %>"><%= provider.first_name %> <%= provider.last_name %></option>
-                                        <% end %>
-                                    </select>
-                                </div>
-                                <div class="col-md-8 col-md-offset-0">
-                                    <label><strong><span class="glyphicon glyphicon-chevron-right"></span> Periodicity:</strong></label>
-                                    <br>
-                                    <label class="radio-inline">
-                                        <input type="radio" onchange="loadSchedule();" name="periodicity" id="p_monthly" value="1" checked>Monthly
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input type="radio" onchange="loadSchedule();" name="periodicity" id="p_weekly" value="2">Weekly
-                                    </label>
-                                    <!--
-                                    <label class="radio-inline">
-                                        <button type="button" onclick="loadSchedule();" class="btn btn-danger btn-large" ><span class="glyphicon glyphicon-refresh"></span> Load Schedule</button>
-                                    </label>
-                                    -->
-                                    <!-- begin: varibles to be used by ajax -->
-                                    <input type="hidden" name="c_client_id" id="c_client_id" value="0">
-                                    <input type="hidden" name="c_client_complete" id="c_client_complete" value="0">
-                                    <input type="hidden" name="c_client_first_name" id="c_client_first_name" value="0">
-                                    <input type="hidden" name="c_client_last_name" id="c_client_last_name" value="0">
-                                    <input type="hidden" name="c_provider_first_name" id="c_provider_first_name" value="0">
-                                    <input type="hidden" name="c_provider_last_name" id="c_provider_last_name" value="0">
-                                    <input type="hidden" name="c_provider_expertise" id="c_provider_expertise" value="0">
-                                    <input type="hidden" name="is_admin" id="is_admin" value="1">
-                                    <!-- end: varibles to be used by ajax -->
-                                </div>
-                            </form>
-                        </div>
+            <div class="row margin-bottom-20">
+              <form id="schedules_periodicity" action="#" method="post">
+                <div class="col-md-4 col-md-offset-0">
+                  <label for="c_provider_id"><strong><span class="glyphicon glyphicon-chevron-right"></span> Provider:</strong></label>
+                  <select name="c_provider_id" id="c_provider_id" class="form-control">
+                    <% @providers.each_with_index do |provider, index| %>
+                      <option value="<%= provider.id %>"><%= provider.first_name %> <%= provider.last_name %></option>
+                    <% end %>
+                  </select>
+                </div>
+                <div class="col-md-8 col-md-offset-0">
+                  <label><strong><span class="glyphicon glyphicon-chevron-right"></span> Periodicity:</strong></label>
+                  <br>
+                  <label class="radio-inline">
+                    <input type="radio" onchange="loadSchedule();" name="periodicity" id="p_monthly" value="1" checked>Monthly
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" onchange="loadSchedule();" name="periodicity" id="p_weekly" value="2">Weekly
+                  </label>
+                  <!--
+                  <label class="radio-inline">
+                    <button type="button" onclick="loadSchedule();" class="btn btn-danger btn-large" ><span class="glyphicon glyphicon-refresh"></span> Load Schedule</button>
+                  </label>
+                  -->
+                  <!-- begin: varibles to be used by ajax -->
+                  <input type="hidden" name="c_client_id" id="c_client_id" value="0">
+                  <input type="hidden" name="c_client_complete" id="c_client_complete" value="0">
+                  <input type="hidden" name="c_client_first_name" id="c_client_first_name" value="0">
+                  <input type="hidden" name="c_client_last_name" id="c_client_last_name" value="0">
+                  <input type="hidden" name="c_provider_first_name" id="c_provider_first_name" value="0">
+                  <input type="hidden" name="c_provider_last_name" id="c_provider_last_name" value="0">
+                  <input type="hidden" name="c_provider_expertise" id="c_provider_expertise" value="0">
+                  <input type="hidden" name="is_admin" id="is_admin" value="1">
+                  <!-- end: varibles to be used by ajax -->
+                </div>
+              </form>
+            </div>
 
-                        <div class="panel-body margin-bottom-40">
-                            <div id="my-calendar">
-                                <div id="schedules_body_alert"></div>
-                                <div class="row">
-                                    <div class="col-xs-12" id="schedules_container"></div>
-                                </div>
-                                <div class="modal fade" id="schedules_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                                <h4 class="modal-title" id="schedules_title"></h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form action="" method="post">
-                                                    <div id="schedules_alert"></div>
-                                                    <div id="schedulse_modal_content"></div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" title="Cancel"></span> Cancel</button>
-                                                        &nbsp;<a href="#" id="schedules_modal_action" class="btn-u pull-right"></a>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <div class="panel-body margin-bottom-40">
+              <div id="my-calendar">
+                <div id="schedules_body_alert"></div>
+                <div class="row">
+                  <div class="col-xs-12" id="schedules_container"></div>
+                </div>
+                <div class="modal fade" id="schedules_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="schedules_title"></h4>
+                      </div>
+                      <div class="modal-body">
+                        <form action="" method="post">
+                          <div id="schedules_alert"></div>
+                          <div id="schedulse_modal_content"></div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" title="Cancel"></span> Cancel</button>
+                            &nbsp;<a href="#" id="schedules_modal_action" class="btn-u pull-right"></a>
+                          </div>
+                        </form>
+                      </div>
                     </div>
-                    <div class="tab-pane" id="providers">
-                        <br><br>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="providers_list"><i class="fa fa-users"></i> Providers</label>
-                                <select name="providers_list" id="providers_list" class="form-control" onchange="adminShowUpProvider();">
-                                    <option value="0"></option>
-                                    <% @providers.each_with_index do |provider, index| %>
-                                        <option value="<%= provider.id %>"><%= provider.first_name %> <%= provider.last_name %></option>
-                                    <% end %>
-                                </select>
-                            </div>
-                        </div>
-                        <hr>
-                        
-                        <ul class="nav nav-pills" role="tablist">
-                            <li role="presentation" class="active"><a href="#provider_picture_tab" aria-controls="provider_picture_tab" role="tab" data-toggle="tab"><i class="fa fa-picture-o"></i> Picture</a></li>
-                            <li role="presentation"><a href="#provider_primary_profile_tab" aria-controls="provider_primary_profile_tab" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Primary profile</a></li>
-                            <li role="presentation"><a href="#provider_specialty_tab" aria-controls="provider_specialty_tab" role="tab" data-toggle="tab"><i class="fa fa-star"></i> Specialties</a></li>
-                            <li role="presentation"><a href="#provider_service_tab" aria-controls="provider_service_tab" role="tab" data-toggle="tab"><i class="fa fa-briefcase"></i> Services</a></li>
-                            <li role="presentation"><a href="#provider_certification_tab" aria-controls="provider_certification_tab" role="tab" data-toggle="tab"><i class="fa fa-graduation-cap"></i> Certifications</a></li>
-                            <li role="presentation"><a href="#provider_area_tab" aria-controls="provider_area_tab" role="tab" data-toggle="tab"><i class="fa fa-map-marker"></i> Areas Served</a></li>
-                            <li role="presentation"><a href="#provider_payment_tab" aria-controls="provider_payment_tab" role="tab" data-toggle="tab"><i class="fa fa-credit-card"></i> Policies</a></li>
-                            <!--<li role="presentation"><a href="#provider_reviews_tab" aria-controls="provider_reviews_tab" role="tab" data-toggle="tab"><i class="fa fa-group"></i> Reviews</a></li>-->
-                            <li role="presentation"><a href="#provider_change_password_tab" aria-controls="provider_change_password_tab" role="tab" data-toggle="tab"><i class="fa fa-lock"></i> Password</a></li>
-                        </ul>
-                        
-                        <%= csrf_meta_tag %>
-                        
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="provider_picture_tab">
-                                <br><br>
-                                <div class="row">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane" id="providers">
+            <br><br>
+            <div class="row">
+              <div class="col-md-4">
+                <label for="providers_list"><i class="fa fa-users"></i> Providers</label>
+                <select name="providers_list" id="providers_list" class="form-control" onchange="adminShowUpProvider();">
+                  <option value="0"></option>
+                  <% @providers.each_with_index do |provider, index| %>
+                    <option value="<%= provider.id %>"><%= provider.first_name %> <%= provider.last_name %></option>
+                  <% end %>
+                </select>
+              </div>
+            </div>
+            <hr>
+            
+            <ul class="nav nav-pills" role="tablist">
+              <li role="presentation" class="active"><a href="#provider_picture_tab" aria-controls="provider_picture_tab" role="tab" data-toggle="tab"><i class="fa fa-picture-o"></i> Picture</a></li>
+              <li role="presentation"><a href="#provider_primary_profile_tab" aria-controls="provider_primary_profile_tab" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Primary profile</a></li>
+              <li role="presentation"><a href="#provider_specialty_tab" aria-controls="provider_specialty_tab" role="tab" data-toggle="tab"><i class="fa fa-star"></i> Specialties</a></li>
+              <li role="presentation"><a href="#provider_service_tab" aria-controls="provider_service_tab" role="tab" data-toggle="tab"><i class="fa fa-briefcase"></i> Services</a></li>
+              <li role="presentation"><a href="#provider_certification_tab" aria-controls="provider_certification_tab" role="tab" data-toggle="tab"><i class="fa fa-graduation-cap"></i> Certifications</a></li>
+              <li role="presentation"><a href="#provider_area_tab" aria-controls="provider_area_tab" role="tab" data-toggle="tab"><i class="fa fa-map-marker"></i> Areas Served</a></li>
+              <li role="presentation"><a href="#provider_payment_tab" aria-controls="provider_payment_tab" role="tab" data-toggle="tab"><i class="fa fa-credit-card"></i> Policies</a></li>
+              <li role="presentation"><a href="#provider_reviews_tab" aria-controls="provider_reviews_tab" role="tab" data-toggle="tab"><i class="fa fa-group"></i> Reviews</a></li>
+              <li role="presentation"><a href="#provider_change_password_tab" aria-controls="provider_change_password_tab" role="tab" data-toggle="tab"><i class="fa fa-lock"></i> Password</a></li>
+            </ul>
+            
+            <%= csrf_meta_tag %>
+            
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div role="tabpanel" class="tab-pane active" id="provider_picture_tab">
+                <br><br>
+                <div class="row">
 									<div class="col-sm-6 col-md-6">
 										<div class="input-group">
 											<input class="form-control" id="mainImageLabel" placeholder="Chose a picture" disabled="disabled" />
@@ -187,246 +188,268 @@
 										<a href="javascript: uploadProviderPicture()" class="btn-u" id="upload_button"><i class="fa fa-cloud-upload"></i> Upload Picture</a>
 										<br><br>
 										<div class="progress">
-                                            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;" id="upload_progress_bar">
-                                                <span class="sr-only">0% Complete</span>
-                                            </div>
-                                        </div>
+                      <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;" id="upload_progress_bar">
+                        <span class="sr-only">0% Complete</span>
+                      </div>
+                    </div>
 									</div>
 									<div class="col-sm-6 col-md-6" align="center">
 										<div id="provider_picture_spin_container" style="display: none;">
-										    <i class="fa fa-spinner fa-spin fa-5x"></i>
+										  <i class="fa fa-spinner fa-spin fa-5x"></i>
 										</div>
 										<div id="provider_image_container">
-										    <img id="provider_main_image" class="img-responsive img-thumbnaile" src="../assets/img/profile_pic/provider_without_picture.png" alt="">
+										  <img id="provider_main_image" class="img-responsive img-thumbnaile" src="../assets/img/profile_pic/provider_without_picture.png" alt="">
 										</div>
 									</div>
 								</div>
-                            </div>
-                            <div role="tabpanel" class="tab-pane" id="provider_primary_profile_tab">
-                                <br><br>
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-12">
-                                        <div class="row margin-bottom-20" style="display: none;">
-                                            <div class="col-md-5 col-md-offset-1">
-                                                <label for="provider_admin"><input type="checkbox" name="provider[admin]" id="provider_admin"> Administrator</label>
-                                            </div>                
-                                        </div>
-                                        <div class="row margin-bottom-20">
-                                            <div class="col-md-5 col-md-offset-1">
-                                                <label for="provider_first_name">First name</label>
-                                                <input type="text" name="provider[first_name]" id="provider_first_name" class="form-control" placeholder="First name">
-                                            </div>
-                                            <div class="col-md-5">
-                                                <label for="provider_last_name">Last name</label>
-                                                <input type="text" name="provider[last_name]" id="provider_last_name" class="form-control" placeholder="Last name">
-                                            </div>                
-                                        </div>
-                                        <div class="row margin-bottom-20">
-                                            <div class="col-md-10 col-md-offset-1">
-                                                <label for="provider_expertise">Expertise</label>
-                                                <input type="text" name="provider[expertise]" id="provider_expertise" class="form-control" placeholder="Expertise">
-                                            </div>                
-                                        </div>
-                                        <div class="row margin-bottom-20">
-                                            <div class="col-md-5 col-md-offset-1">
-                                                <label for="provider_email">Email</label>
-                                                <input type="text" name="provider[email]" id="provider_email" class="form-control" placeholder="Email">
-                                            </div>
-                                            <div class="col-md-5 col-md-offset-0">
-                                                <label for="provider_phone">Phone</label>
-                                                <input type="text" name="provider[phone]" id="provider_phone" class="form-control" placeholder="Phone">
-                                            </div>                
-                                        </div>
-                                        <div class="row margin-bottom-20">
-                                            <div class="col-md-10 col-md-offset-1">
-                                                <label for="provider_abstract">Abstract</label>
-                                                <textarea name="provider[abstract]" id="provider_abstract" class="form-control" placeholder="Abstract to be displayed as advertisement" rows="8"></textarea>
-                                            </div>                
-                                        </div>
-                                        <div class="row margin-bottom-20">
-                                            <div class="col-md-10 col-md-offset-1">
-                                                <textarea name="provider[about]" id="provider_about" class="form-control" placeholder="About" rows="8"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="row margin-bottom-20">
-                                            <div class="col-md-10 col-md-offset-1">
-                                                <a href="javascript: saveProviderPersonalInfo();" class="btn-u pull-right"><i class="fa fa-save"></i>  Save personal info</a>
-                                            </div>                
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div role="tabpanel" class="tab-pane" id="provider_specialty_tab">
-                                <br><br>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="row margin-bottom-20">
-        									<div class="col-md-10 col-md-offset-1">
-        									    <textarea name="provider[specialty_text]" id="provider_specialty_text" class="form-control" placeholder="Specialty" rows="8"></textarea>
-        									</div>                
-        								</div>
-        								<div class="row margin-bottom-20">
-        									<div class="col-md-10 col-md-offset-1">
-        										<a href="javascript: saveProviderSpecialtyText();" class="btn-u pull-right"><i class="fa fa-save"></i> Save Specialties Text</a>
-        									</div>                
-        								</div>
-        								<div class="row margin-bottom-20">
-            								<div class="col-md-10 col-md-offset-1">
-            									<h1>Specialties</h1>
-            									<div id="add_specialty_alert"></div>
-            								</div>                
-            							</div>
-            							<div class="row margin-bottom-20">
-            								<div class="col-md-7 col-md-offset-1">
-            									<input class="form-control" name="new_specialty" id="new_specialty" type="text" placeholder="New Specialty">
-            								</div>
-            								<div class="col-md-3">
-            									<button type="button" class="btn-u col-md-12" onclick="addSpecialtyToProvider();"><i class="fa fa-plus"></i> Add New Specialty</button>
-            								</div>                
-            							</div>
-            							<div class="row" id="specialties_list"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div role="tabpanel" class="tab-pane" id="provider_service_tab">
-                                <br><br>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="row margin-bottom-20">
-        									<div class="col-md-10 col-md-offset-1">
-        									    <textarea name="provider[service_text]" id="provider_service_text" class="form-control" placeholder="Service" rows="8"></textarea>
-        									</div>                
-        								</div>
-        								<div class="row margin-bottom-20">
-        									<div class="col-md-10 col-md-offset-1">
-        										<a href="javascript: saveProviderServiceText();" class="btn-u pull-right"><i class="fa fa-save"></i> Save Services Text</a>
-        									</div>
-        								</div>
-        								<div class="row margin-bottom-20">
-            								<div class="col-md-10 col-md-offset-1">
-            									<h1>Services</h1>
-            									<div id="add_service_alert"></div>
-            								</div>                
-            							</div>
-            							<div class="row margin-bottom-20">
-            								<div class="col-md-7 col-md-offset-1">
-            									<input class="form-control" name="new_service" id="new_service" type="text" placeholder="New Service">
-            								</div>
-            								<div class="col-md-3">
-            									<button type="button" class="btn-u col-md-12" onclick="addServiceToProvider();"><i class="fa fa-plus"></i> Add New Service</button>
-            								</div>                
-            							</div>
-            							<div class="row" id="services_list"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div role="tabpanel" class="tab-pane" id="provider_certification_tab">
-                                <br><br>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="row margin-bottom-20">
-            								<div class="col-md-10 col-md-offset-1">
-            									<h1>Certifications</h1>
-            									<div id="add_certification_alert"></div>
-            								</div>                
-            							</div>
-            							<div class="row margin-bottom-20">
-            								<div class="col-md-7 col-md-offset-1">
-            									<input class="form-control" name="new_certification" id="new_certification" type="text" placeholder="New Certification">
-            								</div>
-            								<div class="col-md-3">
-            									<button type="button" class="btn-u col-md-12" onclick="addCertificationToProvider();"><i class="fa fa-plus"></i> Add New Certification</button>
-            								</div>                
-            							</div>
-            							<div class="row" id="certifications_list"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div role="tabpanel" class="tab-pane" id="provider_area_tab">
-                                <br><br>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="row margin-bottom-20">
-            								<div class="col-md-10 col-md-offset-1">
-            									<h1>Areas</h1>
-            									<div id="add_area_alert"></div>
-            								</div>                
-            							</div>
-            							<div class="row margin-bottom-20">
-            								<div class="col-md-7 col-md-offset-1">
-            									<input class="form-control" name="new_area" id="new_area" type="text" placeholder="New Area">
-            								</div>
-            								<div class="col-md-3">
-            									<button type="button" class="btn-u col-md-12" onclick="addAreaToProvider();"><i class="fa fa-plus"></i> Add New Area</button>
-            								</div>                
-            							</div>
-            							<div class="row" id="areas_list"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div role="tabpanel" class="tab-pane" id="provider_payment_tab">
-                                <br><br>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="row margin-bottom-20">
-        									<div class="col-md-10 col-md-offset-1">
-        									    <textarea name="provider[policies]" id="provider_policies" class="form-control" placeholder="Payment & Policies" rows="8"></textarea>
-        									</div>                
-        								</div>
-        								<div class="row margin-bottom-20">
-        									<div class="col-md-10 col-md-offset-1">
-        										<a href="javascript: saveProviderPoliciesText();" class="btn-u pull-right"><i class="fa fa-save"></i> Save Payment & Policies Text</a>
-        									</div>
-        								</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div role="tabpanel" class="tab-pane" id="provider_reviews_tab">
-                                <br><br>
-                                <div class="row">
-                                    
-                                </div>
-                            </div>
-                            <div role="tabpanel" class="tab-pane" id="provider_change_password_tab">
-                                <br><br>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="row margin-bottom-20">
-        									<div class="col-md-10 col-md-offset-1">
-        										<h1><i class="fa fa-lock"></i> Change Password</h1>
-        									</div>                
-        								</div>
-                                    	<div class="row margin-bottom-20">
-    										<div class="col-md-5 col-md-offset-1">
-    										    <label for="provider_password">Password</label>
-    										    <input type="text" class="form-control" placeholder="Password" name="provider[password]" id="provider_password" required="required">
-    										</div>                
-    										<div class="col-md-5">
-    										    <label for="provider_password_confirmation">Password confirmation</label>
-    										    <input type="text" class="form-control" placeholder="Password confirmation" name="provider[password_confirmation]" id="provider_password_confirmation" required="required">
-    										</div>
-    									</div>
-    									<div class="row margin-bottom-20">
-    										<div class="col-md-10 col-md-offset-1">
-    										    <a href="javascript: generatePasswordProvider();" class="btn btn-primary"><i class="fa fa-refresh"></i> Generate password</a>
-    										    <a href="javascript: changeProviderPassword();" class="btn-u pull-right"><i class="fa fa-save"></i> Save password</a>
-    										</div>
-    									</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
+              </div>
+              <div role="tabpanel" class="tab-pane" id="provider_primary_profile_tab">
+                <br><br>
+                <div class="row">
+                  <div class="col-sm-12 col-md-12">
+                    <div class="row margin-bottom-20" style="display: none;">
+                      <div class="col-md-5 col-md-offset-1">
+                        <label for="provider_admin"><input type="checkbox" name="provider[admin]" id="provider_admin"> Administrator</label>
+                      </div>        
                     </div>
-                    <div class="tab-pane" id="clients">
-                        
-                    </div>    
-                    <div class="tab-pane" id="config">
-                        
+                    <div class="row margin-bottom-20">
+                      <div class="col-md-5 col-md-offset-1">
+                        <label for="provider_first_name">First name</label>
+                        <input type="text" name="provider[first_name]" id="provider_first_name" class="form-control" placeholder="First name">
+                      </div>
+                      <div class="col-md-5">
+                        <label for="provider_last_name">Last name</label>
+                        <input type="text" name="provider[last_name]" id="provider_last_name" class="form-control" placeholder="Last name">
+                      </div>        
                     </div>
+                    <div class="row margin-bottom-20">
+                      <div class="col-md-10 col-md-offset-1">
+                        <label for="provider_expertise">Expertise</label>
+                        <input type="text" name="provider[expertise]" id="provider_expertise" class="form-control" placeholder="Expertise">
+                      </div>        
+                    </div>
+                    <div class="row margin-bottom-20">
+                      <div class="col-md-5 col-md-offset-1">
+                        <label for="provider_email">Email</label>
+                        <input type="text" name="provider[email]" id="provider_email" class="form-control" placeholder="Email">
+                      </div>
+                      <div class="col-md-5 col-md-offset-0">
+                        <label for="provider_phone">Phone</label>
+                        <input type="text" name="provider[phone]" id="provider_phone" class="form-control" placeholder="Phone"  data-mask="(999) 999-9999">
+                      </div>        
+                    </div>
+                    <div class="row margin-bottom-20">
+                      <div class="col-md-10 col-md-offset-1">
+                        <label for="provider_abstract">Abstract</label>
+                        <textarea name="provider[abstract]" id="provider_abstract" class="form-control" placeholder="Abstract to be displayed as advertisement" rows="8"></textarea>
+                      </div>        
+                    </div>
+                    <div class="row margin-bottom-20">
+                      <div class="col-md-10 col-md-offset-1">
+                        <textarea name="provider[about]" id="provider_about" class="form-control" placeholder="About" rows="8"></textarea>
+                      </div>
+                    </div>
+                    <div class="row margin-bottom-20">
+                      <div class="col-md-10 col-md-offset-1">
+                        <a href="javascript: saveProviderPersonalInfo();" class="btn-u pull-right"><i class="fa fa-save"></i>  Save personal info</a>
+                      </div>        
+                    </div>
+                  </div>
                 </div>
-                <!-- Requests table end -->
+              </div>
+              <div role="tabpanel" class="tab-pane" id="provider_specialty_tab">
+                <br><br>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row margin-bottom-20">
+    									<div class="col-md-10 col-md-offset-1">
+    									  <textarea name="provider[specialty_text]" id="provider_specialty_text" class="form-control" placeholder="Specialty" rows="8"></textarea>
+    									</div>        
+    								</div>
+    								<div class="row margin-bottom-20">
+    									<div class="col-md-10 col-md-offset-1">
+    										<a href="javascript: saveProviderSpecialtyText();" class="btn-u pull-right"><i class="fa fa-save"></i> Save Specialties Text</a>
+    									</div>        
+    								</div>
+    								<div class="row margin-bottom-20">
+      								<div class="col-md-10 col-md-offset-1">
+      									<h1>Specialties</h1>
+      									<div id="add_specialty_alert"></div>
+      								</div>        
+      							</div>
+      							<div class="row margin-bottom-20">
+      								<div class="col-md-7 col-md-offset-1">
+      									<input class="form-control" name="new_specialty" id="new_specialty" type="text" placeholder="New Specialty">
+      								</div>
+      								<div class="col-md-3">
+      									<button type="button" class="btn-u col-md-12" onclick="addSpecialtyToProvider();"><i class="fa fa-plus"></i> Add New Specialty</button>
+      								</div>        
+      							</div>
+      							<div class="row" id="specialties_list"></div>
+                  </div>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="provider_service_tab">
+                <br><br>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row margin-bottom-20">
+    									<div class="col-md-10 col-md-offset-1">
+    									  <textarea name="provider[service_text]" id="provider_service_text" class="form-control" placeholder="Service" rows="8"></textarea>
+    									</div>        
+    								</div>
+    								<div class="row margin-bottom-20">
+    									<div class="col-md-10 col-md-offset-1">
+    										<a href="javascript: saveProviderServiceText();" class="btn-u pull-right"><i class="fa fa-save"></i> Save Services Text</a>
+    									</div>
+    								</div>
+    								<div class="row margin-bottom-20">
+      								<div class="col-md-10 col-md-offset-1">
+      									<h1>Services</h1>
+      									<div id="add_service_alert"></div>
+      								</div>        
+      							</div>
+      							<div class="row margin-bottom-20">
+      								<div class="col-md-7 col-md-offset-1">
+      									<input class="form-control" name="new_service" id="new_service" type="text" placeholder="New Service">
+      								</div>
+      								<div class="col-md-3">
+      									<button type="button" class="btn-u col-md-12" onclick="addServiceToProvider();"><i class="fa fa-plus"></i> Add New Service</button>
+      								</div>        
+      							</div>
+      							<div class="row" id="services_list"></div>
+                  </div>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="provider_certification_tab">
+                <br><br>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row margin-bottom-20">
+      								<div class="col-md-10 col-md-offset-1">
+      									<h1>Certifications</h1>
+      									<div id="add_certification_alert"></div>
+      								</div>        
+      							</div>
+      							<div class="row margin-bottom-20">
+      								<div class="col-md-7 col-md-offset-1">
+      									<input class="form-control" name="new_certification" id="new_certification" type="text" placeholder="New Certification">
+      								</div>
+      								<div class="col-md-3">
+      									<button type="button" class="btn-u col-md-12" onclick="addCertificationToProvider();"><i class="fa fa-plus"></i> Add New Certification</button>
+      								</div>        
+      							</div>
+      							<div class="row" id="certifications_list"></div>
+                  </div>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="provider_area_tab">
+                <br><br>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row margin-bottom-20">
+      								<div class="col-md-10 col-md-offset-1">
+      									<h1>Areas</h1>
+      									<div id="add_area_alert"></div>
+      								</div>        
+      							</div>
+      							<div class="row margin-bottom-20">
+      								<div class="col-md-7 col-md-offset-1">
+      									<input class="form-control" name="new_area" id="new_area" type="text" placeholder="New Area">
+      								</div>
+      								<div class="col-md-3">
+      									<button type="button" class="btn-u col-md-12" onclick="addAreaToProvider();"><i class="fa fa-plus"></i> Add New Area</button>
+      								</div>        
+      							</div>
+      							<div class="row" id="areas_list"></div>
+                  </div>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="provider_payment_tab">
+                <br><br>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row margin-bottom-20">
+    									<div class="col-md-10 col-md-offset-1">
+    									  <textarea name="provider[policies]" id="provider_policies" class="form-control" placeholder="Payment & Policies" rows="8"></textarea>
+    									</div>        
+    								</div>
+    								<div class="row margin-bottom-20">
+    									<div class="col-md-10 col-md-offset-1">
+    										<a href="javascript: saveProviderPoliciesText();" class="btn-u pull-right"><i class="fa fa-save"></i> Save Payment & Policies Text</a>
+    									</div>
+    								</div>
+                  </div>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="provider_reviews_tab">
+                <br><br>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row margin-bottom-20">
+      								<div class="col-md-10 col-md-offset-1">
+      									<h1>Reviews</h1>
+      									<div id="add_review_alert"></div>
+      								</div>        
+      							</div>
+      							<div class="row margin-bottom-20">
+      								<div class="col-md-10 col-md-offset-1">
+      									<textarea class="form-control" name="review[review]" id="new_review_review" type="text" placeholder="Review" rows="8"></textarea>
+      								</div>
+      							</div>
+      							<br>
+      							<div class="row margin-bottom-20">
+      								<div class="col-md-7 col-md-offset-1">
+      									<input class="form-control" name="review[author]" id="new_review_author" type="text" placeholder="Author">
+      								</div>
+      								<div class="col-md-3">
+      									<button type="button" class="btn-u col-md-12" onclick="addReviewToProvider();"><i class="fa fa-users"></i> Add New Review</button>
+      								</div>        
+      							</div>
+      							<div class="row" id="reviews_list"></div>
+                  </div>
+                </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="provider_change_password_tab">
+                <br><br>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row margin-bottom-20">
+    									<div class="col-md-10 col-md-offset-1">
+    										<h1><i class="fa fa-lock"></i> Change Password</h1>
+    									</div>        
+    								</div>
+                  	<div class="row margin-bottom-20">
+  										<div class="col-md-5 col-md-offset-1">
+  										  <label for="provider_password">Password</label>
+  										  <input type="password" class="form-control" placeholder="Password" name="provider[password]" id="provider_password" required="required">
+  										</div>        
+  										<div class="col-md-5">
+  										  <label for="provider_password_confirmation">Password confirmation</label>
+  										  <input type="password" class="form-control" placeholder="Password confirmation" name="provider[password_confirmation]" id="provider_password_confirmation" required="required">
+  										</div>
+  									</div>
+  									<div class="row margin-bottom-20">
+  										<div class="col-md-10 col-md-offset-1">
+  										  <!-- <a href="javascript: generatePasswordProvider();" class="btn btn-primary"><i class="fa fa-refresh"></i> Generate password</a>-->
+  										  <a href="javascript: changeProviderPassword();" class="btn-u pull-right"><i class="fa fa-save"></i> Save password</a>
+  										</div>
+  									</div>
+                  </div>
+                </div>
+              </div>
             </div>
-        </div><!--/row-->        
-    </div>
-    <!--=== End Container ===-->
+            
+          </div>
+          <div class="tab-pane" id="clients">
+            
+          </div>  
+          <div class="tab-pane" id="config">
+            
+          </div>
+        </div>
+        <!-- Requests table end -->
+      </div>
+    </div><!--/row-->    
+  </div>
+  <!--=== End Container ===-->

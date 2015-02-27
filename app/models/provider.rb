@@ -23,6 +23,17 @@ class Provider < ActiveRecord::Base
 		SecureRandom.urlsafe_base64
 	end
 
+	# Remembers a user in the database for use in persistent sessions.
+  def remember
+    self.remember_token = Provider.new_remember_token
+    update_attribute(:remember_token, Provider.digest(remember_token))
+  end
+  
+  # Forgets a user.
+  def forget
+    update_attribute(:remember_token, nil)
+  end
+
 	def Provider.digest(token)
 		Digest::SHA1.hexdigest(token.to_s)
 	end
@@ -36,9 +47,22 @@ class Provider < ActiveRecord::Base
 	def without_secure_info
     return self.slice(:picture_path, :first_name, :last_name, :expertise, :email, :phone, :abstract, :about, :admin, :specialty_text, :service_text, :policies)
   end
+  
+  def send_password_reset
+	  generate_token(:password_reset_token)
+	  self.password_reset_sent_at = Time.zone.now
+	  save!
+	  #UserMailer.password_recovery(self).deliver
+	  UserMailer.password_recovery_email(self)
+	end
+	
+	def generate_token(column)
+	  begin
+	    self[column] = SecureRandom.urlsafe_base64
+	  end while Provider.exists?(column => self[column])
+	end
 	
 	private
-
 		def create_remember_token
 			self.remember_token = Provider.digest(Provider.new_remember_token)
 		end

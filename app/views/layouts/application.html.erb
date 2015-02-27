@@ -85,13 +85,13 @@
                                     </li>
                                 <% else %>
                                     <li>
-                                        <%= link_to profile_edit_path do %>
-                                            <i class="fa fa-edit"></i>&nbsp;Edit profile
+                                        <%= link_to provider_dashboard_path do %>
+                                            <i class="fa fa-dashboard"></i>&nbsp;My Dashboard
                                         <% end %>
                                     </li>
                                     <li>
                                         <%= link_to eval(current_provider.profile + '_path') do %>
-                                            <i class="fa fa-eye"></i>&nbsp;View profile
+                                            <i class="fa fa-desktop"></i>&nbsp;View profile
                                         <% end %>
                                     </li>
                                 <% end %>
@@ -103,7 +103,7 @@
                             <% elsif csigned_in? %>
                                 <li>
                                     <%= link_to eval(current_client.profile + '_path') do %>
-                                        <i class="fa fa-home"></i>&nbsp;Home
+                                        <i class="fa fa-dashboard"></i>&nbsp;My Dashboard
                                     <% end %>
                                 </li>
                                 <!--
@@ -158,6 +158,34 @@
     
     <%= yield %>
 	
+	  <div class="modal fade" id="generic_modal" tabindex="-1" role="dialog" aria-labelledby="genericModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="generic_modal_title">Modal title</h4>
+          </div>
+          <div id="generic_modal_alert"></div>
+          <div class="modal-body" id="generic_modal_body"></div>
+          <div class="modal-footer" id="generic_modal_footer"></div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    
+    <div class="modal fade" id="generic_modal_large" tabindex="-1" role="dialog" aria-labelledby="genericLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="generic_modal_large_title">Modal title</h4>
+          </div>
+          <div id="generic_modal_large_alert"></div>
+          <div class="modal-body" id="generic_modal_large_body"></div>
+          <div class="modal-footer" id="generic_modal_large_footer"></div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    
 	<!--=== Footer ===-->
     <div class="footer">
         <div class="container">
@@ -358,11 +386,21 @@
             profile_images[i][2].onload = onloadImage;
           }
         <% end %>
+        /*
+        $.ajaxStart(function(){
+          $("#provider_image_container").hide();
+          $("#provider_picture_spin_container").html("<i class=\"fa fa-spinner fa-spin fa-5x\"></i>");
+        });
+        
+        $.ajaxStop(function(){
+          $("#provider_picture_spin_container").hide();
+          $("#provider_image_container").show();
+        });
+        */
     });
 </script>
 <!--[if lt IE 9]>
     <script src="assets/plugins/respond.js"></script>
 <![endif]-->
-<%= debug(params) if Rails.env.development? %>
 </body>
 </html> 

@@ -26,4 +26,33 @@ Alaya::Application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
+  
+  config.action_mailer.default_url_options = { :host => "http://alaya-c9-thiagomelo.c9.io" }
+  
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.raise_delivery_errors = true
+  #config.action_mailer.default_options = {
+  #  :reply_to => 'thiago.alaya@gmail.com'
+  #},
+  
+  config.action_mailer.smtp_settings = {
+    :user_name => 'thiago.alaya@gmail.com',
+    :password => 'eaacps123',
+    :address => "smtp.gmail.com",
+    :domain => "gmail.com",
+    :enable_starttls_auto => true,
+    :authentication => "plain",
+    :port => 587,
+  }
+  
+  #config.action_mailer.delivery_method = :smtp
+  #config.action_mailer.smtp_settings = {
+  #  :user_name => 'tapan.alaya@gmail.com',
+  #  :password => '0tRCw5a7xObbw2GseSnHaQ',
+  #  :address => "smtp.mandrillapp.com",
+  #  :domain => "careforme.co",
+  #  :enable_starttls_auto => true,
+  #  :authentication => "plain",
+  #  :port => 587,
+  #}
 end

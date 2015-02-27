@@ -1,5 +1,10 @@
+/*
+ * It gets all the information for the selected provider
+ * The provider is selected through a checkbox with id [providers_list]
+ * Last update: 2015-02-19 by @thiago
+ */
 var adminShowUpProvider = function() {
-  clearMessage("admin_page_message");
+  clearMessage("top_page_message");
   var provider_id = $("#providers_list").val();
   if (provider_id == "0") {
     cleanUpProvider();
@@ -18,7 +23,7 @@ var adminShowUpProvider = function() {
         $("#provider_image_container").hide();
         $("#provider_picture_spin_container").show();
         var image = document.getElementById("provider_main_image");
-        image.onload = function(){ // always fires the event.
+        image.onload = function() { // always fires the event.
           $("#provider_picture_spin_container").hide();  
           $("#provider_image_container").show();
         };
@@ -57,6 +62,10 @@ var adminShowUpProvider = function() {
         showAreas(provider_id);
 				/* areas end */
 				
+				/* reviews end */
+        showReviews(provider_id);
+				/* reviews end */
+				
 				/* policies begin */
         $("#provider_policies").val(data.provider.policies);
         /* policies end */
@@ -67,17 +76,23 @@ var adminShowUpProvider = function() {
         /* password end */
     	}
     	else if (data.status == "fail") {
-    	  alertMessage("admin_page_message", "Provider not found.", "warning", false);
+    	  alertMessage("top_page_message", "Provider not found.", "warning", false);
     	}
     },
     error: function(data) {
-      alertMessage("admin_page_message", "Some error happened.", "danger", false);
+      alertMessage("top_page_message", "Some error happened.", "danger", false);
     	console.log("error");
     	console.log(data);
     }
   });
 };
 
+/*
+ * It saves the provider's specialty text under the admin dashboard
+ * this is a single field in providers table
+ * the text to be saved is in a text input with id [provider_specialty_text]
+ * Last update: 2015-02-19 by @thiago
+ */
 var saveProviderSpecialtyText = function() {
 	var provider_id = $("#providers_list").val();
 	if ($("#provider_specialty_text").val() === "" || $("#provider_specialty_text").val() === undefined || provider_id == "0") {
@@ -95,20 +110,26 @@ var saveProviderSpecialtyText = function() {
 		},
 		success: function(data) {
 			if (data.status == "success") {
-				alertMessage("admin_page_message", "Specialty text updated.", "success", false);
+				enableEditSpecialties();
 			}
 			else if (data.status == "fail") {
-				alertMessage("admin_page_message", "Please, try again.", "warning", false);
+				alertMessage("top_page_message", "Please, try again.", "warning", false);
 			}
 		},
 		error: function(data) {
 			console.log("error");
 			console.log(data);
-			alertMessage("admin_page_message", "Some error happened.", "danger", false);
+			alertMessage("top_page_message", "Some error happened.", "danger", false);
 		}
 	});
 };
 
+/*
+ * It saves the provider's service text under the admin dashboard
+ * this is a single field in providers table
+ * the text to be saved is in a text input with id [provider_service_text]
+ * Last update: 2015-02-19 by @thiago
+ */
 var saveProviderServiceText = function() {
 	var provider_id = $("#providers_list").val();
 	if ($("#provider_service_text").val() === "" || $("#provider_service_text").val() === undefined || provider_id == "0") {
@@ -126,20 +147,26 @@ var saveProviderServiceText = function() {
 		},
 		success: function(data) {
 			if (data.status == "success") {
-				alertMessage("admin_page_message", "Service text updated.", "success", false);
+				enableEditServices();
 			}
 			else if (data.status == "fail") {
-				alertMessage("admin_page_message", "Please, try again.", "warning", false);
+				alertMessage("top_page_message", "Please, try again.", "warning", false);
 			}
 		},
 		error: function(data) {
 			console.log("error");
 			console.log(data);
-			alertMessage("admin_page_message", "Some error happened.", "danger", false);
+			alertMessage("top_page_message", "Some error happened.", "danger", false);
 		}
 	});
 };
 
+/*
+ * It saves the provider's policies text under the admin dashboard
+ * this is a single field in providers table
+ * the text to be saved is in a text input with id [provider_policies]
+ * Last update: 2015-02-19 by @thiago
+ */
 var saveProviderPoliciesText = function() {
 	var provider_id = $("#providers_list").val();
 	if ($("#provider_policies").val() === "" || $("#provider_policies").val() === undefined || provider_id == "0") {
@@ -157,20 +184,28 @@ var saveProviderPoliciesText = function() {
 		},
 		success: function(data) {
 			if (data.status == "success") {
-				alertMessage("admin_page_message", "Payment & Policies text updated.", "success", false);
+				enableEditPolicies();
 			}
 			else if (data.status == "fail") {
-				alertMessage("admin_page_message", "Please, try again.", "warning", false);
+				alertMessage("top_page_message", "Please, try again.", "warning", false);
 			}
 		},
 		error: function(data) {
 			console.log("error");
 			console.log(data);
-			alertMessage("admin_page_message", "Some error happened.", "danger", false);
+			alertMessage("top_page_message", "Some error happened.", "danger", false);
 		}
 	});
 };
 
+/*
+ * When no one client is selected, the fields must remain empty
+ * this is most used when the empty option is used in the
+ * selectbox is chosen
+ * it will basically clear all the fields under provider's tab in the
+ * admin dashboard
+ * Last update: 2015-02-19 by @thiago
+ */
 var cleanUpProvider = function() {
   /* picture */
   var image = document.getElementById("provider_main_image");
@@ -194,6 +229,8 @@ var cleanUpProvider = function() {
   $("#certifications_list").html("");
   /* areas */
   $("#areas_list").html("");
+  /* reviews */
+  $("#reviews_list").html("");
   /* policies */
   $("#provider_policies").val("");
   /* password */
@@ -201,13 +238,17 @@ var cleanUpProvider = function() {
   $("#provider_password_confirmation").val("");
 };
 
-var barPercentage = function(value) {
-	$("#upload_progress_bar").attr("aria-valuenow", value);
-	$("#upload_progress_bar").attr("style", "width: " + value + "%");
-};
-
+/*
+ * This is used only in the admin's dashboard
+ * it is the final step of upload a picture.
+ * it differs from the provider's dashboard behavior, here it'll be need
+ * two steps:
+ * 1 - choose the picture and get a preview
+ * 2 - upload the picture (which is what this method does)
+ * Last update: 2015-02-19 by @thiago
+ */
 var uploadProviderPicture = function() {
-  clearMessage("admin_page_message");
+  clearMessage("top_page_message");
   var input_pictures = document.getElementById('provider_picture_file').files;
   var provider_id = $("#providers_list").val();
   if (provider_id == "0") {
@@ -219,7 +260,7 @@ var uploadProviderPicture = function() {
 		formData.append("provider_id", provider_id);
 		formData.append("image", input_pictures[0]);
 		$("#upload_button").html("<i class=\"fa fa-spinner fa-spin\"></i> Uploading");
-		/* big master pog ever in my life */
+		/* big master pog ever in my life, I've no idea wtf is this */
 		document.getElementById("upload_button").style.left = document.getElementById("upload_button").offsetLeft;
 		$.ajax({
 			url: "/upload_provider_picture",
@@ -232,12 +273,10 @@ var uploadProviderPicture = function() {
 			beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
 			success: function(response) {
 				if (response.status == "success") {
-					barPercentage(100);
-					alertMessage("admin_page_message", "Provider picture updated.", "success", false);
-					barPercentage(0);
+					alertMessage("top_page_message", "Provider picture updated.", "success", false);
 				}
 				else if (response.status == "fail") {
-					alertMessage("admin_page_message", "Try again.", "warning", false);
+					alertMessage("top_page_message", "Try again.", "warning", false);
 					console.log(response.error);
 				}
 				$("#upload_button").html("<i class=\"fa fa-cloud-upload\"></i> Upload Picture");
@@ -245,15 +284,23 @@ var uploadProviderPicture = function() {
 			error: function(response) {
 				console.log("error");
 				console.log(response);
-				alertMessage("admin_page_message", "A huge error happened.", "danger", false);
+				alertMessage("top_page_message", "A huge error happened.", "danger", false);
 				console.log(response.error);
 			}
 		});
 	}
 };
 
+/*
+ * When something is changed in the subtab personal info, under provider's tab
+ * in the admin's dashboard, this is the methos called for the [save] button
+ * if some other field [new_field] is created, the following pattern:
+ * 'provider[new_field]': $("#provider_new_field").val(),
+ * must be used
+ * Last update: 2015-02-19 by @thiago
+ */
 var saveProviderPersonalInfo = function() {
-  clearMessage("admin_page_message");
+  clearMessage("top_page_message");
   if (validateProviderEdit()) {
     $.ajax({
       type: 'GET',
@@ -272,14 +319,14 @@ var saveProviderPersonalInfo = function() {
       },
       success: function(data) {
         if (data.status == "success") {
-          alertMessage("admin_page_message", "Provider updated.", "success", false);
+          alertMessage("top_page_message", "Provider updated.", "success", false);
       	}
       	else if (data.status == "fail") {
-      	  alertMessage("admin_page_message", "Provider not found.", "warning", false);
+      	  alertMessage("top_page_message", "Provider not found.", "warning", false);
       	}
       },
       error: function(data) {
-        alertMessage("admin_page_message", "Some error happened.", "danger", false);
+        alertMessage("top_page_message", "Some error happened.", "danger", false);
       	console.log("error");
       	console.log(data);
       }
@@ -287,13 +334,20 @@ var saveProviderPersonalInfo = function() {
   }
 };
 
+/*
+ * It is used to save a provider's password, since it is under the admin's
+ * dashboard, the current password is not asked
+ * there are admin's authentication in the server side before execute this
+ * action
+ * Last update: 2015-02-19 by @thiago
+ */
 var changeProviderPassword = function() {
-	clearMessage("admin_page_message");
+	clearMessage("top_page_message");
 	if (!validPassword($("#provider_password").val()) || !validPassword($("#provider_password_confirmation").val()) || $("#provider_password").val() != $("#provider_password_confirmation").val()) {
 		$("#provider_password_confirmation").val("");
 		$("#provider_password").val("");
 		$("#provider_password").focus();
-		alertMessage("admin_page_message", "Invalid passwords.", "warning", false);
+		alertMessage("top_page_message", "Invalid passwords.", "warning", false);
 		return;
 	}
 	
@@ -308,22 +362,27 @@ var changeProviderPassword = function() {
     },
     success: function(data) {
       if (data.status == "success") {
-        alertMessage("admin_page_message", "Provider password updated.", "success", false);
+        alertMessage("top_page_message", "Provider password updated.", "success", false);
     	}
     	else if (data.status == "fail") {
-    	  alertMessage("admin_page_message", "Provider not found.", "warning", false);
+    	  alertMessage("top_page_message", "Provider not found.", "warning", false);
     	}
     	$("#provider_password").val("");
   		$("#provider_password_confirmation").val("");
     },
     error: function(data) {
-      alertMessage("admin_page_message", "Some error happened.", "danger", false);
+      alertMessage("top_page_message", "Some error happened.", "danger", false);
     	console.log("error");
     	console.log(data);
     }
   });
 };
 
+
+/*
+ * It generates a 6 character length string, only numbers from 0 to 9
+ * Last update: 2015-02-19 by @thiago
+ */
 var generatePasswordProvider = function() {
 	var password = getRandomArbitrary(0, 9) + getRandomArbitrary(0, 9) + getRandomArbitrary(0, 9) + 
 									getRandomArbitrary(0, 9) + getRandomArbitrary(0, 9) + getRandomArbitrary(0, 9);
@@ -331,11 +390,92 @@ var generatePasswordProvider = function() {
 	$("#provider_password_confirmation").val(password);
 };
 
+/*
+ * It generates a random number between min and max (params)
+ * ->the returned value is a string
+ *
+ * params:
+ * @min integer
+ * @mas integer
+ * Last update: 2015-02-19 by @thiago
+ */
 var getRandomArbitrary = function(min, max) {
-    var number = Math.random() * (max - min) + min;
-    number = parseInt(number, 10);
-    return number.toString();
+  var number = Math.random() * (max - min) + min;
+  number = parseInt(number, 10);
+  return number.toString();
 };
+
+
+var current_provider_input;
+var current_provider_id;
+var uploadProviderPictureSelf = function(provider_id, input) {
+	current_provider_input = input;
+	current_provider_id = provider_id;
+	showImageToProvider(input);
+	$("#provider_image_container_buttons").show();
+	//$("#provider_image_preview_modal").modal("show");
+};
+	
+var uploadProviderPictureSelfCancel = function() {
+	$('#provider_main_image').attr('src', current_provider_image);
+	$("#provider_image_container_buttons").hide();
+};
+
+var uploadProviderPictureSelfGo = function() {
+	var input = current_provider_input;
+	var provider_id = current_provider_id;
+	//$("#provider_image_preview_modal").modal("hide");
+  clearMessage("top_page_message");
+  //showImageToProvider(input);
+  //alert("OK 1")
+  $("#provider_image_container").hide();
+  //alert("OK 2")
+  $("#provider_picture_spin_container").html("<i class=\"fa fa-spinner fa-spin fa-5x\"></i>");
+  //alert("OK 3")
+  //show();
+  
+  var input_pictures = document.getElementById('provider_picture_file').files;
+  if (provider_id == "0") {
+    cleanUpProvider();
+    return;
+  }
+  if (!!input_pictures[0].type.match(/image.*/)) {
+		var formData = new FormData();
+		formData.append("provider_id", provider_id);
+		formData.append("image", input_pictures[0]);
+		$.ajax({
+			url: "/upload_provider_picture",
+			type: 'POST',
+			data: formData,
+			async: false,
+			cache: false,
+			contentType: false,
+			processData: false,
+			beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
+			success: function(response) {
+				if (response.status == "success") {
+					alertMessage("top_page_message", "Provider picture updated.", "success", false);
+					$("#provider_image_container_buttons").hide();
+					//showImageToProvider(input);
+  				$("#provider_picture_spin_container").hide();
+          $("#provider_image_container").show();
+				}
+				else if (response.status == "fail") {
+					alertMessage("top_page_message", "Try again.", "warning", false);
+					console.log(response.error);
+				}
+			},
+			error: function(response) {
+				console.log("error");
+				console.log(response);
+				alertMessage("top_page_message", "A huge error happened.", "danger", false);
+				console.log(response.error);
+			}
+		});
+	}
+};
+
+
 
 /* ---------------------------------------------------------------------- */
 
@@ -373,13 +513,13 @@ var showSpecialties = function(provider_id) {
 				$("#specialties_list").html(content);
 			}
 			else if (data.status == "fail") {
-				alertMessage("admin_page_message", "Please, try again.", "warning", false);
+				alertMessage("top_page_message", "Please, try again.", "warning", false);
 			}
 		},
 		error: function(data) {
 			console.log("error");
 			console.log(data);
-			alertMessage("admin_page_message", "Some error happened.", "danger", false);
+			alertMessage("top_page_message", "Some error happened.", "danger", false);
 		}
 	});
 };
@@ -480,13 +620,13 @@ var showServices = function(provider_id) {
 				$("#services_list").html(content);
 			}
 			else if (data.status == "fail") {
-				alertMessage("admin_page_message", "Please, try again.", "warning", false);
+				alertMessage("top_page_message", "Please, try again.", "warning", false);
 			}
 		},
 		error: function(data) {
 			console.log("error");
 			console.log(data);
-			alertMessage("admin_page_message", "Some error happened.", "danger", false);
+			alertMessage("top_page_message", "Some error happened.", "danger", false);
 		}
 	});
 };
@@ -587,13 +727,13 @@ var showCertifications = function(provider_id) {
 				$("#certifications_list").html(content);
 			}
 			else if (data.status == "fail") {
-				alertMessage("admin_page_message", "Please, try again.", "warning", false);
+				alertMessage("top_page_message", "Please, try again.", "warning", false);
 			}
 		},
 		error: function(data) {
 			console.log("error");
 			console.log(data);
-			alertMessage("admin_page_message", "Some error happened.", "danger", false);
+			alertMessage("top_page_message", "Some error happened.", "danger", false);
 		}
 	});
 };
@@ -693,13 +833,13 @@ var showAreas = function(provider_id) {
 				$("#areas_list").html(content);
 			}
 			else if (data.status == "fail") {
-				alertMessage("admin_page_message", "Please, try again.", "warning", false);
+				alertMessage("top_page_message", "Please, try again.", "warning", false);
 			}
 		},
 		error: function(data) {
 			console.log("error");
 			console.log(data);
-			alertMessage("admin_page_message", "Some error happened.", "danger", false);
+			alertMessage("top_page_message", "Some error happened.", "danger", false);
 		}
 	});
 };
@@ -763,3 +903,155 @@ var deleteAreaToProvider = function(area_id) {
 		}
 	});
 };
+
+var showReviews = function(provider_id) {
+	$.ajax({
+		type: 'GET',
+		url: '/provider_reviews',
+		dataType: "json",
+		data: { 
+			'provider_id': provider_id,
+		},
+		success: function(data) {
+			if (data.status == "success") {
+				var content = "";
+				content = content + "<div class=\"col-sm-5 col-sm-offset-1\">";
+				$.each(data.reviews, function(i, review) {
+					if (i < data.reviews.length / 2) {
+						content = content + "<div class=\"alert alert-info\" role=\"alert\">";
+						content = content + "	<button type=\"button\" onclick=\"deleteReviewToProvider(" + review.id + ");\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>";
+						content = content + "	<blockquote>";
+						content = content + "		<p class=\"paragraph_bottom\">" + review.review + "</p>";
+						content = content + "		<footer>" + review.author + "</footer>";
+						content = content + "	</blockquote>";
+						content = content + "</div>";
+					}
+				});
+				content = content + "</div>";
+				content = content + "<div class=\"col-sm-5\">";
+				$.each(data.reviews, function(i, review) {
+					if (i >= data.reviews.length / 2) {
+						content = content + "<div class=\"alert alert-info\" role=\"alert\">";
+						content = content + "	<button type=\"button\" onclick=\"deleteReviewToProvider(" + review.id + ");\" class=\"close\" data-dismiss=\"alert\"><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>";
+						content = content + "	<blockquote>";
+						content = content + "		<p class=\"paragraph_bottom\">" + review.review + "</p>";
+						content = content + "		<footer>" + review.author + "</footer>";
+						content = content + "	</blockquote>";
+						content = content + "</div>";
+					}
+				});
+				content = content + "</div>";
+				$("#reviews_list").html(content);
+			}
+			else if (data.status == "fail") {
+				alertMessage("top_page_message", "Please, try again.", "warning", false);
+			}
+		},
+		error: function(data) {
+			console.log("error");
+			console.log(data);
+			alertMessage("top_page_message", "Some error happened.", "danger", false);
+		}
+	});
+};
+
+var addReviewToProvider = function() {
+	var provider_id = $("#providers_list").val();
+	if ($("#new_review_review").val() === "" || $("#new_review_review").val() === undefined || provider_id == "0") {
+		alertMessage("add_review_alert", "Please, type the review.", "warning", false);
+		$("#new_review_author").focus();
+		return;
+	}
+	if ($("#new_review_author").val() === "" || $("#new_review_author").val() === undefined || provider_id == "0") {
+		alertMessage("add_review_alert", "Please, type the author.", "warning", false);
+		$("#new_review_author").focus();
+		return;
+	}
+	clearMessage("add_review_alert");
+	var review = $("#new_review_review").val();
+	var author = $("#new_review_author").val();
+	$("#new_review_review").val("");
+	$("#new_review_author").val("");
+	$("#new_review").val("");
+	$.ajax({
+		type: 'GET',
+		url: '/add_review_ajax',
+		dataType: "json",
+		data: { 
+			'provider_id': provider_id,
+			'review': review,
+			'author': author
+		},
+		success: function(data) {
+			if (data.status == "success") {
+				
+				showReviews(provider_id);
+			}
+			else if (data.status == "fail") {
+				alertMessage("add_review_alert", "Please, try again.", "warning", false);
+			}
+		},
+		error: function(data) {
+			console.log("error");
+			console.log(data);
+			alertMessage("add_review_alert", "Some error happened.", "danger", false);
+		}
+	});
+};
+
+var deleteReviewToProvider = function(review_id) {
+	var provider_id = $("#providers_list").val();
+	$.ajax({
+		type: 'GET',
+		url: '/delete_review_ajax',
+		dataType: "json",
+		data: { 
+			'provider_id': provider_id,
+			'review_id': review_id
+		},
+		success: function(data) {
+			if (data.status == "success") {
+				showReviews(provider_id);
+			}
+			else if (data.status == "fail") {
+				alertMessage("add_review_alert", "Please, try again.", "warning", false);
+			}
+		},
+		error: function(data) {
+			console.log("error");
+			console.log(data);
+			alertMessage("add_review_alert", "Some error happened.", "danger", false);
+		}
+	});
+};
+
+
+/* create some .... */
+var passwordRecovery = function() {
+	if (!validEmail($("#password_recovery_email").val())) {
+		alertMessage("password_recovery_alert", "Email invalid.", "danger", false);
+		return;
+	}
+	
+	$.ajax({
+		type: 'GET',
+		url: '/password_recovery',
+		dataType: "json",
+		data: {
+			'email': $("#password_recovery_email").val()
+		},
+		success: function(data) {
+			if (data.status == "success") {
+				alertMessage("password_recovery_alert", "An email has been sent to you.", "success", false);
+			}
+			else if (data.status == "fail") {
+				alertMessage("password_recovery_alert", "Email not found, please check the spelling.", "danger", false);
+			}
+		},
+		error: function(data) {
+			console.log("error");
+			console.log(data);
+			alertMessage("password_recovery_alert", "Error, please contact us.", "danger", false);
+		}
+	});
+}
