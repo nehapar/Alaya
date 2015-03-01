@@ -3,4 +3,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Alaya::Application.load_tasks
+CareForMe::Application.load_tasks

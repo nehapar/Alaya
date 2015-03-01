@@ -3,7 +3,7 @@
 <!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
 <!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
 <head>
-    <title>Alaya | <%= yield(:title) %></title>
+    <title>CareForMe | <%= yield(:title) %></title>
     
     <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   	
@@ -60,7 +60,7 @@
                         <span class="sr-only">Toggle navigation</span>
                         <span class="fa fa-bars"></span>
                     </button>
-                    <%= link_to "Alaya", root_path, class: "navbar-brand" %>
+                    <%= link_to "CareForMe", root_path, class: "navbar-brand" %>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
@@ -69,7 +69,7 @@
                         <ul class="nav navbar-nav">
                             <% if yield(:title) == "Welcome" %>
                               <li>
-                                  <a href="#" data-section="why-alaya">WHY ALAYA?</a>
+                                  <a href="#" data-section="why-CareForMe">WHY CareForMe?</a>
                               </li>
                               <li>
                                   <a href="#" data-section="how-does-it-work">HOW DOES IT WORK?</a>
@@ -77,42 +77,55 @@
                             <% end %>
                             
                             <% if signed_in? %>
-                                <% if is_admin? %>
-                                    <li>
-                                        <%= link_to admin_path do %>
-                                            <i class="fa fa-home"></i>&nbsp;Admin home
+                                
+                                <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%= current_provider.first_name %></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <% if is_admin? %>
+                                            <li>
+                                                <%= link_to admin_path do %>
+                                                    <i class="fa fa-home"></i>&nbsp;Admin home
+                                                <% end %>
+                                            </li>
+                                        <% else %>
+                                            <li>
+                                                <%= link_to provider_dashboard_path do %>
+                                                    <i class="fa fa-dashboard"></i>&nbsp;My Dashboard
+                                                <% end %>
+                                            </li>
+                                            <li>
+                                                <%= link_to eval(current_provider.profile + '_path') do %>
+                                                    <i class="fa fa-desktop"></i>&nbsp;View profile
+                                                <% end %>
+                                            </li>
                                         <% end %>
-                                    </li>
-                                <% else %>
-                                    <li>
-                                        <%= link_to provider_dashboard_path do %>
-                                            <i class="fa fa-dashboard"></i>&nbsp;My Dashboard
-                                        <% end %>
-                                    </li>
-                                    <li>
-                                        <%= link_to eval(current_provider.profile + '_path') do %>
-                                            <i class="fa fa-desktop"></i>&nbsp;View profile
-                                        <% end %>
-                                    </li>
-                                <% end %>
+                                    </ul>
+                                </li>
+                                
+                                
                                 <li>
                                     <%= link_to signout_path, method: "delete" do %>
                                         <i class="fa fa-sign-out"></i>&nbsp;Sign Out
                                     <% end %>
                                 </li>
                             <% elsif csigned_in? %>
-                                <li>
-                                    <%= link_to eval(current_client.profile + '_path') do %>
-                                        <i class="fa fa-dashboard"></i>&nbsp;My Dashboard
-                                    <% end %>
-                                </li>
                                 <!--
                                 <li>
-                                    <%= link_to c_profile_edit_path do %>
+                                    <%= link_to eval(current_client.profile + '_path') do %>
                                         <i class="fa fa-edit"></i>&nbsp;Edit information
                                     <% end %>
                                 </li>
                                 -->
+                                <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%= current_client.first_name %></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <%= link_to eval(current_client.profile + '_path') do %>
+                                                <i class="fa fa-dashboard"></i>&nbsp;My Dashboard
+                                            <% end %>
+                                        </li>
+                                    </ul>
+                                </li>
                                 <li>
                                     <%= link_to signout_path, method: "delete" do %>
                                         <i class="fa fa-sign-out"></i>&nbsp;Sign Out
@@ -193,14 +206,14 @@
                 
                 <% if !csigned_in? && !signed_in? %>
 					<div class="col-md-3 md-margin-bottom-40">
-						<!-- Alaya -->
-						<div class="headline"><h2>Alaya</h2></div>  
+						<!-- CareForMe -->
+						<div class="headline"><h2>CareForMe</h2></div>  
 						<p class="margin-bottom-25 md-margin-bottom-40">Taking care of moms</p>    
-						<!-- End Alaya -->
+						<!-- End CareForMe -->
 						
 						<!-- Social Link -->
 						<ul class="social-icons">
-							<li><a href="https://www.facebook.com/pages/Alaya/512356292228538?ref=hl" data-original-title="Facebook" class="social_facebook"></a></li>
+							<li><a href="https://www.facebook.com/pages/CareForMe/512356292228538?ref=hl" data-original-title="Facebook" class="social_facebook"></a></li>
 							<li><a href="#" data-original-title="Twitter" class="social_twitter"></a></li>
 							<li><a href="#" data-original-title="Goole Plus" class="social_googleplus"></a></li>
 						</ul>
@@ -236,7 +249,7 @@
 							<div class="headline"><h2>Follow Us</h2></div> 
 							<dl class="dl-horizontal">
 								<dd>
-									<p><a href="https://www.facebook.com/pages/Alaya/512356292228538?ref=hl">FaceBook</a></p> 
+									<p><a href="https://www.facebook.com/pages/CareForMe/512356292228538?ref=hl">FaceBook</a></p> 
 								</dd>
 							</dl>
 							<dl class="dl-horizontal">
@@ -265,14 +278,14 @@
 					</div>
 				<% else %>
 					<div class="col-md-4 md-margin-bottom-40">
-						<!-- Alaya -->
-						<div class="headline"><h2>Alaya</h2></div>  
+						<!-- CareForMe -->
+						<div class="headline"><h2>CareForMe</h2></div>  
 						<p class="margin-bottom-25 md-margin-bottom-40">Taking care of moms</p>    
-						<!-- End Alaya -->
+						<!-- End CareForMe -->
 						
 						<!-- Social Link -->
 						<ul class="social-icons">
-							<li><a href="https://www.facebook.com/pages/Alaya/512356292228538?ref=hl" data-original-title="Facebook" class="social_facebook"></a></li>
+							<li><a href="https://www.facebook.com/pages/CareForMe/512356292228538?ref=hl" data-original-title="Facebook" class="social_facebook"></a></li>
 							<li><a href="#" data-original-title="Twitter" class="social_twitter"></a></li>
 							<li><a href="#" data-original-title="Goole Plus" class="social_googleplus"></a></li>
 						</ul>
@@ -308,7 +321,7 @@
 							<div class="headline"><h2>Follow Us</h2></div> 
 							<dl class="dl-horizontal">
 								<dd>
-									<p><a href="https://www.facebook.com/pages/Alaya/512356292228538?ref=hl">FaceBook</a></p> 
+									<p><a href="https://www.facebook.com/pages/CareForMe/512356292228538?ref=hl">FaceBook</a></p> 
 								</dd>
 							</dl>
 							<dl class="dl-horizontal">
@@ -338,7 +351,7 @@
             <div class="row">
                 <div class="col-md-6">                      
                     <p class="copyright-space">
-                        2014 &copy; Alaya. ALL Rights Reserved. 
+                        2014 &copy; CareForMe. ALL Rights Reserved. 
                         <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
                     </p>
                 </div>

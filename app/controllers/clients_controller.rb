@@ -5,7 +5,7 @@ class ClientsController < ApplicationController
   # new routes after a client sign up.
   # There are callers on the routes file, at config/routes.rb
   def self.load
-  	Alaya::Application.routes.draw do
+  	CareForMe::Application.routes.draw do
   	  Client.where("active = 1").each do |client|
   		get "/#{client.profile}", :to => "clients#dashboard", defaults: { id: client.id }
   	  end
@@ -14,7 +14,7 @@ class ClientsController < ApplicationController
   
   # It reloads routes for the clients home pages
   def self.reload
-    Alaya::Application.routes_reloader.reload!
+    CareForMe::Application.routes_reloader.reload!
   end
 
   # This method provides an empty Client object for a view with the same name
@@ -28,13 +28,14 @@ class ClientsController < ApplicationController
     @client = Client.new(client_params)
     @client.create_adjusts
     if @client.save
-  	  flash.now[:success] = "Welcome to Alaya!"
-  	  csign_in @client
+  	  flash.now[:success] = "Welcome to CareForMe! Please check your email for validation."
+  	  UserMailer.welcome_client_email(@client)
+  	  #csign_in @client
   	  # for any reason, the sign up process is not finished at this point
   	  # so, it forces a redirect to another method that takes care of
   	  # finilize the job
   	  # !!!!!!!!!!!!! Need to be fixed !!!!!!!!!!!!!
-      redirect_to profile_list_path #csignup_helper_path
+      redirect_to signin_path #profile_list_path #csignup_helper_path
     else
       flash.now[:error] = 'Sorry, it was not possible to register you.'
       render 'new'
@@ -57,15 +58,9 @@ class ClientsController < ApplicationController
   # the client itself by checking if the session params match
   # if does not match, so redirects to home page
   def dashboard
-    if csigned_in? && current_client.id == params[:id]
-      @client = Client.find(params[:id])
+    if csigned_in? and current_client.id == params[:id]
+      @client = current_client
     else
-      # destroy the session if there is some
-      # if someclient is trying to visualize someothers information
-      # to she deserves to be removed
-      if csigned_in?
-        csign_out
-      end
       redirect_to root_url
     end
   end
@@ -181,12 +176,12 @@ class ClientsController < ApplicationController
   def request_appointment_ajax
     appointments = Appointment.new(appointment_params)
     if appointments.save
+      UserMailer.appointment_booked_email(appointments)
       container = { "status" => "success"}
-      render :json => container.to_json
     else
       container = { "appointments" => appointments.errors, "status" => "fail"}
-      render :json => container.to_json
     end
+    render :json => container.to_json
   end
 
   # this is used under admin's page to get all the clients names

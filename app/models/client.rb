@@ -41,7 +41,8 @@ class Client < ActiveRecord::Base
   end
   
   def create_adjusts
-    self.active = 1
+    self.active = 0
+    generate_token(:password_reset_token)
     if self.last_name.include? "'"
       self.profile = self.first_name.downcase + "_" + self.last_name.downcase.gsub("'","")
     else

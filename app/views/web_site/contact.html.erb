@@ -10,26 +10,32 @@
     <div class="row margin-bottom-30">
       <div class="col-md-9 mb-margin-bottom-30">
         <div class="headline"><h2>Contact Form</h2></div>
+        <div id="top_page_contact"></div>
+        <% flash.each do |key, value| %>
+          <div class="alert alert-<%= key == :success ? "success" : "danger" %>" role="alert"><%= value %>
+           <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          </div>
+        <% end %>
         <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas feugiat. Et harum quidem rerum facilis est et expedita distinctio lorem ipsum dolor sit amet, consectetur adipiscing elit landitiis.</p><br>
-        <form>
+        <form action="/contact_message" method="get" onSubmit="return validadeContact()">
           <label>Name</label>
           <div class="row margin-bottom-20">
             <div class="col-md-7 col-md-offset-0">
-              <input type="text" class="form-control">
+              <input type="text" class="form-control" name="name" id="name" placeholder="Name">
             </div>        
           </div>
           
           <label>Email <span class="color-red">*</span></label>
           <div class="row margin-bottom-20">
             <div class="col-md-7 col-md-offset-0">
-              <input type="text" class="form-control">
+              <input type="text" class="form-control" name="email" id="email" placeholder="Email">
             </div>        
           </div>
           
           <label>Message</label>
           <div class="row margin-bottom-20">
             <div class="col-md-11 col-md-offset-0">
-              <textarea rows="8" class="form-control"></textarea>
+              <textarea rows="8" class="form-control" name="message" id="message" placeholder="Message"></textarea>
             </div>        
           </div>
           

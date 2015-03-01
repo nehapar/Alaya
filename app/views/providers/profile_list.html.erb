@@ -29,13 +29,18 @@
 		</div>
 	</div>
   <!-- Filter Block -->
-
+  
   <!--=== Profile ===-->
   <div class="profile container content">
     <div class="row">
       <div class="col-md-12">
         <!--Profile Body-->
         <div class="profile-body">
+          <% flash.each do |key, value| %>
+            <div class="alert alert-<%= key == :success ? "success" : "danger" %>" role="alert"><%= value %>
+               <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+          <% end %>
           <!--Projects-->
           <div class="row" style="margin-top: 50px;">
             <% @providers.each_with_index do |provider, index| %>
@@ -54,10 +59,6 @@
 										-->
 										<div id="profile-img-<%= provider.id %>-container" class="rounded easy-block-v1" align="center" style="cursor: pointer;" data-toggle="modal"data-target="#description_<%= provider.id %>"></div>
 									<% end %>
-									
-									<!--
-									<div id="text_<%= provider.id %>" class=" flip-text" style="display: none; height: 300px;" onmouseout="changeToPicture(<%= provider.id %>);">
-									-->
 									
 									<div id="text_<%= provider.id %>" class=" flip-text">
                     <div class="projects" style="height: 250px;">
@@ -91,12 +92,8 @@
               </div>
               <% if (index + 1) % 4 == 0 && index < @providers.length - 1  %>
                 </div>
-                
                 <div class="row">
               <% end %>
-              
-              
-              
             <% end %>
           </div>
           <hr>

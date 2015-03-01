@@ -276,3 +276,22 @@ var validateProviderEdit = function() {
 	}
 	return true;	
 };
+
+var validadeContact = function() {
+	if (!validNotEmpty($("#name").val())) {
+		alertMessage("top_page_contact", "Name is required.", "danger", false);
+		$("#name").focus();
+		return false;
+	}
+	if (!validEmail($("#email").val())) {
+		alertMessage("top_page_contact", "Email must be not empty and valid.", "danger", false);
+		$("#email").focus();
+		return false;
+	}
+	if (!validNotEmpty($("#message").val())) {
+		alertMessage("top_page_contact", "Message must be not empty.", "danger", false);
+		$("#message").focus();
+		return false;
+	}
+	return true;	
+}

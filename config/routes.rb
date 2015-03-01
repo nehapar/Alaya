@@ -1,4 +1,4 @@
-Alaya::Application.routes.draw do
+CareForMe::Application.routes.draw do
   
   get "password_resets/new"
   get "clients/new"
@@ -35,6 +35,7 @@ Alaya::Application.routes.draw do
   match 'client_delete_appointment_ajax', :to => 'clients#delete_appointment_ajax', via: 'get'
   match 'update_client_information', :to => 'clients#update_client_information_ajax', via: 'get'
   match 'client_simple_info', :to => 'clients#client_simple_info_ajax', via: 'get'
+  match 'client_dashboard', :to => 'clients#dashboard' , via: 'get'
   
   # providers
   
@@ -96,6 +97,7 @@ Alaya::Application.routes.draw do
   match 'about', :to => 'web_site#about', via: 'get'
   match 'contact', :to => 'web_site#contact', via: 'get'
   match 'faq', :to => 'web_site#faq', via: 'get'
+  match 'contact_message', :to => 'web_site#contact_message', via: 'get'
   
   get "web_site/index"
   get "web_site/profile_list"
@@ -108,7 +110,7 @@ Alaya::Application.routes.draw do
   # password recovery
   match 'password_recovery', :to => 'password_resets#new', via: 'get'
   match 'password_recovery_edit', :to => 'password_resets#edit', via: 'get'
-  
+  match 'client_confirmation', :to => 'password_resets#email_confirmation', via: 'get'
   
   ProvidersController.load
   ClientsController.load

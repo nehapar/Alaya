@@ -1,7 +1,5 @@
 class SessionsController < ApplicationController
   
-  
-  
   def new
   end
 
@@ -17,7 +15,7 @@ class SessionsController < ApplicationController
       else
         redirect_to provider_dashboard_path # eval(provider.profile + '_path')
       end
-    elsif client && client.authenticate(params[:session][:password])
+    elsif client && client.authenticate(params[:session][:password]) && client.active == 1
       csign_in client
       params[:session][:remember_me] == '1' ? remember(client) : forget(client)
       if client.appointments.where(['start >= ?', DateTime.now]).length > 0
@@ -25,6 +23,9 @@ class SessionsController < ApplicationController
       else
         redirect_to profile_list_path
       end
+    elsif client && client.authenticate(params[:session][:password]) && client.active == 0
+      flash.now[:error] = 'Please, activate your profile through the link in your email.' # Not quite right!
+      render 'new'
     else
       flash.now[:error] = 'Invalid email/password combination' # Not quite right!
       render 'new'

@@ -25,6 +25,6 @@ def secure_token
   end
 end
 
-Alaya::Application.config.secret_key_base = secure_token
+CareForMe::Application.config.secret_key_base = secure_token
 
-#Alaya::Application.config.secret_key_base = 'd46f362781b30e33f5b1a90a448ec846bbef00cf6411145b2be45edbc1ac73745a6c4ee571a8fc2fe3e007c4e4a3522237ac5683487cbdb467f3eeebe43fde7e'
+#CareForMe::Application.config.secret_key_base = 'd46f362781b30e33f5b1a90a448ec846bbef00cf6411145b2be45edbc1ac73745a6c4ee571a8fc2fe3e007c4e4a3522237ac5683487cbdb467f3eeebe43fde7e'

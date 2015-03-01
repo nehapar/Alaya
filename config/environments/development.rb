@@ -1,4 +1,4 @@
-Alaya::Application.configure do
+CareForMe::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
@@ -32,11 +32,11 @@ Alaya::Application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.raise_delivery_errors = true
   #config.action_mailer.default_options = {
-  #  :reply_to => 'thiago.alaya@gmail.com'
+  #  :reply_to => 'thiago.CareForMe@gmail.com'
   #},
   
   config.action_mailer.smtp_settings = {
-    :user_name => 'thiago.alaya@gmail.com',
+    :user_name => 'thiago.CareForMe@gmail.com',
     :password => 'eaacps123',
     :address => "smtp.gmail.com",
     :domain => "gmail.com",
@@ -47,10 +47,10 @@ Alaya::Application.configure do
   
   #config.action_mailer.delivery_method = :smtp
   #config.action_mailer.smtp_settings = {
-  #  :user_name => 'tapan.alaya@gmail.com',
+  #  :user_name => 'tapan.CareForMe@gmail.com',
   #  :password => '0tRCw5a7xObbw2GseSnHaQ',
   #  :address => "smtp.mandrillapp.com",
-  #  :domain => "careforme.co",
+  #  :domain => "CareForMe.co",
   #  :enable_starttls_auto => true,
   #  :authentication => "plain",
   #  :port => 587,

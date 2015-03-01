@@ -1,7 +1,7 @@
 class ProvidersController < ApplicationController
   
   def self.load
-	  Alaya::Application.routes.draw do
+	  CareForMe::Application.routes.draw do
   	  Provider.where("admin = 0").each do |provider|
   		  get "/#{provider.profile}", :to => "providers#profile_detail", defaults: { id: provider.id }
   	  end
@@ -9,7 +9,7 @@ class ProvidersController < ApplicationController
   end
   
   def self.reload
-    Alaya::Application.routes_reloader.reload!
+    CareForMe::Application.routes_reloader.reload!
   end
   
   def new
@@ -146,14 +146,15 @@ class ProvidersController < ApplicationController
     end
     
     if @provider.save
-	  sign_in @provider
+	    sign_in @provider
+      UserMailer.welcome_provider_email(@provider)
       redirect_to :controller => 'providers', :action => 'dashboard'
     else
-	  if Provider.where("email = '" + @provider.email + "'").length > 0
-		flash.now[:error] = 'Email already registered. Have you forgot your password?'
-	  else
-	    flash.now[:error] = 'It was not possible to create your user.'
-	  end
+  	  if Provider.where("email = '" + @provider.email + "'").length > 0
+  		  flash.now[:error] = 'Email already registered. Have you forgot your password?'
+  	  else
+  	    flash.now[:error] = 'It was not possible to create your user.'
+  	  end
       render 'new'
     end
   end
@@ -769,6 +770,7 @@ class ProvidersController < ApplicationController
       if is_admin? or (signed_in? && current_provider.id == appointment.provider_id)
         appointment.accepted = 1
         if appointment.save
+          UserMailer.appointment_accepted_email(appointment)
           container = { "status" => "success" }
         else
           container = { "status" => "fail" }
@@ -789,6 +791,7 @@ class ProvidersController < ApplicationController
         appointment.accepted = 2
         # something must be done with params[:deny_explanation]
         if appointment.save
+          UserMailer.appointment_denied_email(appointment)
           container = { "status" => "success" }
         else
           container = { "status" => "fail" }
@@ -809,6 +812,9 @@ class ProvidersController < ApplicationController
         appointment.accepted = 2
         # something must be done with params[:reschedule_explanation]
         if appointment.save
+          
+          
+          
           container = { "status" => "success" }
         else
           container = { "status" => "fail" }
