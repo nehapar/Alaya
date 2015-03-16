@@ -4,6 +4,11 @@
     
     <div class="row margin-bottom-30">
       <div class="col-md-10 col-md-offset-1 mb-margin-bottom-30">
+        <% flash.each do |key, value| %>
+          <div class="alert alert-<%= key == :success ? "success" : "danger" %>" role="alert"><%= value %>
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          </div>
+        <% end %>
         <div class="row margin-bottom-20">
 					<div class="col-md-6 col-md-offset-3">
 						<div class="headline"><h2>Password recovery</h2></div>

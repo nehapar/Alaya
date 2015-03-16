@@ -257,7 +257,8 @@ Monthly.prototype.print = function() {
 			}
 			
 			this.c_first_day.setHours(0, 0, 0, 0);
-			if (how_many < 12 && this.c_first_day.getTime() >= today.getTime()) {
+			//if (how_many < 12 && this.c_first_day.getTime() >= today.getTime()) {
+			if (this.c_first_day.getTime() >= today.getTime()) {
 				if (this.c_first_day.getTime() == today.getTime()) {
 					content = content + "        <td onClick=\"showDate(" + dummy_1.getTime() + ");\" class=\"date_available today\"><b>" + this.c_first_day.getDate() + "</b></td>";
 				}
@@ -576,6 +577,18 @@ var requestAppointment = function(datetime) {
 		content = content + "                <div class=\"headline\"><h2>Confirm personal information</h2></div>";
 		content = content + "                <p class=\"lead\">Please confirm your personal information in order to continue:<p>";
 		content = content + "                <form action=\"request_appointment_confirm_info\" method=\"post\">";
+		
+		content = content + "                    <div class=\"row margin-bottom-20\">";
+		content = content + "                        <div class=\"col-md-5 col-md-offset-1\">";
+		content = content + "                            <label for=\"first_name\">First name <i class=\"fa fa-asterisk\"></i></label>";
+		content = content + "                            <input type=\"text\" name=\"client[first_name]\" id=\"first_name\" class=\"form-control\" placeholder=\"First name\" required>";
+		content = content + "                        </div>";
+		content = content + "                        <div class=\"col-md-5 col-md-offset-0\">";
+		content = content + "                            <label for=\"last_name\">Last name <i class=\"fa fa-asterisk\"></i></label>";
+		content = content + "                            <input type=\"text\" name=\"client[last_name]\" id=\"last_name\" class=\"form-control\" placeholder=\"Last name\" required>";
+		content = content + "                        </div>";
+		content = content + "                    </div>";
+		
 		content = content + "                    <div class=\"row margin-bottom-20\">";
 		content = content + "                        <div class=\"col-md-10 col-md-offset-1\">";
 		content = content + "                            <label for=\"address\">Address <i class=\"fa fa-asterisk\"></i></label>";
@@ -583,16 +596,16 @@ var requestAppointment = function(datetime) {
 		content = content + "                        </div>";
 		content = content + "                    </div>";
 		content = content + "                    <div class=\"row margin-bottom-20\">";
-		content = content + "						<div class=\"col-md-5 col-md-offset-1\">";
+		content = content + "												 <div class=\"col-md-5 col-md-offset-1\">";
 		content = content + "                            <label for=\"phone\">Phone <i class=\"fa fa-asterisk\"></i></label>";
-		content = content + "                            <input type=\"text\" name=\"client[phone]\" id=\"phone\" class=\"form-control\" placeholder=\"Phone\" required>";
+		content = content + "                            <input type=\"text\" name=\"client[phone]\" id=\"phone\" class=\"form-control\" data-mask=\"(999) 999-9999\" placeholder=\"Phone\" required>";
 		content = content + "                        </div>";
 		content = content + "                        <div class=\"col-md-5\">";
 		content = content + "                            <label for=\"weeks_pregnant\">Weeks pregnant <i class=\"fa fa-asterisk\"></i></label>";
 		content = content + "                            <input type=\"text\" name=\"client[weeks_pregnant]\" id=\"weeks_pregnant\" class=\"form-control\" placeholder=\"Weeks pregnant\" required>";
 		content = content + "                        </div>";
 		content = content + "                    </div>";
-		content = content + "				</form>";
+		content = content + "									</form>";
 		content = content + "           </div>";
 		content = content + "        </div>";
 
@@ -600,37 +613,43 @@ var requestAppointment = function(datetime) {
 		$("#schedules_modal_action").attr("href", "javascript: updateInfo(" + datetime + ");");
 	}
 	else if ($("#c_client_id").val() != "0") {
-		$("#schedules_title").html("Message for " + $("#c_provider_first_name").val() + " " + $("#c_provider_last_name").val());
+		$("#schedules_title").html("<h3>Booking Confirmation</h3>");
+		//$("#schedules_title").html("Message for " + $("#c_provider_first_name").val() + " " + $("#c_provider_last_name").val());
+		
 		
 		content = content + "        <div class=\"row margin-bottom-30\">";
 		content = content + "            <div class=\"col-md-10 col-md-offset-1 mb-margin-bottom-30\">";
-		content = content + "                <div class=\"headline\"><h2>Booking Confirmation</h2></div>";
-		content = content + "                <p class=\"lead\">Please confirm your request for an appointment with:<p>";
-
-		content = content + "                <blockquote>";
-		content = content + "                	<p class=\"lead\">" + $("#c_provider_first_name").val() + " " + $("#c_provider_last_name").val() + "</p>";
-		content = content + "                	<footer>" + $("#c_provider_expertise").val() + "</footer>";
-		content = content + "                </blockquote>";
+		//content = content + "                <div class=\"headline\"><h3>Booking Confirmation</h3></div>";
+	//	content = content + "                <p class=\"lead\">Please confirm your request for an appointment with "+ $("#c_provider_first_name").val() + " " + $("#c_provider_last_name").val() + "<p>";
+		content = content + "  					<p class=\"lead\">You are about to book an appointment with  "+ $("#c_provider_first_name").val() + " " + $("#c_provider_last_name").val() +"."+" "+  "Please confirm the below details:"  + "<p>";
+		//content = content + "                <blockquote>";
+		content = content + "       		   <p><strong>Date & Time:</strong> " +  m_current_date.getHours() + ":" + ("0" + m_current_date.getMinutes()).slice(-2) + (m_current_date.getHours() < 12 ? " AM" : " PM") + " on " + q_screens.month(m_current_date.getMonth() + 1) + " " + m_current_date.getDate() + "th, " + m_current_date.getFullYear() +" </p>";
+		//content = content + "           	   <p><strong>Time:</strong> " +  </p>";
+		content = content + "           	   <p><strong>Location:</strong> " +  $("#c_client_address").val() + "</p>";	
+		
+		//content = content + "                	<p class=\"lead\">" + $("#c_provider_first_name").val() + " " + $("#c_provider_last_name").val() + "</p>";
+		//content = content + "                	<footer>" + $("#c_provider_expertise").val() + "</footer>";
+		//content = content + "                </blockquote>";
 
 		content = content + "                <form action=\"request_appointment\" method=\"post\">";
 		
 		content = content + "                    <div class=\"row margin-bottom-20\">";
 		content = content + "                        <div class=\"col-md-12 col-md-offset-0\">";
-		content = content + "                            <label for=\"client_observation\">Please, feel free to let us know about whatever detail that you wish.</label>";
-		content = content + "                            <textarea name=\"client_observation\" id=\"client_observation\" class=\"form-control\" placeholder=\"Observations\"></textarea>";
+	//	content = content + "                            <label for=\"client_observation\">Please, feel free to let us know about whatever detail that you wish.</label>";
+		content = content + "                            <textarea name=\"client_observation\" id=\"client_observation\" rows=4 class=\"form-control\" placeholder=\"Don't forget to mention your special requests to " + $("#c_provider_first_name").val() + "\"></textarea>";
 		content = content + "                        </div>";
 		content = content + "                    </div>";
 
-		content = content + "					<div class=\"checkbox\">";
-	    content = content + "						<label>";
-	    content = content + "							<input id=\"send_confirmation\" type=\"checkbox\" checked> Send me an email confirmation.";
-	    content = content + "						</label>";
-	    content = content + "					</div>";
+		//content = content + "					<div class=\"checkbox\">";
+	    //content = content + "						<label>";
+	    //content = content + "							<input id=\"send_confirmation\" type=\"checkbox\" checked> Send me an email confirmation.";
+	    //content = content + "						</label>";
+	    //content = content + "					</div>";
 		content = content + "               </form>";
 		content = content + "           </div>";
 		content = content + "        </div>";
 
-		$("#schedules_modal_action").html("Book now");
+		$("#schedules_modal_action").html("Confirm");
 		$("#schedules_modal_action").attr("href", "javascript: sendRequest(" + datetime + ");");
 	}
 	else if ($("#c_client_id").val() == "0" && request_option == "signin") {
@@ -706,7 +725,7 @@ var requestAppointment = function(datetime) {
 		content = content + "                    <div class=\"row margin-bottom-20\">";
 		content = content + "						<div class=\"col-md-5 col-md-offset-1\">";
 		content = content + "                            <label for=\"phone\">Phone <i class=\"fa fa-asterisk\"></i></label>";
-		content = content + "                            <input type=\"text\" name=\"phone\" id=\"phone\" class=\"form-control\" placeholder=\"Phone\" required>";
+		content = content + "                            <input type=\"text\" name=\"phone\" id=\"phone\" class=\"form-control\" data-mask=\"(999) 999-9999\" placeholder=\"Phone\" required>";
 		content = content + "                        </div>";
 		content = content + "                        ";
 		content = content + "                        <div class=\"col-md-5\">";
@@ -768,6 +787,7 @@ var signin = function(date) {
 				$("#c_client_id").val(data.client.id);
 				$("#c_client_first_name").val(data.client.first_name);
 				$("#c_client_last_name").val(data.client.last_name);
+				$("#c_client_address").val(data.client.address);
 				if (data.client.phone !== undefined && data.client.phone !== "" && data.client.address !== undefined && data.client.address !== "" && data.client.weeks_pregnant !== undefined && data.client.weeks_pregnant !== "") {
 					$("#c_client_complete").val(1);
 				}
@@ -878,6 +898,7 @@ var signup = function(date) {
 				$("#c_client_id").val(data.client.id);
 				$("#c_client_first_name").val(data.client.first_name);
 				$("#c_client_last_name").val(data.client.last_name);
+				$("#c_client_address").val(data.client.address);
 				if (data.client.phone !== undefined && data.client.phone !== "" && data.client.address !== undefined && data.client.address !== "" && data.client.weeks_pregnant !== undefined && data.client.weeks_pregnant !== "") {
 					$("#c_client_complete").val(1);
 				}
@@ -911,6 +932,18 @@ var signup = function(date) {
 var updateInfo = function(date) {
 	clearMessage("schedules_alert");
 
+	if (!validNotEmpty($("#first_name").val())) {
+		alertMessage("schedules_alert", "First name invalid.", "danger", false);
+		$("#first_name").focus();
+		return;
+	}
+
+	if (!validNotEmpty($("#last_name").val())) {
+		alertMessage("schedules_alert", "Last name invalid.", "danger", false);
+		$("#last_name").focus();
+		return;
+	}
+	
 	if (!validatePhone($("#phone").val())) {
 		alertMessage("schedules_alert", "Phone invalid.", "danger", false);
 		$("#phone").focus();
@@ -934,6 +967,8 @@ var updateInfo = function(date) {
 		url: '/update_info_ajax',
 		dataType: "json",
 		data: { 
+			'client[first_name]': $("#first_name").val(),
+			'client[last_name]': $("#last_name").val(),
 			'client[phone]': $("#phone").val(),
 			'client[address]': $("#address").val(),
 			'client[weeks_pregnant]': $("#weeks_pregnant").val()
@@ -943,6 +978,7 @@ var updateInfo = function(date) {
 				$("#c_client_id").val(data.client.id);
 				$("#c_client_first_name").val(data.client.first_name);
 				$("#c_client_last_name").val(data.client.last_name);
+				$("#c_client_address").val(data.client.address);
 				if (data.client.phone !== undefined && data.client.phone !== "" && data.client.address !== undefined && data.client.address !== "" && data.client.weeks_pregnant !== undefined && data.client.weeks_pregnant !== "") {
 					$("#c_client_complete").val(1);
 				}
@@ -1108,7 +1144,7 @@ var fetchClientInformation = function() {
 					content = content + "<div class=\"row margin-bottom-20\">";
 					content = content + "    <div class=\"col-md-5 col-md-offset-1\">";
 					content = content + "        <label for=\"phone\">Phone <i class=\"fa fa-asterisk\"></i></label>";
-					content = content + "        <input type=\"text\" value=\"" + data.client.phone + "\" name=\"phone\" id=\"phone\" class=\"form-control\" placeholder=\"Phone\" required>";
+					content = content + "        <input type=\"text\" value=\"" + data.client.phone + "\" name=\"phone\" id=\"phone\" class=\"form-control\" data-mask=\"(999) 999-9999\" placeholder=\"Phone\" required>";
 					content = content + "    </div>";
 					content = content + "    <div class=\"col-md-5\">";
 					content = content + "        <label for=\"weeks_pregnant\">Weeks pregnant <i class=\"fa fa-asterisk\"></i></label>";

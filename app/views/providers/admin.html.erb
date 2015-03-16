@@ -5,7 +5,7 @@
       <div class="col-md-10 col-md-offset-1 mb-margin-bottom-30">
         <div id="top_page_message"></div>
         <% flash.each do |key, value| %>
-          <div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-remove"></span> <strong><%= key %></strong> <%= value %>
+          <div class="alert alert-danger" role="alert"><strong><%= key %></strong> <%= value %>
              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
           </div>
         <% end %>

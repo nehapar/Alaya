@@ -2,14 +2,9 @@ var reschedule = function(appointment_id) {
 	var content = "";
 	
 	content = content + "<div class=\"row\">";
-	content = content + "    <div class=\"col-md-10 col-md-offset-1\">";
-	content = content + "        <p class=\"lead\">Would you like to...</p>";
-	content = content + "    </div>";
-	content = content + "</div>";
-	content = content + "<div class=\"row\">";
-	content = content + "    <div class=\"col-md-10 col-md-offset-1\">";
-	content = content + "        <a href=\"#\" class=\"btn btn-primary\">... modify this schedule?</a>";
-	content = content + "        <a href=\"#\" class=\"btn btn-success pull-right\">... create a new one?</a>";
+	content = content + "    <div class=\"col-md-6 col-md-offset-3\">";
+	content = content + "        <a href=\"#\" class=\"btn btn-primary btn-block\">Modify this schedule?</a>";
+	content = content + "        <a href=\"#\" class=\"btn btn-success btn-block\">Create a new one?</a>";
 	content = content + "    </div>";
 	content = content + "</div>";
 	
@@ -64,8 +59,8 @@ var deleteAppointment = function(appointment_id) {
 
 var enableEditClient = function() {
 	if ($("#client_address").prop("disabled")) {
-		//$("#client_first_name").prop("disabled", false);
-		//$("#client_last_name").prop("disabled", false);
+		$("#client_first_name").prop("disabled", false);
+		$("#client_last_name").prop("disabled", false);
 		$("#client_address").prop("disabled", false);
 		$("#client_phone").prop("disabled", false);
 		$("#client_weeks_pregnant").prop("disabled", false);
@@ -75,8 +70,8 @@ var enableEditClient = function() {
 	}
 	else {
 		resetClientInfo();
-		//$("#client_first_name").prop("disabled", true);
-		//$("#client_last_name").prop("disabled", true);
+		$("#client_first_name").prop("disabled", true);
+		$("#client_last_name").prop("disabled", true);
 		
 		$("#client_address").prop("disabled", true);
 		$("#client_phone").prop("disabled", true);
@@ -95,8 +90,8 @@ var saveEditClient = function() {
 			dataType: "json",
 			data: {
 				'client_id': $("#client_id").val(),
-				//'client[first_name]': $("#client_first_name").val(),
-				//'client[last_name]': $("#client_last_name").val(),
+				'client[first_name]': $("#client_first_name").val(),
+				'client[last_name]': $("#client_last_name").val(),
 				'client[address]': $("#client_address").val(),
 				'client[phone]': $("#client_phone").val(),
 				'client[weeks_pregnant]': $("#client_weeks_pregnant").val()
@@ -129,15 +124,15 @@ var resetClientInfo = function() {
 		},
 		success: function(data) {
 			if (data.status == "success") {
-				//$("#client_first_name").val(data.client.first_name);
-				//$("#client_last_name").val(data.client.last_name);
+				$("#client_first_name").val(data.client.first_name);
+				$("#client_last_name").val(data.client.last_name);
 				
 				$("#client_address").val(data.client.address);
 				$("#client_phone").val(data.client.phone);
 				$("#client_weeks_pregnant").val(data.client.weeks_pregnant);
 				
-				//$("#client_first_name").prop("disabled", true);
-				//$("#client_last_name").prop("disabled", true);
+				$("#client_first_name").prop("disabled", true);
+				$("#client_last_name").prop("disabled", true);
 				$("#client_address").prop("disabled", true);
 				$("#client_phone").prop("disabled", true);
 				$("#client_weeks_pregnant").prop("disabled", true);

@@ -134,6 +134,47 @@ class UserMailer < ActionMailer::Base
   def welcome_client_email (user)
     
     html = <<-HTML_END
+    <p>Dear Mom,</p>
+    <p>Welcome to CareForMe!</p>
+    <p>To confirm your register, please, access the following address:</p>
+    <p>#{default_url}/client_confirmation?id=#{user.password_reset_token}</p>
+    <p>Regards,</p>
+    <p>CareForMe Team</p>
+    HTML_END
+    text = <<-TEXT_END
+    Dear Mom,
+    
+    Welcome to CareForMe!
+    
+    To confirm your register, please, access the following address:
+    
+    #{default_url}/client_confirmation?id=#{user.password_reset_token}
+    
+    Regards,
+    
+    CareForMe Team
+    TEXT_END
+    
+    hash = [
+      { 
+        "name" => "name" , 
+        "content" => "Mom" 
+      },
+      { 
+        "name" => "lname" , 
+        "content" => "" 
+      },
+      { 
+        "name" => "link" , 
+        "content" => "#{default_url}/client_confirmation?id=#{user.password_reset_token}"
+      }
+    ]
+    simple_template_email("V4SignUp-Template", "Mom", user.email, "Welcome", text, html, ["welcome-client"], nil, nil, nil, hash)
+  end
+  
+  def welcome_client_email_bkp (user)
+    
+    html = <<-HTML_END
     <p>Dear #{user.first_name},</p>
     <p>Welcome to CareForMe!</p>
     <p>To confirm your register, please, access the following address:</p>
@@ -275,12 +316,16 @@ class UserMailer < ActionMailer::Base
   end
   
   def appointment_accepted_email (appointment)
+    
+    appointment_date = (appointment.start + 20.minutes).strftime("%A, %B %d, %Y")
+    appointment_time = (appointment.start + 20.minutes).strftime("%I:%M %p")
+    
     html = <<-HTML_END
     <p>Hi #{appointment.client.first_name},</p>
     <p>Your appointment is confirmed. Please find the details below.</p>
     <p>Practitioner: #{appointment.provider.first_name} #{appointment.provider.last_name}</p>
-    <p>Date: #{(appointment.start + 20.minutes).strftime("%A, %B %d, %Y")}</p> 
-    <p>Time: #{(appointment.start + 20.minutes).strftime("%I:%M %p")}</p>
+    <p>Date: #{appointment_date}</p> 
+    <p>Time: #{appointment_time}</p>
     <p>Location: #{appointment.client.address}</p>
     <p>We understand things happen and plans change. In case there is any change in your schedule and you need to cancel, please refer to your provider's policy section for the cancellation policy.</p>
     <p>Thanks</p>
@@ -293,9 +338,9 @@ class UserMailer < ActionMailer::Base
     
     Practitioner: #{appointment.provider.first_name} #{appointment.provider.last_name}
     
-    Date: #{(appointment.start + 20.minutes).strftime("%A, %B %d, %Y")} 
+    Date: #{appointment_date} 
     
-    Time: #{(appointment.start + 20.minutes).strftime("%I:%M %p")} 
+    Time: #{appointment_time} 
     
     Location: #{appointment.client.address} 
     
@@ -324,14 +369,15 @@ class UserMailer < ActionMailer::Base
         "content" => "#{appointment_time}"
       },
       { 
-        "name" => "address",
+        "name" => "location",
         "content" => "#{appointment.client.address}"
       }
     ]
-    simple_template_email("Confirmation-template", appointment.client.first_name, appointment.client.email, "Appointment accpeted", text, html, ["appointment-accpeted"], nil, nil, nil, hash)
+    simple_template_email("Confirmation-template", appointment.client.first_name, appointment.client.email, "Appointment accepted", text, html, ["appointment-accpeted"], nil, nil, nil, hash)
   end
   
   def appointment_denied_email (appointment)
+    
   end
   
   def contact_message_email (name, email, message)
@@ -356,6 +402,40 @@ class UserMailer < ActionMailer::Base
     simple_mail_deliver("Website contact", default_to, "Contact through website", text, html, ["contact"], nil, nil, email)
   end
   
+  # it sends a message to admin about someone intending to become a
+  # a provider
+  #
+  # @params: [email] is the person's email
+  def sendNoteToBecomePartner (email)
+    
+    (to_name, to, subject, text, html, tags, from = nil, from_name = nil, reply_to = nil)
+    
+    html = <<-HTML_END
+    <p>Hi Neha,</p>
+    <p>This person is intending to become a provider.</p>
+    <p>Can you contact her/him please?</p>
+    <p><b>Email:</b> #{email}</p>
+    <p>Regards,</p>
+    <p>CareForMe Team</p>
+    HTML_END
+    text = <<-TEXT_END
+    Hi Neha,
+    
+    This person is intending to become a provider.
+    
+    Can you contact her/him please?
+    
+    Email: #{email}
+    
+    Regards,
+    
+    CareForMe Team
+    TEXT_END
+    
+    simple_mail_deliver("Neha", "neha@careforme.co", "Booking request - #{DateTime.now}", text, html, ["intention-note"])
+    simple_mail_deliver("Neha", "neha.alaya@gmail.com", "Booking request - #{DateTime.now}", text, html, ["intention-note"])
+    simple_mail_deliver("Thiago Melo", "thiago.alaya@gmail.com", "Booking request - #{DateTime.now}", text, html, ["intention-note"])
+  end
   
   def default_url
     return "http://alaya-c9-thiagomelo.c9.io"

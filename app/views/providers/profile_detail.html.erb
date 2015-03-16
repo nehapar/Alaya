@@ -1,10 +1,22 @@
 <% provide(:title, @provider.first_name + " " + @provider.last_name) %>
   <!--=== Profile ===-->
   <div class="profile">	
+  	
+  	<div class="container">
+  		<br>
+  		<div class="row">
+        <div class="col-md-12">
+        	<a href="/profile_list" class="btn-u pull-left">Back to browse</a>
+        </div>
+      </div>
+  	</div>
+  	
+    
     <div class="container content">
     	<div class="row">
         <div class="col-md-12">
           <!--Profile Body-->
+          
           <div class="profile-body">
             <div class="profile-bio">
               <div class="row">
@@ -41,6 +53,113 @@
 							</div>
             <% end %>
 						<!-- Therapist Bio -->
+						
+						<!-- Appointment -->          
+            <div class="panel panel-profile">
+              <div class="panel-heading overflow-h">
+                <h2 class="panel-title heading-sm pull-left"><i class="fa fa-calendar"></i>Schedule an Appointment</h2>
+              </div>
+              <div class="panel-body margin-bottom-40">
+                <div id="my-calendar">
+                  <div id="schedules_body_alert"></div>
+                  <div class="row">
+                    <div class="col-xs-12 col-ms-12 col-sm-12">
+                      <form id="schedules_periodicity" action="#" method="post">
+                        <% if csigned_in? %>
+                          <input type="hidden" name="c_client_id" id="c_client_id" value="<%= current_client.id %>">
+                          <input type="hidden" name="c_client_first_name" id="c_client_first_name" value="<%= current_client.first_name %>">
+                          <input type="hidden" name="c_client_last_name" id="c_client_last_name" value="<%= current_client.last_name %>">
+                          <input type="hidden" name="c_client_address" id="c_client_address" value="<%= current_client.address %>">
+                          <% if !current_client.phone.empty? && !current_client.phone.nil? && !current_client.address.empty? && !current_client.address.nil? && !current_client.weeks_pregnant.nil? %>
+                            <input type="hidden" name="c_client_complete" id="c_client_complete" value="1"> 
+                          <% else %>
+                            <input type="hidden" name="c_client_complete" id="c_client_complete" value="0">  
+                          <% end %>
+                        <% else %>
+                          <input type="hidden" name="c_client_id" id="c_client_id" value="0">
+                          <input type="hidden" name="c_client_complete" id="c_client_complete" value="0">
+                        <% end %>
+                        
+                        <input type="hidden" name="c_provider_id" id="c_provider_id" value="<%= @provider.id %>">
+                        <input type="hidden" name="c_provider_first_name" id="c_provider_first_name" value="<%= @provider.first_name %>">
+                        <input type="hidden" name="c_provider_last_name" id="c_provider_last_name" value="<%= @provider.last_name %>">
+                        <input type="hidden" name="c_provider_expertise" id="c_provider_expertise" value="<%= @provider.expertise %>">
+                        <div id="periodicity_options" style="display: none">
+	                        <label class="radio-inline">
+	                          <strong><span class="glyphicon glyphicon-chevron-right"></span> View:</strong>
+	                        </label>
+	                        <label class="radio-inline">
+	                          <input type="radio" onchange="loadSchedule();" name="periodicity" id="p_monthly" value="1" checked>Monthly
+	                        </label>
+	                        <label class="radio-inline">
+	                          <input type="radio" onchange="loadSchedule();" name="periodicity" id="p_weekly" value="2">Weekly
+	                        </label>
+                        </div>
+                        <label class="radio-inline pull-right">
+                        	<!--
+                          <a href="javascript: loadSchedule();" class="btn-u">Press to see my schedule</a>
+                          -->
+                        </label>
+                      </form>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-xs-12" id="schedules_container">
+                    	<script type="text/javascript">
+											  /*
+											  var poll;
+											  var timeout = 100;
+												var script = document.createElement('script');
+												script.type = 'text/javascript';
+												script.src = '/assets/javascripts/booking.js';
+												document.body.appendChild(script);
+												poll = function () {
+													setTimeout(function () {
+														timeout--;
+														if (typeof loadSchedule !== 'undefined') {
+															loadSchedule();
+														}
+														else if (timeout > 0) {
+															poll();
+														}
+														else {
+														// External library failed to load
+														}
+													}, 100);
+												};
+												poll();
+												*/
+											</script>
+                    	
+                    </div>
+                    <!--<div class="col-xs-4" id="schedule_descriptions"></div>-->
+                  </div>
+                  
+                  <div class="modal fade" id="schedules_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                          <h4 class="modal-title" id="schedules_title"></h4>
+                        </div>
+                        <div class="modal-body">
+                          <form action="" method="post">
+                            <div id="schedules_alert"></div>
+                            <div id="schedulse_modal_content"></div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" title="Cancel"></span> Cancel</button>
+                              &nbsp;<a href="#" id="schedules_modal_action" class="btn-u pull-right"></a>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End Appointment -->
 
 						<!--Specialties-->
 						<% if @provider.specialties.length > 0 || !@provider.specialty_text.nil?  %>
@@ -174,112 +293,6 @@
             <% end %>
             <!--End Areas-->
 
-            <!-- Appointment -->          
-            <div class="panel panel-profile">
-              <div class="panel-heading overflow-h">
-                <h2 class="panel-title heading-sm pull-left"><i class="fa fa-calendar"></i>Schedule an Appointment</h2>
-              </div>
-              <div class="panel-body margin-bottom-40">
-                <div id="my-calendar">
-                  <div id="schedules_body_alert"></div>
-                  <div class="row">
-                    <div class="col-xs-12 col-ms-12 col-sm-12">
-                      <form id="schedules_periodicity" action="#" method="post">
-                        <% if csigned_in? %>
-                          <input type="hidden" name="c_client_id" id="c_client_id" value="<%= current_client.id %>">
-                          <input type="hidden" name="c_client_first_name" id="c_client_first_name" value="<%= current_client.first_name %>">
-                          <input type="hidden" name="c_client_last_name" id="c_client_last_name" value="<%= current_client.last_name %>">
-                          <% if !current_client.phone.empty? && !current_client.phone.nil? && !current_client.address.empty? && !current_client.address.nil? && !current_client.weeks_pregnant.nil? %>
-                            <input type="hidden" name="c_client_complete" id="c_client_complete" value="1"> 
-                          <% else %>
-                            <input type="hidden" name="c_client_complete" id="c_client_complete" value="0">  
-                          <% end %>
-                        <% else %>
-                          <input type="hidden" name="c_client_id" id="c_client_id" value="0">
-                          <input type="hidden" name="c_client_complete" id="c_client_complete" value="0">
-                        <% end %>
-                        
-                        <input type="hidden" name="c_provider_id" id="c_provider_id" value="<%= @provider.id %>">
-                        <input type="hidden" name="c_provider_first_name" id="c_provider_first_name" value="<%= @provider.first_name %>">
-                        <input type="hidden" name="c_provider_last_name" id="c_provider_last_name" value="<%= @provider.last_name %>">
-                        <input type="hidden" name="c_provider_expertise" id="c_provider_expertise" value="<%= @provider.expertise %>">
-                        <div id="periodicity_options" style="display: none">
-	                        <label class="radio-inline">
-	                          <strong><span class="glyphicon glyphicon-chevron-right"></span> View:</strong>
-	                        </label>
-	                        <label class="radio-inline">
-	                          <input type="radio" onchange="loadSchedule();" name="periodicity" id="p_monthly" value="1" checked>Monthly
-	                        </label>
-	                        <label class="radio-inline">
-	                          <input type="radio" onchange="loadSchedule();" name="periodicity" id="p_weekly" value="2">Weekly
-	                        </label>
-                        </div>
-                        <label class="radio-inline pull-right">
-                        	<!--
-                          <a href="javascript: loadSchedule();" class="btn-u">Press to see my schedule</a>
-                          -->
-                        </label>
-                      </form>
-                    </div>
-                  </div>
-                  <br>
-                  <div class="row">
-                    <div class="col-xs-12" id="schedules_container">
-                    	<script type="text/javascript">
-											  /*
-											  var poll;
-											  var timeout = 100;
-												var script = document.createElement('script');
-												script.type = 'text/javascript';
-												script.src = '/assets/javascripts/booking.js';
-												document.body.appendChild(script);
-												poll = function () {
-													setTimeout(function () {
-														timeout--;
-														if (typeof loadSchedule !== 'undefined') {
-															loadSchedule();
-														}
-														else if (timeout > 0) {
-															poll();
-														}
-														else {
-														// External library failed to load
-														}
-													}, 100);
-												};
-												poll();
-												*/
-											</script>
-                    	
-                    </div>
-                    <!--<div class="col-xs-4" id="schedule_descriptions"></div>-->
-                  </div>
-                  
-                  <div class="modal fade" id="schedules_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                          <h4 class="modal-title" id="schedules_title"></h4>
-                        </div>
-                        <div class="modal-body">
-                          <form action="" method="post">
-                            <div id="schedules_alert"></div>
-                            <div id="schedulse_modal_content"></div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" title="Cancel"></span> Cancel</button>
-                              &nbsp;<a href="#" id="schedules_modal_action" class="btn-u pull-right"></a>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- End Appointment -->
-            
             <!--Payment & Policies-->
             <% if !@provider.policies.nil? %>
 							<div class="panel panel-profile">

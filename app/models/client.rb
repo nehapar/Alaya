@@ -3,8 +3,8 @@ class Client < ActiveRecord::Base
   has_many :providers, :through => :appointments
 
   before_save { self.email = email.downcase }
-  validates :first_name,  presence: true, length: { maximum: 50 }
-  validates :last_name,  presence: true, length: { maximum: 50 }
+  #validates :first_name,  presence: true, length: { maximum: 50 }
+  #validates :last_name,  presence: true, length: { maximum: 50 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
   has_secure_password
@@ -43,17 +43,23 @@ class Client < ActiveRecord::Base
   def create_adjusts
     self.active = 0
     generate_token(:password_reset_token)
-    if self.last_name.include? "'"
-      self.profile = self.first_name.downcase + "_" + self.last_name.downcase.gsub("'","")
-    else
-      self.profile = self.first_name.downcase + "_" + self.last_name.downcase
-    end
+    
+    #if self.last_name.include? "'"
+    #  self.profile = self.first_name.downcase + "_" + self.last_name.downcase.gsub("'","")
+    #else
+    #  self.profile = self.first_name.downcase + "_" + self.last_name.downcase
+    #end
+    self.profile = self.email.split("@")[0]
     if self.profile.include? " "
       self.profile = self.profile.gsub(" ","_")
     end
     if self.profile.include? "-"
       self.profile = self.profile.gsub("-","_")
     end
+    if self.profile.include? "."
+      self.profile = self.profile.gsub(".","_")
+    end
+    
     id = 0
     profile = self.profile
     while Client.where("profile = '#{self.profile}'").length > 0 do

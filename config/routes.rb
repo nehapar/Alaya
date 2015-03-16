@@ -23,6 +23,7 @@ CareForMe::Application.routes.draw do
   # clients
   match 'c_profile_edit', :to => 'clients#profile_edit' , via: 'get'
   match 'csignup',  :to => 'clients#new', via: 'get'
+  match 'create_client',  :to => 'clients#create', via: 'get'
   match 'csignup_helper',  :to => 'clients#signup_helper', via: 'get'
   match 'client_update_personal', :to => 'clients#update_personal' , via: 'patch'
   match 'client_update_password', :to => 'clients#update_password' , via: 'patch'
@@ -98,6 +99,8 @@ CareForMe::Application.routes.draw do
   match 'contact', :to => 'web_site#contact', via: 'get'
   match 'faq', :to => 'web_site#faq', via: 'get'
   match 'contact_message', :to => 'web_site#contact_message', via: 'get'
+  match 'provider_intention_note', :to => 'web_site#provider_intention_note_ajax', via: 'get'
+  
   
   get "web_site/index"
   get "web_site/profile_list"

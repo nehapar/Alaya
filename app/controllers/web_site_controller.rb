@@ -27,7 +27,20 @@ class WebSiteController < ApplicationController
     rescue
       redirect_to contact_path, :danger => "Sorry, we have a problem, your message has not been sent."
     end
-    
-    
+  end
+  
+  #------------------- ajax methods
+  
+  # send someone's intention to become a provider to the admin
+  # @params 
+  #   get: [email]
+  def provider_intention_note_ajax
+    begin
+      UserMailer.sendNoteToBecomePartner(params[:email])
+      container = { "status" => "success" }
+    rescue
+      container = { "status" => "fail" }
+    end
+    render :json => container.to_json
   end
 end

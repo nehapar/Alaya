@@ -4,6 +4,10 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
+h2 {
+    padding-left: 0px;
+}
+
 .navbar>.container .navbar-brand {
     font-size: 30px;
     font-weight: normal;

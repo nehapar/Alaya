@@ -1,20 +1,17 @@
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
-<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
-<head>
+<!--[if !IE]><!--> 
+<html lang="en"> <!--<![endif]-->
+  <head>
     <title>CareForMe | <%= yield(:title) %></title>
-    
     <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
-  	
-  	<%= csrf_meta_tags %>
-
+    <%= csrf_meta_tags %>
     <!-- Meta -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <!-- CSS Global Compulsory -->
     <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
@@ -24,156 +21,150 @@
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Open+Sans' type='text/css'>
     <link rel="stylesheet" href="assets/plugins/sky-forms/version-2.0.1/css/custom-sky-forms.css">
     <!--[if lt IE 9]>
-        <link rel="stylesheet" href="css/sky-forms-ie8.css">
+    <link rel="stylesheet" href="css/sky-forms-ie8.css">
     <![endif]-->
-
     <!-- CSS Page Style -->    
     <link rel="stylesheet" href="assets/css/pages/page_search.css">
-
     <!-- CSS Theme -->    
     <link rel="stylesheet" href="assets/css/themes/red.css" id="style_color">
-
     <!-- CSS Customization -->
     <link rel="stylesheet" href="assets/css/custom.css">
-    
-</head> 
-
-<body>
-
-<div class="wrapper">
-    <!--=== Header ===-->    
-    <div class="header">
+  </head>
+  <body>
+    <div class="wrapper">
+      <!--=== Header ===-->    
+      <div class="header">
         <!-- Topbar -->
         <div class="topbar">
-            <div class="container">
-                <!-- End Topbar Navigation -->
-            </div>
+          <div class="container">
+          <!-- End Topbar Navigation -->
+          </div>
         </div>
         <!-- End Topbar -->
-    
         <!-- Navbar -->
         <div class="navbar navbar-default" role="navigation">
-            <div class="container">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="fa fa-bars"></span>
-                    </button>
-                    <%= link_to "CareForMe", root_path, class: "navbar-brand" %>
-                </div>
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse navbar-responsive-collapse">
-                    <div id="nav_links">
-                        <ul class="nav navbar-nav">
-                            <% if yield(:title) == "Welcome" %>
-                              <li>
-                                  <a href="#" data-section="why-CareForMe">WHY CareForMe?</a>
-                              </li>
-                              <li>
-                                  <a href="#" data-section="how-does-it-work">HOW DOES IT WORK?</a>
-                              </li>
+          <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="fa fa-bars"></span>
+              </button>
+              <%= link_to "CareForMe", root_path, class: "navbar-brand" %>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-responsive-collapse">
+              <div id="nav_links">
+                <ul class="nav navbar-nav">
+                  <% if yield(:title) == "Welcome" %>
+                    <li>
+                      <a href="#" data-section="why-CareForMe">WHY CareForMe?</a>
+                    </li>
+                    <li>
+                      <a href="#" data-section="how-does-it-work">HOW DOES IT WORK?</a>
+                    </li>
+                  <% end %>
+                  <% if signed_in? %>
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%= current_provider.first_name %></a>
+                      <ul class="dropdown-menu" role="menu">
+                        <% if is_admin? %>
+                          <li>
+                            <%= link_to admin_path do %>
+                              <i class="fa fa-home"></i>&nbsp;Admin home
                             <% end %>
-                            
-                            <% if signed_in? %>
-                                
-                                <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%= current_provider.first_name %></a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <% if is_admin? %>
-                                            <li>
-                                                <%= link_to admin_path do %>
-                                                    <i class="fa fa-home"></i>&nbsp;Admin home
-                                                <% end %>
-                                            </li>
-                                        <% else %>
-                                            <li>
-                                                <%= link_to provider_dashboard_path do %>
-                                                    <i class="fa fa-dashboard"></i>&nbsp;My Dashboard
-                                                <% end %>
-                                            </li>
-                                            <li>
-                                                <%= link_to eval(current_provider.profile + '_path') do %>
-                                                    <i class="fa fa-desktop"></i>&nbsp;View profile
-                                                <% end %>
-                                            </li>
-                                        <% end %>
-                                    </ul>
-                                </li>
-                                
-                                
-                                <li>
-                                    <%= link_to signout_path, method: "delete" do %>
-                                        <i class="fa fa-sign-out"></i>&nbsp;Sign Out
-                                    <% end %>
-                                </li>
-                            <% elsif csigned_in? %>
-                                <!--
-                                <li>
-                                    <%= link_to eval(current_client.profile + '_path') do %>
-                                        <i class="fa fa-edit"></i>&nbsp;Edit information
-                                    <% end %>
-                                </li>
-                                -->
-                                <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%= current_client.first_name %></a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li>
-                                            <%= link_to eval(current_client.profile + '_path') do %>
-                                                <i class="fa fa-dashboard"></i>&nbsp;My Dashboard
-                                            <% end %>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <%= link_to signout_path, method: "delete" do %>
-                                        <i class="fa fa-sign-out"></i>&nbsp;Sign Out
-                                    <% end %>
-                                </li>
-                            <% else %>
-    							<!-- IMPORTANT: class="active" allows a red semaphore over <li> -->
-                            
-                                <!-- Sign In -->
-                                <li>
-                                    <%= link_to signin_path do %>
-                                        <i class="fa fa-sign-in"></i>&nbsp;Sign In
-                                    <% end %>
-                                </li>    
-                                <!-- End Sign In -->
-                                
-                                <!-- Sign Up -->                        
-                                <li>
-                                    <%= link_to csignup_path do %>
-                                        <i class="fa fa-pencil"></i>&nbsp;Sign Up
-                                    <% end %>
-                                </li>
-                                <!-- End Sign Up -->
-                                
-                                <!-- Sign Up --> 
-                                <!--                       
-                                <li>
-                                    <%= link_to signup_path do %>
-                                        <i class="fa fa-medkit"></i>&nbsp;Get Listed (Professionals)
-                                    <% end %>
-                                </li>
-                                -->
-                                <!-- End Sign Up -->
+                          </li>
+                        <% else %>
+                          <li>
+                            <%= link_to provider_dashboard_path do %>
+                              <i class="fa fa-dashboard"></i>&nbsp;My Dashboard
                             <% end %>
-                        </ul>
-                    </div>
-                </div><!--/navbar-collapse-->
-            </div>    
+                          </li>
+                          <li>
+                            <%= link_to eval(current_provider.profile + '_path') do %>
+                              <i class="fa fa-desktop"></i>&nbsp;View profile
+                            <% end %>
+                          </li>
+                        <% end %>
+                      </ul>
+                    </li>
+                    <li>
+                      <%= link_to signout_path, method: "delete" do %>
+                        <i class="fa fa-sign-out"></i>&nbsp;Sign Out
+                      <% end %>
+                    </li>
+                  <% elsif csigned_in? %>
+                    <!--
+                      <li>
+                        <%= link_to eval(current_client.profile + '_path') do %>
+                          <i class="fa fa-edit"></i>&nbsp;Edit information
+                        <% end %>
+                      </li>
+                    -->
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%= current_client.first_name.present? ? current_client.first_name : "Mom" %></a>
+                      <ul class="dropdown-menu" role="menu">
+                        <li>
+                          <%= link_to eval(current_client.profile + '_path') do %>
+                            <i class="fa fa-dashboard"></i>&nbsp;My Dashboard
+                          <% end %>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <%= link_to signout_path, method: "delete" do %>
+                        <i class="fa fa-sign-out"></i>&nbsp;Sign Out
+                      <% end %>
+                    </li>
+                  <% else %>
+                    <!-- IMPORTANT: class="active" allows a red semaphore over <li> -->
+                    
+                    <!-- Sign In -->
+                    <li>
+                      <a href="#" data-toggle="modal" data-target="#signinModal"><i class="fa fa-sign-in"></i> Sign In</a>
+                      <!--
+                        <%= link_to signin_path do %>
+                          <i class="fa fa-sign-in"></i>&nbsp;Sign In
+                        <% end %>
+                      -->
+                    </li>    
+                    <!-- End Sign In -->
+                    
+                    <!-- Sign Up -->                        
+                    <li>
+                      <a href="#" data-toggle="modal" data-target="#signupModal"><i class="fa fa-pencil"></i> Sign Up</a>
+                      <!--
+                        <%= link_to csignup_path do %>
+                          <i class="fa fa-pencil"></i>&nbsp;Sign Up
+                        <% end %>
+                      -->
+                    </li>
+                    <!-- End Sign Up -->
+                    
+                    <!-- Sign Up --> 
+                      <!--                       
+                        <li>
+                          <%= link_to signup_path do %>
+                            <i class="fa fa-medkit"></i>&nbsp;Get Listed (Professionals)
+                          <% end %>
+                        </li>
+                      -->
+                    <!-- End Sign Up -->
+                  <% end <%>
+                </ul>
+              </div>
+            </div><!--/navbar-collapse-->
+          </div>    
         </div>            
         <!-- End Navbar -->
-    </div>
-    <!--=== End Header ===-->
-    
-    <%= yield %>
-	
-	  <div class="modal fade" id="generic_modal" tabindex="-1" role="dialog" aria-labelledby="genericModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
+      </div>
+      <!--=== End Header ===-->
+      
+      <%= yield %>
+      
+      <div class="modal fade" id="generic_modal" tabindex="-1" role="dialog" aria-labelledby="genericModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title" id="generic_modal_title">Modal title</h4>
@@ -181,239 +172,315 @@
           <div id="generic_modal_alert"></div>
           <div class="modal-body" id="generic_modal_body"></div>
           <div class="modal-footer" id="generic_modal_footer"></div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    
-    <div class="modal fade" id="generic_modal_large" tabindex="-1" role="dialog" aria-labelledby="genericLargeModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="generic_modal_large_title">Modal title</h4>
-          </div>
-          <div id="generic_modal_large_alert"></div>
-          <div class="modal-body" id="generic_modal_large_body"></div>
-          <div class="modal-footer" id="generic_modal_large_footer"></div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    
-	<!--=== Footer ===-->
-    <div class="footer">
-        <div class="container">
-            <div class="row">                
-                
-                <% if !csigned_in? && !signed_in? %>
-					<div class="col-md-3 md-margin-bottom-40">
-						<!-- CareForMe -->
-						<div class="headline"><h2>CareForMe</h2></div>  
-						<p class="margin-bottom-25 md-margin-bottom-40">Taking care of moms</p>    
-						<!-- End CareForMe -->
-						
-						<!-- Social Link -->
-						<ul class="social-icons">
-							<li><a href="https://www.facebook.com/pages/CareForMe/512356292228538?ref=hl" data-original-title="Facebook" class="social_facebook"></a></li>
-							<li><a href="#" data-original-title="Twitter" class="social_twitter"></a></li>
-							<li><a href="#" data-original-title="Goole Plus" class="social_googleplus"></a></li>
-						</ul>
-						<!-- End Social Link -->
-					</div><!--/col-md-4-->  
-					
-					<div class="col-md-3 md-margin-bottom-40">
-						<!-- Categories -->
-						<div class="posts">
-							<div class="headline"><h2>Categories</h2></div>
-							<dl class="dl-horizontal">
-								<dd>
-									<p><%= link_to "About", about_path %></p> 
-								</dd>
-							</dl>
-							<dl class="dl-horizontal">
-								<dd>
-									<p><%= link_to "F.A.Q", faq_path %></p> 
-								</dd>
-							</dl>
-							<dl class="dl-horizontal">
-								<dd>
-									<p><%= link_to "Contact", contact_path %></p> 
-								</dd>
-							</dl>
-						</div>
-						<!-- End Categories -->                    
-					</div><!--/col-md-4-->
-
-					<div class="col-md-3">
-						<!-- Follow Us -->
-						<div class="posts">
-							<div class="headline"><h2>Follow Us</h2></div> 
-							<dl class="dl-horizontal">
-								<dd>
-									<p><a href="https://www.facebook.com/pages/CareForMe/512356292228538?ref=hl">FaceBook</a></p> 
-								</dd>
-							</dl>
-							<dl class="dl-horizontal">
-								<dd>
-									<p><a href="#">Twitter</a></p> 
-								</dd>
-							</dl>
-							<dl class="dl-horizontal">
-								<dd>
-									<p><a href="#">Google+</a></p> 
-								</dd>
-							</dl>
-						</div>
-						<!-- End Follow Us -->
-					</div>
-					<div class="col-md-3">
-						<!-- Sign Up -->
-						<form action="csignup" method="get">
-							<div class="posts">
-								<div class="headline"><h2>Sign Up</h2></div>
-								<p><input name="email" type="text" class="form-control" placeholder="Email Address"></p>
-								<p><button class="btn-u" type="submit">Sign Up</button></p>
-							</div>
-						</form>
-						<!-- End Sign Up -->
-					</div>
-				<% else %>
-					<div class="col-md-4 md-margin-bottom-40">
-						<!-- CareForMe -->
-						<div class="headline"><h2>CareForMe</h2></div>  
-						<p class="margin-bottom-25 md-margin-bottom-40">Taking care of moms</p>    
-						<!-- End CareForMe -->
-						
-						<!-- Social Link -->
-						<ul class="social-icons">
-							<li><a href="https://www.facebook.com/pages/CareForMe/512356292228538?ref=hl" data-original-title="Facebook" class="social_facebook"></a></li>
-							<li><a href="#" data-original-title="Twitter" class="social_twitter"></a></li>
-							<li><a href="#" data-original-title="Goole Plus" class="social_googleplus"></a></li>
-						</ul>
-						<!-- End Social Link -->
-					</div><!--/col-md-4-->  
-					
-					<div class="col-md-4 md-margin-bottom-40">
-						<!-- Categories -->
-						<div class="posts">
-							<div class="headline"><h2>Categories</h2></div>
-							<dl class="dl-horizontal">
-								<dd>
-									<p><%= link_to "About", about_path %></p> 
-								</dd>
-							</dl>
-							<dl class="dl-horizontal">
-								<dd>
-									<p><%= link_to "F.A.Q", faq_path %></p> 
-								</dd>
-							</dl>
-							<dl class="dl-horizontal">
-								<dd>
-									<p><%= link_to "Contact", contact_path %></p> 
-								</dd>
-							</dl>
-						</div>
-						<!-- End Categories -->                    
-					</div><!--/col-md-4-->
-
-					<div class="col-md-4">
-						<!-- Follow Us -->
-						<div class="posts">
-							<div class="headline"><h2>Follow Us</h2></div> 
-							<dl class="dl-horizontal">
-								<dd>
-									<p><a href="https://www.facebook.com/pages/CareForMe/512356292228538?ref=hl">FaceBook</a></p> 
-								</dd>
-							</dl>
-							<dl class="dl-horizontal">
-								<dd>
-									<p><a href="#">Twitter</a></p> 
-								</dd>
-							</dl>
-							<dl class="dl-horizontal">
-								<dd>
-									<p><a href="#">Google+</a></p> 
-								</dd>
-							</dl>
-						</div>
-						<!-- End Follow Us -->
-					</div>
-                <% end %>
-                
-                <!--/col-md-3-->
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+      
+      <div class="modal fade" id="generic_modal_large" tabindex="-1" role="dialog" aria-labelledby="genericLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="generic_modal_large_title">Modal title</h4>
             </div>
-        </div> 
-    </div>    
-    <!--=== End Footer ===-->
-
-    <!--=== Copyright ===-->
-    <div class="copyright">
+            <div id="generic_modal_large_alert"></div>
+            <div class="modal-body" id="generic_modal_large_body"></div>
+            <div class="modal-footer" id="generic_modal_large_footer"></div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+      
+      <!--=== Footer ===-->
+      <div class="footer">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6">                      
-                    <p class="copyright-space">
-                        2014 &copy; CareForMe. ALL Rights Reserved. 
-                        <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
-                    </p>
+          <div class="row">
+            <% if !csigned_in? && !signed_in? %>
+              <div class="col-md-3 md-margin-bottom-40">
+                <!-- CareForMe -->
+                <div class="headline"><h2>CareForMe</h2></div>  
+                <!-- <p class="margin-bottom-25 md-margin-bottom-40">Taking care of moms</p> -->
+                <!-- End CareForMe -->
+                
+                <!-- Social Link -->
+                <ul class="social-icons">
+                  <li><a href="javascript: window.open('https://www.facebook.com/pages/CareForMe/512356292228538?ref=hl');" data-original-title="Facebook" class="social_facebook"></a></li>
+                  <li><a href="#" data-original-title="Twitter" class="social_twitter"></a></li>
+                  <li><a href="javascript: window.open('https://www.pinterest.com/careformeco/');" data-original-title="Pintrest" class="social_pintrest"></a></li>
+                </ul>
+                <!-- End Social Link -->
+              </div><!--/col-md-4-->  
+            
+              <div class="col-md-3 md-margin-bottom-40">
+                <!-- Categories -->
+                <div class="posts">
+                  <div class="headline"><h2>Categories</h2></div>
+                  <dl class="dl-horizontal">
+                    <dd>
+                      <p><%= link_to "About", about_path %></p> 
+                    </dd>
+                  </dl>
+                  <dl class="dl-horizontal">
+                    <dd>
+                      <p><%= link_to "F.A.Q", faq_path %></p> 
+                    </dd>
+                  </dl>
+                  <dl class="dl-horizontal">
+                    <dd>
+                      <p><%= link_to "Contact", contact_path %></p> 
+                    </dd>
+                  </dl>
                 </div>
-            </div>
+                <!-- End Categories -->                    
+              </div><!--/col-md-4-->
+            
+              <div class="col-md-3">
+                <!-- Follow Us -->
+                <div class="posts">
+                  <div class="headline"><h2>Follow Us</h2></div> 
+                  <dl class="dl-horizontal">
+                    <dd>
+                      <p><a href="javascript: window.open('https://www.facebook.com/pages/CareForMe/512356292228538?ref=hl');">FaceBook</a></p> 
+                    </dd>
+                  </dl>
+                  <dl class="dl-horizontal">
+                    <dd>
+                      <p><a href="#">Twitter</a></p> 
+                    </dd>
+                  </dl>
+                  <dl class="dl-horizontal">
+                    <dd>
+                      <p><a href="javascript: window.open('https://www.pinterest.com/careformeco/');">Pintrest</a></p> 
+                    </dd>
+                  </dl>
+                </div>
+                <!-- End Follow Us -->
+              </div>
+              
+              <div class="col-md-3">
+                <!-- Sign Up -->
+                <form action="csignup" method="get">
+                  <div class="posts">
+                    <div class="headline"><h2>Sign Up</h2></div>
+                    <p><input name="email" type="text" class="form-control" placeholder="Email Address"></p>
+                    <p><button class="btn-u" type="submit">Sign Up</button></p>
+                  </div>
+                </form>
+                <!-- End Sign Up -->
+              </div>
+            <% else %>
+              <div class="col-md-4 md-margin-bottom-40">
+                <!-- CareForMe -->
+                <div class="headline"><h2>CareForMe</h2></div>  
+                <!-- <p class="margin-bottom-25 md-margin-bottom-40">Taking care of moms</p> -->
+                <!-- End CareForMe -->
+                
+                <!-- Social Link -->
+                <ul class="social-icons">
+                  <li><a href="https://www.facebook.com/pages/CareForMe/512356292228538?ref=hl" data-original-title="Facebook" class="social_facebook"></a></li>
+                  <li><a href="#" data-original-title="Twitter" class="social_twitter"></a></li>
+                  <li><a href="#" data-original-title="Goole Plus" class="social_googleplus"></a></li>
+                </ul>
+                <!-- End Social Link -->
+              </div><!--/col-md-4-->  
+            
+              <div class="col-md-4 md-margin-bottom-40">
+                <!-- Categories -->
+                <div class="posts">
+                  <div class="headline"><h2>Categories</h2></div>
+                  <dl class="dl-horizontal">
+                    <dd>
+                      <p><%= link_to "About", about_path %></p> 
+                    </dd>
+                  </dl>
+                  <dl class="dl-horizontal">
+                    <dd>
+                      <p><%= link_to "F.A.Q", faq_path %></p> 
+                    </dd>
+                  </dl>
+                  <dl class="dl-horizontal">
+                    <dd>
+                      <p><%= link_to "Contact", contact_path %></p> 
+                    </dd>
+                  </dl>
+                </div>
+                <!-- End Categories -->                    
+              </div><!--/col-md-4-->
+            
+              <div class="col-md-4">
+                <!-- Follow Us -->
+                <div class="posts">
+                  <div class="headline"><h2>Follow Us</h2></div> 
+                  <dl class="dl-horizontal">
+                    <dd>
+                      <p><a href="https://www.facebook.com/pages/CareForMe/512356292228538?ref=hl">FaceBook</a></p> 
+                    </dd>
+                  </dl>
+                  <dl class="dl-horizontal">
+                    <dd>
+                      <p><a href="#">Twitter</a></p> 
+                    </dd>
+                  </dl>
+                  <dl class="dl-horizontal">
+                    <dd>
+                      <p><a href="#">Google+</a></p> 
+                    </dd>
+                  </dl>
+                </div>
+                <!-- End Follow Us -->
+              </div>
+            <% end %>
+            <!--/col-md-3-->
+          </div>
         </div> 
-    </div> 
-    <!--=== End Copyright ===-->
-    
-</div><!--/End Wrapepr-->
-
-<!-- JS Global Compulsory -->           
-<%= javascript_include_tag "application", "data-turbolinks-track" => true %>
-<script type="text/javascript" src="assets/plugins/jquery-1.10.2.min.js"></script>
-<script type="text/javascript" src="assets/plugins/jquery-migrate-1.2.1.min.js"></script>
-<script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script> 
-<!-- JS Implementing Plugins -->
-<script type="text/javascript" src="assets/plugins/back-to-top.js"></script>
-<script type="text/javascript" src="assets/plugins/jquery.parallax.js"></script>
-<script type="text/javascript" src="assets/plugins/counter/waypoints.min.js"></script>
-<script type="text/javascript" src="assets/plugins/counter/jquery.counterup.min.js"></script> 
-<!-- JS Page Level -->           
-<script type="text/javascript" src="assets/js/app.js"></script>
-<script type="text/javascript">
+      </div>    
+      <!--=== End Footer ===-->
+      
+      <!--=== Copyright ===-->
+      <div class="copyright">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">                      
+              <p class="copyright-space">
+                2014 &copy; CareForMe. ALL Rights Reserved. 
+                <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+              </p>
+            </div>
+          </div>
+        </div> 
+      </div> 
+      <!--=== End Copyright ===-->
+      
+      <div class="modal fade" id="signinModal" tabindex="-1" role="dialog" aria-labelledby="signinModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Sign In</h4>
+            </div>
+            <%= form_for(:session, url: sessions_path) do |f| %>
+              <div class="modal-body">
+                <div id="signin_alert_message"></div>
+                <div class="row">
+                  <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">
+                    <%= f.label :email  %>
+                    <%= f.text_field :email, class: "form-control", placeholder: "Email", required: "required" %>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">
+                    <%= f.label :password  %>
+                    <%= f.password_field :password, class: "form-control", placeholder: "Password", required: "required" %>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">
+                    <%= f.label :remember_me, class: "checkbox inline" do %>
+                    <%= f.check_box :remember_me %>
+                      <span>Keep me signed in</span>
+                    <% end %>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-md-10 col-md-offset-1">
+                    <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#signupModal" class="pull-left">Don't you have an account?</a>
+                    <!--<%= link_to "Don't you have an account?", csignup_path, class: "pull-left" %>--></1-->
+                    <%= link_to "Forgot your password?", password_recovery_path, class: "pull-right" %>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <%= f.submit "Sign In", class: "btn-u", onclick: "return validateSign()", :data => { :valid_signin => 'somevalue' } %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-body">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <div id="client_signup_alert"></div>
+              <%= form_for(:client, url: { action: "create", controller: "clients" }) do |f| %>
+                <div class="row">
+                  <div class="col-md-10 col-md-offset-1">
+                    <div class="headline"><h2>Sign Up</h2></div>
+                  </div>           
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-10 col-md-offset-1">
+                    <%= f.label :email %>&nbsp;<i class="fa fa-asterisk"></i>
+                    <%= f.text_field :email, class: "form-control", placeholder: "Email", required: "required" %>
+                  </div>                
+                </div>
+                <br>
+                <div class="row margin-bottom-20">
+                  <div class="col-md-10 col-md-offset-1">
+                    <%= f.label :password %>&nbsp;<i class="fa fa-asterisk"></i>
+                    <%= f.password_field :password, class: "form-control", placeholder: "Password", required: "required" %>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="col-md-10 col-md-offset-1" align="center">
+                    <%= f.submit "Create my account", onclick: "return validateClientSignupPop()", class: "btn-u" %>
+                  </div>                
+                </div>
+              <% end %>
+            </div>  
+          </div>
+        </div>
+      </div>
+    </div><!--/End Wrapepr-->
+    <!-- JS Global Compulsory -->           
+    <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+    <script type="text/javascript" src="assets/plugins/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="assets/plugins/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script> 
+    <!-- JS Implementing Plugins -->
+    <script type="text/javascript" src="assets/plugins/back-to-top.js"></script>
+    <script type="text/javascript" src="assets/plugins/jquery.parallax.js"></script>
+    <script type="text/javascript" src="assets/plugins/counter/waypoints.min.js"></script>
+    <script type="text/javascript" src="assets/plugins/counter/jquery.counterup.min.js"></script> 
+    <!-- JS Page Level -->           
+    <script type="text/javascript" src="assets/js/app.js"></script>
+    <script type="text/javascript">
     $(document).ready(function() {
-        App.init();
-        App.initCounter();
-        //App.initParallaxBg();
-        $('html, body').animate({scrollTop : 0},500);
-        loadSchedule();
-        $("a[data-section]").click(function(e) {
-      			e.preventDefault();
-      			var offSet = 50;
-      			$('html, body').animate({
-      				  scrollTop: $("#" + $(this).data("section")).offset().top// - offSet
-      			}, 1000);
-      			$("li.active").toggleClass("active");
-      			$(this).parent().toggleClass("active");
-    		});
-    		
-    		<% if yield(:title) == "Profile List" %>
-      		var i;
-          for (i = 0; i < profile_images.length; i++) {
-            profile_images[i][2].src = profile_images[i][1];
-            profile_images[i][2].id = "profile-img-" + profile_images[i][0];
-            profile_images[i][2].onload = onloadImage;
-          }
-        <% end %>
-        /*
-        $.ajaxStart(function(){
-          $("#provider_image_container").hide();
-          $("#provider_picture_spin_container").html("<i class=\"fa fa-spinner fa-spin fa-5x\"></i>");
-        });
-        
-        $.ajaxStop(function(){
-          $("#provider_picture_spin_container").hide();
-          $("#provider_image_container").show();
-        });
-        */
+    App.init();
+    App.initCounter();
+    //App.initParallaxBg();
+    $('html, body').animate({scrollTop : 0},500);
+      loadSchedule();
+      $("a[data-section]").click(function(e) {
+        e.preventDefault();
+        var offSet = 50;
+        $('html, body').animate({
+          scrollTop: $("#" + $(this).data("section")).offset().top// - offSet
+        }, 1000);
+        $("li.active").toggleClass("active");
+        $(this).parent().toggleClass("active");
+      });
+      
+      <% if yield(:title) == "Profile List" %>
+        var i;
+        for (i = 0; i < profile_images.length; i++) {
+          profile_images[i][2].src = profile_images[i][1];
+          profile_images[i][2].id = "profile-img-" + profile_images[i][0];
+          profile_images[i][2].onload = onloadImage;
+        }
+      <% end %>
+      <% if yield(:title) == "Sign in" %>
+        //$("#signupFromSignModal").modal("show");
+      <% end %>
     });
-</script>
-<!--[if lt IE 9]>
+    </script>
+    <!--[if lt IE 9]>
     <script src="assets/plugins/respond.js"></script>
-<![endif]-->
-</body>
+    <![endif]-->
+  </body>
 </html> 

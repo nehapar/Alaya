@@ -25,6 +25,7 @@ class ClientsController < ApplicationController
   
   # It creates a client
   def create
+    params[:client][:password_confirmation] = params[:client][:password]
     @client = Client.new(client_params)
     @client.create_adjusts
     if @client.save
@@ -35,10 +36,10 @@ class ClientsController < ApplicationController
   	  # so, it forces a redirect to another method that takes care of
   	  # finilize the job
   	  # !!!!!!!!!!!!! Need to be fixed !!!!!!!!!!!!!
-      redirect_to signin_path #profile_list_path #csignup_helper_path
+      redirect_to signin_path, :flash => { :success => "Welcome to CareForMe! Please check your email for validation." } #profile_list_path #csignup_helper_path
     else
-      flash.now[:error] = 'Sorry, it was not possible to register you.'
-      render 'new'
+      flash.now[:error] = 'You are already registered. Please, request a new password.'
+      redirect_to password_recovery_path
     end
   end
   
@@ -174,12 +175,19 @@ class ClientsController < ApplicationController
 
   # this performs the final action of create an appointment request
   def request_appointment_ajax
-    appointments = Appointment.new(appointment_params)
-    if appointments.save
-      UserMailer.appointment_booked_email(appointments)
-      container = { "status" => "success"}
+    
+    appointment = Appointment.where("provider_id = ? and client_id = ? and start = ? and end = ?", 
+      params[:appointment][:provider_id], params[:appointment][:client_id], params[:appointment][:start], params[:appointment][:end] )
+    if appointment.length == 0
+      appointments = Appointment.new(appointment_params)
+      if appointments.save
+        UserMailer.appointment_booked_email(appointments)
+        container = { "status" => "success"}
+      else
+        container = { "appointments" => appointments.errors, "status" => "fail"}
+      end
     else
-      container = { "appointments" => appointments.errors, "status" => "fail"}
+      container = { "status" => "success"}
     end
     render :json => container.to_json
   end
@@ -288,6 +296,6 @@ class ClientsController < ApplicationController
     end
 
     def client_update_params
-      params.require(:client).permit(:phone, :address, :weeks_pregnant)
+      params.require(:client).permit(:first_name, :last_name, :phone, :address, :weeks_pregnant)
     end
 end

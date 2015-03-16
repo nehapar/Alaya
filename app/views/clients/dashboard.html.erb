@@ -1,248 +1,235 @@
-<% provide(:title, @client.first_name) %>
-    <!--=== Container ===-->
-    <div class="container content">
-        <div class="row margin-bottom-30">
-            <div class="col-md-10 col-md-offset-1 mb-margin-bottom-30">
-                <div id="client_edit_alert"></div>
-                <div class="headline"><h2>Client Home Page</h2></div>
-                <!-- Requests table begin -->
-                <ul class="nav nav-tabs" role="tablist">
-                    <li class="active"><a onclick="resetClientInfo();" href="#appointments" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-calendar"></span> Appointments</a></li>
-                    <li class=""><a href="#edit" role="tab" data-toggle="tab"><i class="fa fa-edit"></i> My Info</a></li>
-                    <li class=""><a onclick="resetClientInfo();" href="#password" role="tab" data-toggle="tab"><i class="fa fa-lock"></i> Password</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="appointments">
-						<br>
-						<div class="row">
-							<div class="col-md-12 col-md-offset-0">
-								<%= link_to "Schedule an appointment today!", profile_list_path, class: "btn-u pull-right" %>
-							</div>
-						</div>
-						
-						<div class="row">
-							<div class="col-md-12 col-xs-12">
-								<h2>Upcoming appointments <!--<small><strong><a href="#" data-toggle="modal" data-target="#waiting_modal">(See those waiting for acceptance)</a></strong></small>--></h2>
-								<% if @client.appointments.where("accepted = 0 or accepted = 1").where(['start >= ?', DateTime.now]).length > 0 %>
-		                            <table class="table table-striped table-hover">
-		                                <thead>
-		                                    <tr>
-		                                        <th>Appointments</th>
-		                                        <th>Accepted</th>
-		                                        <th>Reschedule</th>
-		                                    </tr>
-		                                </thead>
-		                                <tbody>
-		                                    <% @client.appointments.where("accepted = 0 or accepted = 1").where(['start >= ?', DateTime.now]).order(start: :asc).each_with_index do |appointment, index| %>
-		                                        <tr id="appointment_<%= appointment.id %>">
-		                                            <td>
-														You have an upcoming appointment with <%= link_to eval("#{appointment.provider.profile}_path") do %><strong><%= appointment.provider.first_name %> <%= appointment.provider.last_name %></strong><% end %> on <strong><%= (appointment.start + 20.minutes).strftime("%A, %m/%d/%Y") %></strong> at <strong><%= (appointment.start + 20.minutes).strftime("%I:%M %p") %></strong> at <strong><%= appointment.client.address %></strong>
-													</td>
-													<!--	
-		                                            <td><%= appointment.provider.expertise %></td>
-		                                            -->
-		                                            <td align="center"><% if appointment.accepted == 1 %><i class="fa fa-thumbs-up"></i><% end %></td>
-		                                            <td align="center"><a href="javascript: reschedule(<%= appointment.id %>);"><i class="fa fa-history fa-flip-horizontal"></i></a></td>
-		                                            <!-- <td align="center"><a href="javascript: deleteAppointment(<%= appointment.id %>);"><i class="fa fa-remove"></i></a></td> -->
-		                                       </tr>
-		                                    <% end %>
-		                                </tbody>
-		                            </table>
-								<% else %>
-									<p>You don't have upcoming appointments.</p>
-								<% end %>
-							</div>
-						</div>
-						
-						<div class="row">
-							<div class="col-md-12 col-xs-12">
-								<h2>Past appointments</h2>
-								<% if @client.appointments.where("accepted = 0 or accepted = 1").where(['start < ?', DateTime.now]).length > 0 %>
-		                            <table class="table table-striped table-hover">
-		                                <thead>
-		                                    <tr>
-		                                        <th>Consultant</th>
-		                                        <th>Expertise</th>
-		                                        <th>Date</th>
-		                                        <th>Reschedule</th>
-		                                    </tr>
-		                                </thead>
-		                                <tbody>
-		                                    <% @client.appointments.where("accepted = 0 or accepted = 1").where(['start < ?', DateTime.now]).order(start: :desc).each_with_index do |appointment, index| %>
-		                                        <tr id="appointment_<%= appointment.id %>">
-		                                            <td>
-														<%= link_to eval("#{appointment.provider.profile}_path") do %>
-															<strong><%= appointment.provider.first_name %> <%= appointment.provider.last_name %></strong>
-														<% end %>
-													</td>
-													<td>
-														<%= appointment.provider.expertise %>
-													</td>
-													<td>
-														<strong><%= (appointment.start + 20.minutes).strftime("%A, %B %dth, %Y") %></strong> at <strong><%= (appointment.start + 20.minutes).strftime("%I:%M %p") %></strong>
-													</td>
-		                                            <td align="center"><a href="javascript: reschedule(<%= appointment.id %>);"><i class="fa fa-history fa-flip-horizontal"></i></a></td>
-		                                            <!-- <td align="center"><a href="javascript: deleteAppointment(<%= appointment.id %>);"><i class="fa fa-remove"></i></a></td> -->
-		                                       </tr>
-		                                    <% end %>
-		                                </tbody>
-		                            </table>
-								<% else %>
-									<p>You don't have past appointments.</p>
-								<% end %>
-							</div>
-						</div>
-						
-						<div class="modal fade" id="reschedules_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-										<h4 class="modal-title" id="reschedules_title"></h4>
-									</div>
-									<div class="modal-body">
-										<form action="" method="post">
-											<div id="reschedules_alert"></div>
-											<div id="reschedulse_modal_content"></div>
-										</form>
-									</div>
+		<% provide(:title, @client.first_name) %>
+		<!--=== Container ===-->
+		<div class="container content">
+			<div class="row margin-bottom-30">
+				<div class="col-md-10 col-md-offset-1 mb-margin-bottom-30">
+					<div id="client_edit_alert"></div>
+					<div class="headline">
+						<h2><%= "Welcome, #{current_client.first_name.present? ? current_client.first_name : "Mom"}!" %></h2>
+					</div>
+					<!-- Requests table begin -->
+					<ul class="nav nav-tabs" role="tablist">
+						<li class="active"><a onclick="resetClientInfo();" href="#appointments" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-calendar"></span> Appointments</a></li>
+						<li class=""><a href="#edit" role="tab" data-toggle="tab"><i class="fa fa-edit"></i> My Info</a></li>
+						<li class=""><a onclick="resetClientInfo();" href="#password" role="tab" data-toggle="tab"><i class="fa fa-lock"></i> Password</a></li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="appointments">
+							<div class="row">
+								<div class="col-md-12 col-xs-12">
+									<h2 style="padding-left: 0px;">Upcoming appointments <!--<small><strong><a href="#" data-toggle="modal" data-target="#waiting_modal">(See those waiting for acceptance)</a></strong></small>--></h2>
+									<% if @client.appointments.where("accepted = 0 or accepted = 1").where(['start >= ?', DateTime.now]).length > 0 %>
+										<table class="table table-striped table-hover">
+											<thead>
+												<tr>
+													<th>Appointments</th>
+													<th>Accepted</th>
+													<th>Reschedule</th>
+												</tr>
+											</thead>
+											<tbody>
+												<% @client.appointments.where("accepted = 0 or accepted = 1").where(['start >= ?', DateTime.now]).order(start: :asc).each_with_index do |appointment, index| %>
+													<tr id="appointment_<%= appointment.id %>">
+														<td>
+															You have an upcoming appointment with <%= link_to eval("#{appointment.provider.profile}_path") do %><strong><%= appointment.provider.first_name %> <%= appointment.provider.last_name %></strong><% end %> on <strong><%= (appointment.start + 20.minutes).strftime("%A, %m/%d/%Y") %></strong> at <strong><%= (appointment.start + 20.minutes).strftime("%I:%M %p") %></strong> at <strong><%= appointment.client.address %></strong>
+														</td>
+														<!--	
+														<td><%= appointment.provider.expertise %></td>
+														-->
+														<td align="center"><% if appointment.accepted == 1 %><i class="fa fa-check"></i><% else %>In process<% end %></td>
+														<td align="center"><a href="javascript: reschedule(<%= appointment.id %>);"><i class="fa fa-history fa-flip-horizontal"></i></a></td>
+														<!-- <td align="center"><a href="javascript: deleteAppointment(<%= appointment.id %>);"><i class="fa fa-remove"></i></a></td> -->
+													</tr>
+												<% end %>
+											</tbody>
+										</table>
+									<% else %>
+										<p>You don't have upcoming appointments.</p>
+									<% end %>
 								</div>
 							</div>
-						</div>
-						
-						<div class="modal fade" id="waiting_modal" tabindex="-1" role="dialog" aria-labelledby="waitingLabel" aria-hidden="true">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-										<h4 class="modal-title">Waiting for confirmation</h4>
-									</div>
-									<div class="modal-body">
-										<div class="row">
-											<div class="col-md-12 col-xs-12">
-												<% if @client.appointments.where("accepted = 0").where(['start >= ?', DateTime.now]).length > 0 %>
-						                            <table class="table table-striped table-hover">
-						                                <thead>
-						                                    <tr>
-						                                        <th>Consultant</th>
-						                                        <th>Date</th>
-						                                    </tr>
-						                                </thead>
-						                                <tbody>
-						                                    <% @client.appointments.where("accepted = 0").where(['start >= ?', DateTime.now]).order(start: :asc).each_with_index do |appointment, index| %>
-						                                        <tr id="appointment_<%= appointment.id %>">
-						                                            <td>
-																		<%= link_to eval("#{appointment.provider.profile}_path") do %><strong><%= appointment.provider.first_name %> <%= appointment.provider.last_name %></strong><% end %></strong>
-																	</td>
-						                                            <td>
-						                                            	<strong><%= (appointment.start + 20.minutes).strftime("%A, %B %dth, %Y") %></strong> at <strong><%= (appointment.start + 20.minutes).strftime("%I:%M %p") %></strong>
-						                                            </td>
-						                                            <!-- <td align="center"><a href="javascript: deleteAppointment(<%= appointment.id %>);"><i class="fa fa-remove"></i></a></td> -->
-						                                       </tr>
-						                                    <% end %>
-						                                </tbody>
-						                            </table>
-												<% else %>
-													<p>You don't have waiting for acceptance appointments.</p>
+							<div class="row">
+								<div class="col-md-12 col-md-offset-0">
+									<%= link_to "Schedule an appointment today!", profile_list_path, class: "btn-u" %>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12 col-xs-12">
+									<h2 style="padding-left: 0px;">Past appointments</h2>
+									<% if @client.appointments.where("accepted = 0 or accepted = 1").where(['start < ?', DateTime.now]).length > 0 %>
+										<table class="table table-striped table-hover">
+											<thead>
+												<tr>
+													<th>Consultant</th>
+													<th>Expertise</th>
+													<th>Date</th>
+													<th>Reschedule</th>
+												</tr>
+											</thead>
+											<tbody>
+												<% @client.appointments.where("accepted = 0 or accepted = 1").where(['start < ?', DateTime.now]).order(start: :desc).each_with_index do |appointment, index| %>
+													<tr id="appointment_<%= appointment.id %>">
+														<td>
+															<%= link_to eval("#{appointment.provider.profile}_path") do %>
+																<strong><%= appointment.provider.first_name %> <%= appointment.provider.last_name %></strong>
+															<% end %>
+														</td>
+														<td>
+															<%= appointment.provider.expertise %>
+														</td>
+														<td>
+															<strong><%= (appointment.start + 20.minutes).strftime("%A, %B %dth, %Y") %></strong> at <strong><%= (appointment.start + 20.minutes).strftime("%I:%M %p") %></strong>
+														</td>
+														<td align="center">
+															<a href="javascript: reschedule(<%= appointment.id %>);"><i class="fa fa-history fa-flip-horizontal"></i></a>
+														</td>
+														<!-- <td align="center"><a href="javascript: deleteAppointment(<%= appointment.id %>);"><i class="fa fa-remove"></i></a></td> -->
+													</tr>
 												<% end %>
-											</div>
+											</tbody>
+										</table>
+									<% else %>
+										<p>You don't have past appointments.</p>
+									<% end %>
+								</div>
+							</div>
+							<div class="modal fade" id="reschedules_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+											<h4 class="modal-title" id="reschedules_title"></h4>
+										</div>
+										<div class="modal-body">
+											<form action="" method="post">
+												<div id="reschedules_alert"></div>
+												<div id="reschedulse_modal_content"></div>
+											</form>
 										</div>
 									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i> Close</button>
+								</div>
+							</div>
+							<div class="modal fade" id="waiting_modal" tabindex="-1" role="dialog" aria-labelledby="waitingLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+											<h4 class="modal-title">Waiting for confirmation</h4>
+										</div>
+										<div class="modal-body">
+											<div class="row">
+												<div class="col-md-12 col-xs-12">
+													<% if @client.appointments.where("accepted = 0").where(['start >= ?', DateTime.now]).length > 0 %>
+														<table class="table table-striped table-hover">
+															<thead>
+																<tr>
+																	<th>Consultant</th>
+																	<th>Date</th>
+																</tr>
+															</thead>
+														<tbody>
+															<% @client.appointments.where("accepted = 0").where(['start >= ?', DateTime.now]).order(start: :asc).each_with_index do |appointment, index| %>
+																<tr id="appointment_<%= appointment.id %>">
+																	<td>
+																		<%= link_to eval("#{appointment.provider.profile}_path") do %><strong><%= appointment.provider.first_name %> <%= appointment.provider.last_name %></strong><% end %></strong>
+																	</td>
+																	<td>
+																		<strong><%= (appointment.start + 20.minutes).strftime("%A, %B %dth, %Y") %></strong> at <strong><%= (appointment.start + 20.minutes).strftime("%I:%M %p") %></strong>
+																	</td>
+																	<!-- <td align="center"><a href="javascript: deleteAppointment(<%= appointment.id %>);"><i class="fa fa-remove"></i></a></td> -->
+																</tr>
+															<% end %>
+														</tbody>
+														</table>
+													<% else %>
+														<p>You don't have waiting for acceptance appointments.</p>
+													<% end %>
+												</div>
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-remove"></i> Close</button>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-                    </div>
-                    <div class="tab-pane" id="edit">
-						<br><br>
-						<%= form_for(@client, url: client_update_personal_path) do |f| %>
-							<input type="hidden" name="client[id]" id="client_id" value="<%= @client.id %>">
-							<div class="row margin-bottom-20">
-								<div class="col-md-4 col-md-offset-2">
-									
-									<%= f.label :first_name %>: <b><%= @client.first_name %></b>
-									<!-- <%= f.text_field :first_name, class: "form-control", placeholder: "First name", required: "required", disabled: "disabled" %> -->
-									
-								</div>                
-								
-								<div class="col-md-4">
-									
-									<%= f.label :last_name %>: <b><%= @client.last_name %></b>
-									<!-- <%= f.text_field :last_name, class: "form-control", placeholder: "Last name", required: "required", disabled: "disabled" %> -->
-									
-								</div>                
-							</div>
-							
-							<div class="row margin-bottom-20">
-								<div class="col-md-8 col-md-offset-2">
-									<%= f.label :email %>: <b><%= @client.email %></b>
-									<!-- <%= f.text_field :email, class: "form-control", placeholder: "Email", required: "required", value: @client.email, disabled: "disabled" %> -->
-								</div>                
-							</div>
-
-							<div class="row margin-bottom-20">
-								<div class="col-md-8 col-md-offset-2">
-									<%= f.label :address  %>
-									<%= f.text_field :address, class: "form-control", placeholder: "Address", disabled: "disabled" %>
-								</div>                
-							</div>
-
-							<div class="row margin-bottom-20">
-								<div class="col-md-4 col-md-offset-2">
-									<label for="client_phone">Phone</label>
-									<input type="text" class="form-control" placeholder="Phone" disabled="disabled" name="client[phone]" id="client_phone" value="<%= @client.phone %>" data-mask="(999) 999-9999">
-								</div>                
-								
-								<div class="col-md-4">
-									<%= f.label :weeks_pregnant %>
-									<%= f.text_field :weeks_pregnant, class: "form-control", placeholder: "Weeks pregnant", disabled: "disabled", :maxlength => 2 %>
-								</div>                
-							</div>
-							
-							<div class="row margin-bottom-20">
-								<div class="col-md-8 col-md-offset-2" align="center">
-									<a id="edit_client_button" href="javascript: enableEditClient();" class="btn btn-primary pull-left"><i class="fa fa-toggle-off"></i> Edit Info</a>
-									<a id="save_client_button" href="javascript: saveEditClient();" class="btn-u pull-right" style="display: none;"><i class="fa fa-save"></i> Save Changes</a>
-									<!-- <%= f.submit "Edit my information", onclick: "return validateClientUpdateInfo()", class: "btn-u" %> -->
-								</div>                
-							</div>
-						<% end %>
-                    </div>
-                    <div class="tab-pane" id="password">
-						<br><br>
-						<%= form_for(@client, url: client_update_password_path) do |f| %>
-							<div class="row margin-bottom-20">
-								<div class="col-md-4 col-md-offset-4">
-									<%= f.label :password_old %>
-									<%= f.password_field :password_old, class: "form-control", placeholder: "Old password", required: "required" %>
+						<div class="tab-pane" id="edit">
+							<br><br>
+							<%= form_for(@client, url: client_update_personal_path) do |f| %>
+								<input type="hidden" name="client[id]" id="client_id" value="<%= @client.id %>">
+								<div class="row margin-bottom-20">
+									<div class="col-md-8 col-md-offset-2">
+										<%= f.label :email %>: <b><%= @client.email %></b>
+										<!-- <%= f.text_field :email, class: "form-control", placeholder: "Email", required: "required", value: @client.email, disabled: "disabled" %> -->
+									</div>                
 								</div>
-							</div>
-						
-							<div class="row margin-bottom-20">
-								<div class="col-md-4 col-md-offset-4">
-									<%= f.label :password %>
-									<%= f.password_field :password, class: "form-control", placeholder: "New password", required: "required" %>
+								<div class="row margin-bottom-20">
+									<div class="col-md-4 col-md-offset-2">
+										<%= f.label :first_name %>:
+										<%= f.text_field :first_name, class: "form-control", placeholder: "First name", required: "required", disabled: "disabled" %>
+									</div>
+									<div class="col-md-4">
+										<%= f.label :last_name %>:
+										<%= f.text_field :last_name, class: "form-control", placeholder: "Last name", required: "required", disabled: "disabled" %>
+									</div>                
 								</div>
-							</div>
-							<div class="row margin-bottom-20">
-								<div class="col-md-4 col-md-offset-4">
-									<%= f.label :password_confirmation, "Password confirmation" %>
-									<%= f.password_field :password_confirmation, class: "form-control", placeholder: "New password confirmation", required: "required" %>
-								</div>                
-							</div>
-							
-							<div class="row margin-bottom-20">
-								<div class="col-md-4 col-md-offset-4" align="center">
-									<%= f.submit "Change my password", onclick: "return validateClientUpdatePassword()", class: "btn-u" %>
-								</div>                
-							</div>
-						<% end %>
-                    </div>
-                </div>
-                <!-- Requests table end -->
-            </div>
-        </div><!--/row-->        
-    </div>
-    <!--=== End Container ===-->
+								<div class="row margin-bottom-20">
+									<div class="col-md-8 col-md-offset-2">
+										<%= f.label :address  %>
+										<%= f.text_field :address, class: "form-control", placeholder: "Address", disabled: "disabled" %>
+									</div>                
+								</div>
+								<div class="row margin-bottom-20">
+									<div class="col-md-4 col-md-offset-2">
+										<label for="client_phone">Phone</label>
+										<input type="text" class="form-control" placeholder="Phone" disabled="disabled" name="client[phone]" id="client_phone" value="<%= @client.phone %>" data-mask="(999) 999-9999">
+									</div> 
+									<div class="col-md-4">
+										<%= f.label :weeks_pregnant %>
+										<%= f.text_field :weeks_pregnant, class: "form-control", placeholder: "Weeks pregnant", disabled: "disabled", :maxlength => 2 %>
+									</div>                
+								</div>
+								<div class="row margin-bottom-20">
+									<div class="col-md-8 col-md-offset-2" align="center">
+										<a id="edit_client_button" href="javascript: enableEditClient();" class="btn btn-primary pull-left"><i class="fa fa-toggle-off"></i> Edit Info</a>
+										<a id="save_client_button" href="javascript: saveEditClient();" class="btn-u pull-right" style="display: none;"><i class="fa fa-save"></i> Save Changes</a>
+										<!-- <%= f.submit "Edit my information", onclick: "return validateClientUpdateInfo()", class: "btn-u" %> -->
+									</div>                
+								</div>
+							<% end %>
+						</div>
+						<div class="tab-pane" id="password">
+							<br><br>
+							<%= form_for(@client, url: client_update_password_path) do |f| %>
+								<div class="row margin-bottom-20">
+									<div class="col-md-4 col-md-offset-4">
+										<%= f.label :password_old %>
+										<%= f.password_field :password_old, class: "form-control", placeholder: "Old password", required: "required" %>
+									</div>
+								</div>
+								<div class="row margin-bottom-20">
+									<div class="col-md-4 col-md-offset-4">
+										<%= f.label :password %>
+										<%= f.password_field :password, class: "form-control", placeholder: "New password", required: "required" %>
+									</div>
+								</div>
+								<div class="row margin-bottom-20">
+									<div class="col-md-4 col-md-offset-4">
+										<%= f.label :password_confirmation, "Password confirmation" %>
+										<%= f.password_field :password_confirmation, class: "form-control", placeholder: "New password confirmation", required: "required" %>
+									</div>                
+								</div>
+								<div class="row margin-bottom-20">
+									<div class="col-md-4 col-md-offset-4" align="center">
+										<%= f.submit "Change my password", onclick: "return validateClientUpdatePassword()", class: "btn-u" %>
+									</div>                
+								</div>
+							<% end %>
+						</div>
+					</div>
+					<!-- Requests table end -->
+				</div>
+			</div><!--/row-->        
+		</div>
+		<!--=== End Container ===-->

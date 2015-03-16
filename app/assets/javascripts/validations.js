@@ -41,6 +41,26 @@ var validateSign = function() {
 	}
 };
 
+var validateClientSignupPop  = function() {
+	var client_email = $("#client_email").val();
+	var client_password = $("#client_password").val();
+	
+	clearMessage("client_signup_alert");
+	
+	if (!validEmail(client_email)) {
+		alertMessage("client_signup_alert", "Invalid email.", "danger", false);
+		$("#client_email").focus();
+		return false;
+	}
+	
+	if (!validPassword(client_password)) {
+		alertMessage("client_signup_alert", "Invalid password. Password must be at least 6 characters.", "danger", false);
+		$("#client_password").val("");
+		$("#client_password").focus();
+		return false;
+	}
+};
+
 var validateClientSignup = function() {
 	var client_first_name = $("#client_first_name").val();
 	var client_last_name = $("#client_last_name").val();
@@ -147,6 +167,20 @@ var validateClientUpdateInfoShort = function()  {
 	//client_password = $("#client_password").val();
 	//client_password_confirmation = $("#client_password_confirmation").val();
 	var client_weeks_pregnant = $("#client_weeks_pregnant").val();
+	
+	var client_first_name = $("#client_first_name").val();
+	var client_last_name = $("#client_last_name").val();
+	
+	if (!validNotEmpty(client_first_name)) {
+		alertMessage("client_edit_alert", "Type your first name.", "danger", false);
+		$("#client_first_name").focus();
+		return false;
+	}
+	if (!validNotEmpty(client_last_name)) {
+		alertMessage("client_edit_alert", "Type your last name.", "danger", false);
+		$("#client_last_name").focus();
+		return false;
+	}
 	
 	clearMessage("client_edit_alert");
 	
