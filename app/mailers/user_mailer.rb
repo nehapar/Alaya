@@ -311,7 +311,7 @@ class UserMailer < ActionMailer::Base
     TEXT_END
     #simple_mail_deliver(appointment.provider.first_name, appointment.provider.email, "Booking request", text, html, ["booking-request-provider"])
     simple_mail_deliver("Neha", "neha@careforme.co", "Booking request - #{appointment.provider.first_name} #{appointment.provider.last_name} - #{appointment_date}", text, html, ["booking-request-provider"])
-    simple_mail_deliver("Thiago Melo", "thiago.alaya@gmail.com", "Booking request - #{appointment.provider.first_name} #{appointment.provider.last_name} - #{appointment_date}", text, html, ["booking-request-provider"])
+    #simple_mail_deliver("Thiago Melo", "thiago.alaya@gmail.com", "Booking request - #{appointment.provider.first_name} #{appointment.provider.last_name} - #{appointment_date}", text, html, ["booking-request-provider"])
     simple_mail_deliver("Neha", "neha.alaya@gmail.com", "Booking request - #{appointment.provider.first_name} #{appointment.provider.last_name} - #{appointment_date}", text, html, ["booking-request-provider"])
   end
   
@@ -376,10 +376,6 @@ class UserMailer < ActionMailer::Base
     simple_template_email("Confirmation-template", appointment.client.first_name, appointment.client.email, "Appointment accepted", text, html, ["appointment-accpeted"], nil, nil, nil, hash)
   end
   
-  def appointment_denied_email (appointment)
-    
-  end
-  
   def contact_message_email (name, email, message)
     default_to = "tapan.alaya@gmail.com"
     message_html = message
@@ -406,14 +402,15 @@ class UserMailer < ActionMailer::Base
   # a provider
   #
   # @params: [email] is the person's email
+  # @author: Thiago Melo
+  # @version: 2015-03-14
   def sendNoteToBecomePartner (email)
-    
     (to_name, to, subject, text, html, tags, from = nil, from_name = nil, reply_to = nil)
     
     html = <<-HTML_END
     <p>Hi Neha,</p>
     <p>This person is intending to become a provider.</p>
-    <p>Can you contact her/him please?</p>
+    <p>Can you contact her please?</p>
     <p><b>Email:</b> #{email}</p>
     <p>Regards,</p>
     <p>CareForMe Team</p>
@@ -423,7 +420,7 @@ class UserMailer < ActionMailer::Base
     
     This person is intending to become a provider.
     
-    Can you contact her/him please?
+    Can you contact her please?
     
     Email: #{email}
     
@@ -434,7 +431,381 @@ class UserMailer < ActionMailer::Base
     
     simple_mail_deliver("Neha", "neha@careforme.co", "Booking request - #{DateTime.now}", text, html, ["intention-note"])
     simple_mail_deliver("Neha", "neha.alaya@gmail.com", "Booking request - #{DateTime.now}", text, html, ["intention-note"])
-    simple_mail_deliver("Thiago Melo", "thiago.alaya@gmail.com", "Booking request - #{DateTime.now}", text, html, ["intention-note"])
+    #simple_mail_deliver("Thiago Melo", "thiago.alaya@gmail.com", "Booking request - #{DateTime.now}", text, html, ["intention-note"])
+  end
+  
+  # ***** right now: only the admin is been mailed *************
+  # it send emails for the client, provider and admin
+  # dua to a client's willing in reschedule
+  #
+  # @params: [appointment] is the object corresponding to the appointment
+  #           to be rescheduled
+  #          [reschedule_message] is the message sent bt the client
+  #
+  # @author: Thiago Melo
+  # @version: 2015-03-16
+  def sendRescheduleRequest (appointment, reschedule_message)
+    appointment_date = (appointment.start + 20.minutes).strftime("%A, %B %d, %Y")
+    appointment_time = (appointment.start + 20.minutes).strftime("%I:%M %p")
+    
+    html = <<-HTML_END
+    <p>Hi Neha,</p>
+    <p>This person is intending to reschedue an appointment:</p>
+    <br><br>
+    <p>Client: #{appointment.client.first_name} #{appointment.client.last_name}</p>
+    <p>Phone: #{appointment.client.phone}</p>
+    <p>Email: #{appointment.client.email}</p>
+    <p>Weeks: #{appointment.client.weeks_pregnant}</p>
+    <br><br>
+    <p>This is her message:</p>
+    <p>----------------------------------------------------------</p>
+    <p>#{reschedule_message}</p>
+    <p>----------------------------------------------------------</p>
+    <br><br>
+    <p>Practitioner: #{appointment.provider.first_name} #{appointment.provider.last_name}</p>
+    <p>Expertise: #{appointment.provider.expertise}</p>
+    <p>Phone: #{appointment.provider.phone}</p>
+    <p>Email: #{appointment.provider.email}</p>
+    <br><br>
+    <p>Appointment details:</p>
+    <p>Date: #{appointment_date}</p> 
+    <p>Time: #{appointment_time}</p>
+    <p>Location: #{appointment.client.address}</p>
+    <p>Observation: #{appointment.client_observation}</p>
+    <br>
+    <p>Can you contact her please?</p>
+    <p>Regards,</p>
+    <p>CareForMe Team</p>
+    HTML_END
+    text = <<-TEXT_END
+    Hi Neha,
+
+    This person is intending to reschedue an appointment:
+
+    
+    Client: #{appointment.client.first_name} #{appointment.client.last_name}
+
+    Phone: #{appointment.client.phone}
+
+    Email: #{appointment.client.email}
+
+    Weeks: #{appointment.client.weeks_pregnant}
+  
+    
+    This is her message:
+    ----------------------------------------------------------
+    
+    #{reschedule_message}
+    
+    ----------------------------------------------------------
+    
+    Practitioner: #{appointment.provider.first_name} #{appointment.provider.last_name}
+
+    Expertise: #{appointment.provider.expertise}
+
+    Phone: #{appointment.provider.phone}
+
+    Email: #{appointment.provider.email}
+
+    
+    Appointment details:
+
+    Date: #{appointment_date}
+ 
+    Time: #{appointment_time}
+
+    Location: #{appointment.client.address}
+
+    Observation: #{appointment.client_observation}
+
+    
+    Can you contact her please?
+
+    Regards,
+
+    CareForMe Team
+    TEXT_END
+    
+    simple_mail_deliver("Neha", "neha@careforme.co", "Reschedule request - #{DateTime.now}", text, html, ["reschedule-request"])
+    simple_mail_deliver("Neha", "neha.alaya@gmail.com", "Reschedule request - #{DateTime.now}", text, html, ["reschedule-request"])
+    simple_mail_deliver("Thiago Melo", "thiago.alaya@gmail.com", "Reschedule request - #{DateTime.now}", text, html, ["reschedule-request"])
+  end
+  
+  # ***** right now: only the admin and the client are been mailed *************
+  # this method should send emails for the client, the provider and the admin
+  # lettng then know about a booking canceled
+  # 
+  # @params: [appointment] is the object corresponding to the appointment
+  #           that has been canceled
+  #
+  # @author: Thiago Melo
+  # @version: 2015-03-14
+  def sendCancelingBooking(appointment)
+    appointment_date = (appointment.start + 20.minutes).strftime("%A, %B %d, %Y")
+    appointment_time = (appointment.start + 20.minutes).strftime("%I:%M %p")
+    
+    html = <<-HTML_END
+    <p>Hi #{appointment.client.first_name},</p>
+    <p>Your appointment with #{appointment.provider.first_name} #{appointment.provider.last_name} on #{appointment_date} at #{appointment_time}  has been canceled</p>
+    <p>Need to reschedule? <a href="#{default_url}/profile_list">Click</a> here to book another appointment!</p>
+    <p>Thanks</p>
+    <p>CareForMe Team</p>
+    HTML_END
+    text = <<-TEXT_END
+    Hi #{appointment.client.first_name},
+    
+    Your appointment with #{appointment.provider.first_name} #{appointment.provider.last_name} on #{appointment_date} at #{appointment_time}  has been canceled
+    
+    Need to reschedule? Access our website to book another appointment!
+    
+    #{default_url}/profile_list
+    
+    Thanks
+    
+    CareForMe Team
+    TEXT_END
+    
+    hash = [
+      { 
+        "name" => "name" , 
+        "content" => "#{appointment.client.first_name}" 
+      },
+      { 
+        "name" => "link" , 
+        "content" => "#{default_url}/profile_list/"
+      },
+      { 
+        "name" => "date",
+        "content" => "#{appointment_date}"
+      },
+      { 
+        "name" => "time",
+        "content" => "#{appointment_time}"
+      },
+      { 
+        "name" => "provider",
+        "content" => "#{appointment.provider.first_name} #{appointment.provider.last_name}"
+      }
+    ]
+    simple_template_email("Cancellation-Template", appointment.client.first_name, appointment.client.email, 
+      "Canceling booking", text, html, ["canceling-appointment-client"], nil, nil, reply_to = nil, hash)
+      
+    
+    html = <<-HTML_END
+    <p>Hi Neha,</p>
+    <p>This person has canceled her appointment:</p>
+    <br><br>
+    <p>Client: #{appointment.client.first_name} #{appointment.client.last_name}</p>
+    <p>Phone: #{appointment.client.phone}</p>
+    <p>Email: #{appointment.client.email}</p>
+    <p>Weeks: #{appointment.client.weeks_pregnant}</p>
+    <br><br>
+    <p>Practitioner: #{appointment.provider.first_name} #{appointment.provider.last_name}</p>
+    <p>Expertise: #{appointment.provider.expertise}</p>
+    <p>Phone: #{appointment.provider.phone}</p>
+    <p>Email: #{appointment.provider.email}</p>
+    <br><br>
+    <p>Appointment details:</p>
+    <p>Date: #{appointment_date}</p> 
+    <p>Time: #{appointment_time}</p>
+    <p>Location: #{appointment.client.address}</p>
+    <p>Observation: #{appointment.client_observation}</p>
+    <br>
+    <p>Regards,</p>
+    <p>CareForMe Team</p>
+    HTML_END
+    text = <<-TEXT_END
+    Hi Neha,
+
+    This person has canceled her appointment:
+
+    
+    Client: #{appointment.client.first_name} #{appointment.client.last_name}
+
+    Phone: #{appointment.client.phone}
+
+    Email: #{appointment.client.email}
+
+    Weeks: #{appointment.client.weeks_pregnant}
+  
+    
+    Practitioner: #{appointment.provider.first_name} #{appointment.provider.last_name}
+
+    Expertise: #{appointment.provider.expertise}
+
+    Phone: #{appointment.provider.phone}
+
+    Email: #{appointment.provider.email}
+
+    
+    Appointment details:
+
+    Date: #{appointment_date}
+ 
+    Time: #{appointment_time}
+
+    Location: #{appointment.client.address}
+
+    Observation: #{appointment.client_observation}
+
+    
+    Regards,
+
+    CareForMe Team
+    TEXT_END
+    
+    simple_mail_deliver("Neha", "neha@careforme.co", "Canceling appointment (client) - #{DateTime.now.strftime("%A, %B %d, %Y - %I:%M %p")}", text, html, ["canceling-appointment-client"])
+    simple_mail_deliver("Neha", "neha.alaya@gmail.com", "Canceling appointment (client) - #{DateTime.now.strftime("%A, %B %d, %Y - %I:%M %p")}", text, html, ["canceling-appointment-client"])
+    simple_mail_deliver("Thiago Melo", "thiago.alaya@gmail.com", "Canceling appointment (client) - #{DateTime.now.strftime("%A, %B %d, %Y - %I:%M %p")}", text, html, ["canceling-appointment-client"])
+  end
+  
+  
+  # this method should perform the canceling requested bt the
+  # provider
+  #
+  # @params: [appointment] an object containing the corresponding appointment
+  #          [explanation] the provider explanation
+  #
+  # @author: Thiago Melo
+  # @version: 2015-03-16
+  def appointment_denied_email (appointment, explanation)
+    
+    appointment_date = (appointment.start + 20.minutes).strftime("%A, %B %d, %Y")
+    appointment_time = (appointment.start + 20.minutes).strftime("%I:%M %p")
+    
+    html = <<-HTML_END
+    <p>Hi #{appointment.client.first_name},</p>
+    <p>Your appointment with #{appointment.provider.first_name} #{appointment.provider.last_name} on #{appointment_date} at #{appointment_time}  has been canceled</p>
+    <p>The practitioner has left the following message for you:</p>
+    <p><b>#{explanation}</b></p>
+    <p>Need to reschedule? <a href="#{default_url}/profile_list">Click</a> here to book another appointment!</p>
+    <p>Thanks</p>
+    <p>CareForMe Team</p>
+    HTML_END
+    text = <<-TEXT_END
+    Hi #{appointment.client.first_name},
+    
+    Your appointment with #{appointment.provider.first_name} #{appointment.provider.last_name} on #{appointment_date} at #{appointment_time}  has been canceled
+    
+    The practitioner has left the following message for you:
+    
+    #{explanation}
+    
+    Need to reschedule? Access our website to book another appointment!
+    
+    #{default_url}/profile_list
+    
+    Thanks
+    
+    CareForMe Team
+    TEXT_END
+    
+    hash = [
+      { 
+        "name" => "name" , 
+        "content" => "#{appointment.client.first_name}" 
+      },
+      { 
+        "name" => "link" , 
+        "content" => "#{default_url}/profile_list/"
+      },
+      { 
+        "name" => "date",
+        "content" => "#{appointment_date}"
+      },
+      { 
+        "name" => "time",
+        "content" => "#{appointment_time}"
+      },
+      { 
+        "name" => "provider",
+        "content" => "#{appointment.provider.first_name} #{appointment.provider.last_name}"
+      },
+      { 
+        "name" => "explanation",
+        "content" => "#{explanation}"
+      }
+    ]
+    simple_template_email("Cancellation-Template-provider", appointment.client.first_name, appointment.client.email, 
+      "Canceling booking", text, html, ["canceling-appointment-provider"], nil, nil, reply_to = nil, hash)
+      
+    
+    html = <<-HTML_END
+    <p>Hi Neha,</p>
+    <p>This provider has canceled her appointment:</p>
+    <br><br>
+    <p>Practitioner: #{appointment.provider.first_name} #{appointment.provider.last_name}</p>
+    <p>Expertise: #{appointment.provider.expertise}</p>
+    <p>Phone: #{appointment.provider.phone}</p>
+    <p>Email: #{appointment.provider.email}</p>
+    <br><br>
+    <p>It is his/her explanation</p>
+    <p>----------------------------------------------------------</p>
+    <p>#{explanation}</p>
+    <p>----------------------------------------------------------</p>
+    <br><br>
+    <p>Client: #{appointment.client.first_name} #{appointment.client.last_name}</p>
+    <p>Phone: #{appointment.client.phone}</p>
+    <p>Email: #{appointment.client.email}</p>
+    <p>Weeks: #{appointment.client.weeks_pregnant}</p>
+    <br><br>
+    <p>Appointment details:</p>
+    <p>Date: #{appointment_date}</p> 
+    <p>Time: #{appointment_time}</p>
+    <p>Location: #{appointment.client.address}</p>
+    <p>Observation: #{appointment.client_observation}</p>
+    <br>
+    <p>Regards,</p>
+    <p>CareForMe Team</p>
+    HTML_END
+    text = <<-TEXT_END
+    Hi Neha,
+
+    This provider has canceled her appointment:
+    
+    Practitioner: #{appointment.provider.first_name} #{appointment.provider.last_name}
+
+    Expertise: #{appointment.provider.expertise}
+
+    Phone: #{appointment.provider.phone}
+
+    Email: #{appointment.provider.email}
+    
+    It is his/her explanation
+    ----------------------------------------------------------
+    #{explanation}
+    ----------------------------------------------------------
+
+
+    Client: #{appointment.client.first_name} #{appointment.client.last_name}
+
+    Phone: #{appointment.client.phone}
+
+    Email: #{appointment.client.email}
+
+    Weeks: #{appointment.client.weeks_pregnant}
+    
+    
+    Appointment details:
+
+    Date: #{appointment_date}
+ 
+    Time: #{appointment_time}
+
+    Location: #{appointment.client.address}
+
+    Observation: #{appointment.client_observation}
+
+    
+    Regards,
+
+    CareForMe Team
+    TEXT_END
+    
+    simple_mail_deliver("Neha", "neha@careforme.co", "Canceling appointment (provider) - #{DateTime.now.strftime("%A, %B %d, %Y - %I:%M %p")}", text, html, ["canceling-appointment"])
+    simple_mail_deliver("Neha", "neha.alaya@gmail.com", "Canceling appointment (provider) - #{DateTime.now.strftime("%A, %B %d, %Y - %I:%M %p")}", text, html, ["canceling-appointment"])
+    simple_mail_deliver("Thiago Melo", "thiago.alaya@gmail.com", "Canceling appointment (provider) - #{DateTime.now.strftime("%A, %B %d, %Y - %I:%M %p")}", text, html, ["canceling-appointment"])
+    
   end
   
   def default_url

@@ -1000,53 +1000,55 @@ var updateInfo = function(date) {
 	});
 };
 
+var working_on_request = false;
 var sendRequest = function(date) {
-	m_current_date = new Date(date);
-
-	var MS_PER_MINUTE = 60000;
-	
-	//var datestart = new Date(date - 20 * MS_PER_MINUTE);
-	//var dateend = new Date(date + 80 * MS_PER_MINUTE);
-
-	var datestart = new Date(date - 20 * MS_PER_MINUTE);
-	var dateend = new Date(date + 80 * MS_PER_MINUTE);
-	
-	var d_start = datestart.getFullYear() + "-" + ("0" + (datestart.getMonth() + 1)).slice(-2) + "-" + ("0" + datestart.getDate()).slice(-2) + " " + ("0" + datestart.getHours()).slice(-2) + ":" + ("0" + datestart.getMinutes()).slice(-2) + ":00";
-	var d_end = dateend.getFullYear() + "-" + ("0" + (dateend.getMonth() + 1)).slice(-2) + "-" + ("0" + dateend.getDate()).slice(-2) + " " + ("0" + dateend.getHours()).slice(-2) + ":" + ("0" + dateend.getMinutes()).slice(-2) + ":00";
-	var send_confirmation = $('#send_confirmation').prop('checked');
-	$.ajax({
-		type: 'GET',
-		url: '/request_appointment_ajax',
-		dataType: "json",
-		data: { 
-			'appointment[start]': d_start,
-			'appointment[end]': d_end,
-			'appointment[provider_id]': $("#c_provider_id").val(),
-			'appointment[client_id]': $("#c_client_id").val(),
-			'appointment[client_observation]': $("#client_observation").val(),
-			'appointment[accepted]': 0,
-			'send_confirmation': send_confirmation
-		},
-		success: function(data) {
-			if (data.status == "success") {
-				$("#schedules_modal").modal("hide");
-				$('.modal-backdrop').remove();
-				alertMessage("schedules_body_alert", "Thank you for requesting an appointment. You will be contacted within a few hours about a confirmation.", "success", false);
-				$('html, body').animate({ scrollTop: $("#schedules_body_alert").offset().top }, 2000);
-				
-				//$('#p_weekly').attr('checked',true);
-				loadSchedule();
+	if (!working_on_request) {
+		working_on_request = true;
+		m_current_date = new Date(date);
+		var MS_PER_MINUTE = 60000;
+		//var datestart = new Date(date - 20 * MS_PER_MINUTE);
+		//var dateend = new Date(date + 80 * MS_PER_MINUTE);
+		var datestart = new Date(date - 20 * MS_PER_MINUTE);
+		var dateend = new Date(date + 80 * MS_PER_MINUTE);
+		var d_start = datestart.getFullYear() + "-" + ("0" + (datestart.getMonth() + 1)).slice(-2) + "-" + ("0" + datestart.getDate()).slice(-2) + " " + ("0" + datestart.getHours()).slice(-2) + ":" + ("0" + datestart.getMinutes()).slice(-2) + ":00";
+		var d_end = dateend.getFullYear() + "-" + ("0" + (dateend.getMonth() + 1)).slice(-2) + "-" + ("0" + dateend.getDate()).slice(-2) + " " + ("0" + dateend.getHours()).slice(-2) + ":" + ("0" + dateend.getMinutes()).slice(-2) + ":00";
+		var send_confirmation = $('#send_confirmation').prop('checked');
+		$.ajax({
+			type: 'GET',
+			url: '/request_appointment_ajax',
+			dataType: "json",
+			data: { 
+				'appointment[start]': d_start,
+				'appointment[end]': d_end,
+				'appointment[provider_id]': $("#c_provider_id").val(),
+				'appointment[client_id]': $("#c_client_id").val(),
+				'appointment[client_observation]': $("#client_observation").val(),
+				'appointment[accepted]': 0,
+				'send_confirmation': send_confirmation
+			},
+			success: function(data) {
+				if (data.status == "success") {
+					$("#schedules_modal").modal("hide");
+					$('.modal-backdrop').remove();
+					alertMessage("schedules_body_alert", "Thank you for requesting an appointment. You will be contacted within a few hours about a confirmation.", "success", false);
+					$('html, body').animate({ scrollTop: $("#schedules_body_alert").offset().top }, 2000);
+					
+					//$('#p_weekly').attr('checked',true);
+					loadSchedule();
+				}
+				else if (data.status == "fail") {
+					alertMessage("schedules_alert", "Fail to update info, please try again.", "warning", false);
+				}
+				working_on_request = false;
+			},
+			error: function(data) {
+				console.log("error");
+				console.log(data);
+				alertMessage("schedules_alert", "Please contact us directly.", "danger", false);
+				working_on_request = false;
 			}
-			else if (data.status == "fail") {
-				alertMessage("schedules_alert", "Fail to update info, please try again.", "warning", false);
-			}
-		},
-		error: function(data) {
-			console.log("error");
-			console.log(data);
-			alertMessage("schedules_alert", "Please contact us directly.", "danger", false);
-		}
-	});
+		});
+	}
 }
 
 var buildNonClientVersion = function(datetime) {

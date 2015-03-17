@@ -18,7 +18,7 @@ class SessionsController < ApplicationController
     elsif client && client.authenticate(params[:session][:password]) && client.active == 1
       csign_in client
       params[:session][:remember_me] == '1' ? remember(client) : forget(client)
-      if client.appointments.where(['start >= ?', DateTime.now]).length > 0
+      if client.appointments.where(['start >= ? and (accepted = 0 or accepted = 1)', DateTime.now]).length > 0
         redirect_to eval(client.profile + '_path')
       else
         redirect_to profile_list_path

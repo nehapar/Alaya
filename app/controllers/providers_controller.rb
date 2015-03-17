@@ -791,7 +791,7 @@ class ProvidersController < ApplicationController
         appointment.accepted = 2
         # something must be done with params[:deny_explanation]
         if appointment.save
-          UserMailer.appointment_denied_email(appointment)
+          UserMailer.appointment_denied_email(appointment, params[:deny_explanation])
           container = { "status" => "success" }
         else
           container = { "status" => "fail" }

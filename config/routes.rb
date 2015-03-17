@@ -37,6 +37,8 @@ CareForMe::Application.routes.draw do
   match 'update_client_information', :to => 'clients#update_client_information_ajax', via: 'get'
   match 'client_simple_info', :to => 'clients#client_simple_info_ajax', via: 'get'
   match 'client_dashboard', :to => 'clients#dashboard' , via: 'get'
+  match 'reschedule_request_by_client', :to => 'clients#reschedule_request_by_client_ajax' , via: 'get'
+  match 'cancel_appointment_by_client', :to => 'clients#cancel_appointment_by_client_ajax' , via: 'get'
   
   # providers
   

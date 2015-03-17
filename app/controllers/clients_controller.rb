@@ -175,9 +175,8 @@ class ClientsController < ApplicationController
 
   # this performs the final action of create an appointment request
   def request_appointment_ajax
-    
-    appointment = Appointment.where("provider_id = ? and client_id = ? and start = ? and end = ?", 
-      params[:appointment][:provider_id], params[:appointment][:client_id], params[:appointment][:start], params[:appointment][:end] )
+    appointment = Appointment.where("provider_id = ? and client_id = ? and created_at > ?", 
+      params[:appointment][:provider_id], params[:appointment][:client_id], Time.now - 30.seconds)
     if appointment.length == 0
       appointments = Appointment.new(appointment_params)
       if appointments.save
@@ -269,6 +268,62 @@ class ClientsController < ApplicationController
     else
       redirect_to root_url
     end
+  end
+  
+  # it performs the reschedule request for some appointment
+  # 
+  # @params:
+  #   [get]:
+  #     [:appointment_id] the corresponding appointment id
+  #     [:reschedule_message] the reschedule request message
+  #
+  # @author:Thiago Melo
+  # @version: 2015-03-16
+  def reschedule_request_by_client_ajax
+    appointment = Appointment.find(params[:appointment_id])
+    if !appointment.nil?
+      if csigned_in? and current_client.id == appointment.client_id
+        begin
+          UserMailer.sendRescheduleRequest appointment, params[:reschedule_message]
+          container = { "status" => "success" }
+        rescue
+          container = { "status" => "fail" }
+        end
+      else
+        container = { "status" => "not_allowed" }
+      end
+    else
+      container = { "status" => "not_found" }
+    end
+    render :json => container.to_json
+  end
+  
+  # it performs the canceling for some appointment
+  # 
+  # @params:
+  #   [get]:
+  #     [:appointment_id] the corresponding appointment id
+  #
+  # @author:Thiago Melo
+  # @version: 2015-03-16
+  def cancel_appointment_by_client_ajax
+    appointment = Appointment.find(params[:appointment_id])
+    if !appointment.nil?
+      if csigned_in? and current_client.id == appointment.client_id
+        begin
+          appointment.update_attribute(:accepted, 2)
+          UserMailer.sendCancelingBooking appointment
+          container = { "status" => "success" }
+        rescue
+          container = { "status" => "fail" }
+        end
+      else
+        container = { "status" => "not_allowed" }
+      end
+    else
+      container = { "status" => "not_found" }
+    end
+    render :json => container.to_json
   end
 
   private
