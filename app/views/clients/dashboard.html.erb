@@ -1,11 +1,11 @@
-		<% provide(:title, @client.first_name) %>
+		<% provide(:title, current_client.first_name.present? ? ", " + current_client.first_name : "Profile") %>
 		<!--=== Container ===-->
 		<div class="container content">
 			<div class="row margin-bottom-30">
 				<div class="col-md-10 col-md-offset-1 mb-margin-bottom-30">
 					<div id="client_edit_alert"></div>
 					<div class="headline">
-						<h2><%= "Welcome, #{current_client.first_name.present? ? current_client.first_name : "Mom"}!" %></h2>
+						<h2><%= "Welcome#{current_client.first_name.present? ? ", " + current_client.first_name : ""}!" %></h2>
 					</div>
 					<!-- Requests table begin -->
 					<ul class="nav nav-tabs" role="tablist">

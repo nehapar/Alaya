@@ -3,6 +3,11 @@ var validEmail = function(email) {
 	return re.test(email);
 };
 
+var validAnyNumber = function(word) {
+	var re = /[0-9]/;
+	return re.test(word);
+};
+
 var validPassword = function(password) {
 	if (!validNotEmpty(password) || password.length < 6) {
 		return false;
@@ -69,14 +74,14 @@ var validateClientSignup = function() {
 	var client_password_confirmation = $("#client_password_confirmation").val();
 	
 	clearMessage("client_signup_alert");
-	if (!validNotEmpty(client_first_name)) {
-		alertMessage("client_signup_alert", "Type your first name.", "danger", false);
+	if (!validNotEmpty(client_first_name) || validAnyNumber(client_first_name)) {
+		alertMessage("client_signup_alert", "Type your first name (Only letters).", "danger", false);
 		$("#client_first_name").focus();
 		return false;
 	}
 	
-	if (!validNotEmpty(client_last_name)) {
-		alertMessage("client_signup_alert", "Type your last name.", "danger", false);
+	if (!validNotEmpty(client_last_name) || validAnyNumber(client_last_name)) {
+		alertMessage("client_signup_alert", "Type your last name (Only letters).", "danger", false);
 		$("#client_last_name").focus();
 		return false;
 	}
@@ -119,13 +124,13 @@ var validateProviderSignup = function() {
 	provider_password_confirmation = $("#provider_password_confirmation").val();
 	
 	clearMessage("provider_signup_alert");
-	if (!validNotEmpty(provider_first_name)) {
-		alertMessage("provider_signup_alert", "Type your first name.", "danger", false);
+	if (!validNotEmpty(provider_first_name) || validAnyNumber(provider_first_name)) {
+		alertMessage("provider_signup_alert", "Type your first name (Only letters).", "danger", false);
 		$("#provider_first_name").focus();
 		return false;
 	}
-	if (!validNotEmpty(provider_last_name)) {
-		alertMessage("provider_signup_alert", "Type your last name.", "danger", false);
+	if (!validNotEmpty(provider_last_name) || validAnyNumber(provider_last_name)) {
+		alertMessage("provider_signup_alert", "Type your last name (Only letters).", "danger", false);
 		$("#provider_last_name").focus();
 		return false;
 	}
@@ -171,13 +176,13 @@ var validateClientUpdateInfoShort = function()  {
 	var client_first_name = $("#client_first_name").val();
 	var client_last_name = $("#client_last_name").val();
 	
-	if (!validNotEmpty(client_first_name)) {
-		alertMessage("client_edit_alert", "Type your first name.", "danger", false);
+	if (!validNotEmpty(client_first_name) || validAnyNumber(client_first_name)) {
+		alertMessage("client_edit_alert", "Type your first name (Only letters).", "danger", false);
 		$("#client_first_name").focus();
 		return false;
 	}
-	if (!validNotEmpty(client_last_name)) {
-		alertMessage("client_edit_alert", "Type your last name.", "danger", false);
+	if (!validNotEmpty(client_last_name) || validAnyNumber(client_last_name)) {
+		alertMessage("client_edit_alert", "Type your last name (Only letters).", "danger", false);
 		$("#client_last_name").focus();
 		return false;
 	}
@@ -196,15 +201,15 @@ var validateClientUpdateInfoShort = function()  {
 var validateProviderUpdateInfoShort = function()  {
 	clearMessage("provider_edit_alert");
 	
-	if (!validNotEmpty($("#provider_first_name").val())) {
-		alertMessage("provider_edit_alert", "First name cannot be empty.", "danger", false);
+	if (!validNotEmpty($("#provider_first_name").val()) || validAnyNumber($("#provider_first_name").val())) {
+		alertMessage("provider_edit_alert", "First name cannot be empty (Only letters).", "danger", false);
 		$("#provider_first_name").val("");
 		$("#provider_first_name").focus();
 		return false;
 	}
 	
-	if (!validNotEmpty($("#provider_last_name").val())) {
-		alertMessage("provider_edit_alert", "Last name cannot be empty.", "danger", false);
+	if (!validNotEmpty($("#provider_last_name").val()) || validAnyNumber($("#provider_last_name").val())) {
+		alertMessage("provider_edit_alert", "Last name cannot be empty (Only letters).", "danger", false);
 		$("#provider_last_name").val("");
 		$("#provider_last_name").focus();
 		return false;
@@ -230,14 +235,14 @@ var validateClientUpdateInfo = function() {
 	
 	clearMessage("client_edit_alert");
 	
-	if (!validNotEmpty(client_first_name)) {
-		alertMessage("client_edit_alert", "Type your first name.", "danger", false);
+	if (!validNotEmpty(client_first_name) || validAnyNumber(client_first_name)) {
+		alertMessage("client_edit_alert", "Type your first name (Only letters).", "danger", false);
 		$("#client_first_name").focus();
 		return false;
 	}
 	
-	if (!validNotEmpty(client_last_name)) {
-		alertMessage("client_edit_alert", "Type your last name.", "danger", false);
+	if (!validNotEmpty(client_last_name) || validAnyNumber(client_last_name)) {
+		alertMessage("client_edit_alert", "Type your last name (Only letters).", "danger", false);
 		$("#client_last_name").focus();
 		return false;
 	}
@@ -293,13 +298,13 @@ var validateClientUpdatePassword = function() {
 };
 
 var validateProviderEdit = function() {
-	if (!validNotEmpty($("#provider_first_name").val())) {
-		alertMessage("top_page_message", "First name is required.", "danger", false);
+	if (!validNotEmpty($("#provider_first_name").val()) || validAnyNumber($("#provider_first_name").val())) {
+		alertMessage("top_page_message", "First name is required (Only letters).", "danger", false);
 		$("#provider_first_name").focus();
 		return false;
 	}
-	if (!validNotEmpty($("#provider_last_name").val())) {
-		alertMessage("top_page_message", "Last name is required.", "danger", false);
+	if (!validNotEmpty($("#provider_last_name").val()) || validAnyNumber($("#provider_last_name").val())) {
+		alertMessage("top_page_message", "Last name is required (Only letters).", "danger", false);
 		$("#provider_last_name").focus();
 		return false;
 	}

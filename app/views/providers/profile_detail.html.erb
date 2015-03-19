@@ -2,14 +2,22 @@
   <!--=== Profile ===-->
   <div class="profile">	
   	
-  	<div class="container">
-  		<br>
-  		<div class="row">
-        <div class="col-md-12">
-        	<a href="/profile_list" class="btn-u pull-left">Back to browse</a>
-        </div>
-      </div>
-  	</div>
+  	
+  	<% if !signed_in? or is_admin?  %>
+	  	<div class="container">
+	  		<br>
+	  		<div class="row">
+	        <div class="col-md-12">
+	        	<a href="/profile_list" class="btn-u pull-left">Back to browse</a>
+	        	
+	        	<a href="/profile_detail?id=<%= @provider.id %>&go=next" class="btn-u pull-right"><i class="fa fa-chevron-right"></i></a>
+	        	<a href="#" class="pull-right">&nbsp;</a>
+	        	<a href="/profile_detail?id=<%= @provider.id %>&go=previous" class="btn-u pull-right"><i class="fa fa-chevron-left"></i></a>
+	        	
+	        </div>
+	      </div>
+	  	</div>
+  	<% end %>
   	
     
     <div class="container content">
@@ -70,7 +78,7 @@
                           <input type="hidden" name="c_client_first_name" id="c_client_first_name" value="<%= current_client.first_name %>">
                           <input type="hidden" name="c_client_last_name" id="c_client_last_name" value="<%= current_client.last_name %>">
                           <input type="hidden" name="c_client_address" id="c_client_address" value="<%= current_client.address %>">
-                          <% if !current_client.phone.empty? && !current_client.phone.nil? && !current_client.address.empty? && !current_client.address.nil? && !current_client.weeks_pregnant.nil? %>
+                          <% if !current_client.phone.present? && !current_client.phone.nil? && !current_client.address.present? && !current_client.address.nil? && !current_client.weeks_pregnant.nil? %>
                             <input type="hidden" name="c_client_complete" id="c_client_complete" value="1"> 
                           <% else %>
                             <input type="hidden" name="c_client_complete" id="c_client_complete" value="0">  

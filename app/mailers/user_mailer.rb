@@ -134,7 +134,7 @@ class UserMailer < ActionMailer::Base
   def welcome_client_email (user)
     
     html = <<-HTML_END
-    <p>Dear Mom,</p>
+    <p>Dear,</p>
     <p>Welcome to CareForMe!</p>
     <p>To confirm your register, please, access the following address:</p>
     <p>#{default_url}/client_confirmation?id=#{user.password_reset_token}</p>
@@ -142,7 +142,7 @@ class UserMailer < ActionMailer::Base
     <p>CareForMe Team</p>
     HTML_END
     text = <<-TEXT_END
-    Dear Mom,
+    Dear,
     
     Welcome to CareForMe!
     
@@ -158,7 +158,7 @@ class UserMailer < ActionMailer::Base
     hash = [
       { 
         "name" => "name" , 
-        "content" => "Mom" 
+        "content" => "" 
       },
       { 
         "name" => "lname" , 
@@ -169,7 +169,7 @@ class UserMailer < ActionMailer::Base
         "content" => "#{default_url}/client_confirmation?id=#{user.password_reset_token}"
       }
     ]
-    simple_template_email("V4SignUp-Template", "Mom", user.email, "Welcome", text, html, ["welcome-client"], nil, nil, nil, hash)
+    simple_template_email("V4SignUp-Template", "", user.email, "Welcome", text, html, ["welcome-client"], nil, nil, nil, hash)
   end
   
   def welcome_client_email_bkp (user)

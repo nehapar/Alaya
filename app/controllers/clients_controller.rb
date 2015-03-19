@@ -36,7 +36,7 @@ class ClientsController < ApplicationController
   	  # so, it forces a redirect to another method that takes care of
   	  # finilize the job
   	  # !!!!!!!!!!!!! Need to be fixed !!!!!!!!!!!!!
-      redirect_to signin_path, :flash => { :success => "Welcome to CareForMe! Please check your email for validation." } #profile_list_path #csignup_helper_path
+      redirect_to profile_list_path, :flash => { :success => "Welcome to CareForMe! Please check your email for validation." } #profile_list_path #csignup_helper_path
     else
       flash.now[:error] = 'You are already registered. Please, request a new password.'
       redirect_to password_recovery_path

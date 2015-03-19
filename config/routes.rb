@@ -82,7 +82,6 @@ CareForMe::Application.routes.draw do
   match 'delete_certification_ajax', :to => 'providers#delete_certification_ajax', via: 'get'
   match 'delete_area_ajax', :to => 'providers#delete_area_ajax', via: 'get'
   match 'delete_review_ajax', :to => 'providers#delete_review_ajax', via: 'get'
-  match 'appointment_detail', :to => 'providers#appointment_detail', via: 'get'
   match 'filter_provider_ajax', :to => 'providers#filter_provider_ajax', via: 'get'
   match 'signup', :to => 'providers#new', via: 'get'
   

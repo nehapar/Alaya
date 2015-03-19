@@ -28,7 +28,92 @@ var showAppointmentDetail = function(appointment_id, type, past) {
         */
         switch (type) {
           case 0:
-            // code
+            content = $('<div/>').append(
+              $('<div/>').addClass('row').append(
+                $('<div/>').addClass('col-md-10 col-md-offset-1').append(
+                  $('<h2/>').append('Client Info')
+                )
+              )
+            ).append(
+              $('<div/>').addClass('row').append(
+                $('<div/>').addClass('col-md-5 col-md-offset-1').append(
+                  $('<label/>').append('Client')
+                ).append($('<br>')).append(data.client.first_name + " " + data.client.last_name)
+              ).append(
+                $('<div/>').addClass('col-md-5 col-md-offset-0').append(
+                  $('<label/>').append('Weeks pregnant')
+                ).append($('<br>')).append(data.client.weeks_pregnant)
+              )
+            ).append($('<br>')).append(
+              $('<div/>').addClass('row').append(
+                $('<div/>').addClass('col-md-5 col-md-offset-1').append(
+                  $('<label/>').append('Email')
+                ).append($('<br>')).append(data.client.email)
+              ).append(
+                $('<div/>').addClass('col-md-5 col-md-offset-0').append(
+                  $('<label/>').append('Phone')
+                ).append($('<br>')).append(data.client.phone)
+              )
+            ).append($('<br>')).append(
+              $('<div/>').addClass('row').append(
+                $('<div/>').addClass('col-md-10 col-md-offset-1').append(
+                  $('<label/>').append('Address')
+                ).append($('<br>')).append(data.client.address)
+              )
+            ).append($('<hr>')).append(
+              $('<div/>').addClass('row').append(
+                $('<div/>').addClass('col-md-10 col-md-offset-1').append(
+                  $('<h2/>').append('Provider Info')
+                )
+              )
+            ).append(
+              $('<div/>').addClass('row').append(
+                $('<div/>').addClass('col-md-5 col-md-offset-1').append(
+                  $('<label/>').append('Provider')
+                ).append($('<br>')).append(data.provider.first_name + " " + data.provider.last_name)
+              ).append(
+                $('<div/>').addClass('col-md-5 col-md-offset-0').append(
+                  $('<label/>').append('Expertise')
+                ).append($('<br>')).append(data.provider.expertise)
+              )
+            ).append($('<br>')).append(
+              $('<div/>').addClass('row').append(
+                $('<div/>').addClass('col-md-5 col-md-offset-1').append(
+                  $('<label/>').append('Email')
+                ).append($('<br>')).append(data.provider.email)
+              ).append(
+                $('<div/>').addClass('col-md-5 col-md-offset-0').append(
+                  $('<label/>').append('Phone')
+                ).append($('<br>')).append(data.provider.phone)
+              )
+            ).append($('<hr>')).append(
+              $('<div/>').addClass('row').append(
+                $('<div/>').addClass('col-md-10 col-md-offset-1').append(
+                  $('<h2/>').append('Appointment Info')
+                )
+              )
+            ).append(
+              $('<div/>').addClass('row').append(
+                $('<div/>').addClass('col-md-5 col-md-offset-1').append(
+                  $('<label/>').append('Date')
+                ).append($('<br>')).append(data.date)
+              ).append(
+                $('<div/>').addClass('col-md-5 col-md-offset-0').append(
+                  $('<label/>').append('Address')
+                ).append($('<br>')).append(data.client.address)
+              )
+            ).append($('<br>')).append(
+              $('<div/>').addClass('row').append(
+                $('<div/>').addClass('col-md-10 col-md-offset-1').append(
+                  $('<label/>').append('Observation')
+                ).append($('<br>')).append(data.appointment.client_observation)
+              )
+            );
+            footer = $('<button/>').addClass('btn btn-default').prop('type', 'button').append(
+              $('<i/>').addClass('fa fa-remove')
+            ).append(' Close').click(function() {
+              $('#generic_modal').modal('hide');
+            });
             break;
           case 1:
             content += "<div class=\"row\">";
@@ -98,41 +183,46 @@ var showAppointmentDetail = function(appointment_id, type, past) {
   });
 };
 
-
+var working_on_accepting = false;
 var acceptAppointmentWizard = function(appointment_id, type) {
   $("#generic_modal").modal("hide");
-  $.ajax({
-    type: 'GET',
-    url: '/accept_appointment',
-    dataType: "json",
-    data: { 
-    	'appointment_id': appointment_id
-    },
-    success: function(data) {
-      if (data.status == "success") {
-        $("#generic_modal").modal("hide");
-        switch (type) {
-          case 0:
-            // code
-            break;
-          case 1:
-            reloadProviderAppointments();
-            break;
-          case 2:
-            // code
-            break;
-        }
-    	}
-    	else if (data.status == "fail") {
-    	  alertMessage("top_page_message", "Appointment not found.", "warning", false);
-    	}
-    },
-    error: function(data) {
-      alertMessage("top_page_message", "Some error happened.", "danger", false);
-    	console.log("error");
-    	console.log(data);
-    }
-  });
+  if (!working_on_accepting) {
+    working_on_accepting = true;
+    $.ajax({
+      type: 'GET',
+      url: '/accept_appointment',
+      dataType: "json",
+      data: { 
+      	'appointment_id': appointment_id
+      },
+      success: function(data) {
+        if (data.status == "success") {
+          $("#generic_modal").modal("hide");
+          switch (type) {
+            case 0:
+              reloadAdminAppointments();
+              break;
+            case 1:
+              reloadProviderAppointments();
+              break;
+            case 2:
+              // code
+              break;
+          }
+      	}
+      	else if (data.status == "fail") {
+      	  alertMessage("top_page_message", "Appointment not found.", "warning", false);
+      	}
+      	working_on_accepting = false;
+      },
+      error: function(data) {
+        alertMessage("top_page_message", "Some error happened.", "danger", false);
+      	console.log("error");
+      	console.log(data);
+      	working_on_accepting = false;
+      }
+    });
+  }
 };
 
 var denyAppointmentWizard = function(appointment_id, type) {
@@ -145,13 +235,14 @@ var denyAppointmentWizard = function(appointment_id, type) {
   content += "  </div>";
   content += "</div>";
   footer += "<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\"><i class=\"fa fa-remove\"></i> Close</button>";
-  footer += "<a href=\"javascript: denyAppointment(" + appointment_id + "," + type + ");\" class=\"btn btn-danger\" ><i class=\"fa fa-thumbs-o-down\"></i> Cancel</a>";
+  footer += "<a href=\"javascript: denyAppointment(" + appointment_id + "," + type + ");\" class=\"btn btn-danger\" >OK</a>";
   $("#generic_modal_title").html("Cancel appointment");
   $("#generic_modal_body").html(content);
   $("#generic_modal_footer").html(footer);
   $("#generic_modal").modal("show");
 };
 
+var working_on_denying = false;
 var denyAppointment = function(appointment_id, type) {
   clearMessage();
   if (!validNotEmpty($("#deny_explanation").val())) {
@@ -159,40 +250,45 @@ var denyAppointment = function(appointment_id, type) {
     $("#deny_explanation").focus();
   }
   else {
-    $.ajax({
-      type: 'GET',
-      url: '/deny_appointment',
-      dataType: "json",
-      data: { 
-      	'appointment_id': appointment_id,
-      	'deny_explanation': $("#deny_explanation").val()
-      },
-      success: function(data) {
-        if (data.status == "success") {
-          $("#generic_modal").modal("hide");
-          $("#deny_explanation").val("");
-          switch (type) {
-            case 0:
-              // code
-              break;
-            case 1:
-              reloadProviderAppointments();
-              break;
-            case 2:
-              // code
-              break;
-          }
-      	}
-      	else if (data.status == "fail") {
-      	  alertMessage("generic_modal_alert", "Appointment not found.", "warning", false);
-      	}
-      },
-      error: function(data) {
-        alertMessage("generic_modal_alert", "Some error happened.", "danger", false);
-      	console.log("error");
-      	console.log(data);
-      }
-    });
+    if (!working_on_denying) {
+      working_on_denying = true;
+      $.ajax({
+        type: 'GET',
+        url: '/deny_appointment',
+        dataType: "json",
+        data: { 
+        	'appointment_id': appointment_id,
+        	'deny_explanation': $("#deny_explanation").val()
+        },
+        success: function(data) {
+          if (data.status == "success") {
+            $("#generic_modal").modal("hide");
+            $("#deny_explanation").val("");
+            switch (type) {
+              case 0:
+                reloadAdminAppointments();
+                break;
+              case 1:
+                reloadProviderAppointments();
+                break;
+              case 2:
+                // code
+                break;
+            }
+        	}
+        	else if (data.status == "fail") {
+        	  alertMessage("generic_modal_alert", "Appointment not found.", "warning", false);
+        	}
+        	working_on_denying = false;
+        },
+        error: function(data) {
+          alertMessage("generic_modal_alert", "Some error happened.", "danger", false);
+        	console.log("error");
+        	console.log(data);
+        	working_on_denying = false;
+        }
+      });
+    }
   }
 };
 
@@ -216,6 +312,7 @@ var rescheduleAppointmentWizard = function(appointment_id, type) {
   $("#generic_modal").modal("show");
 };
 
+var working_on_rescheduling = false;
 var rescheduleAppointment = function(appointment_id, type) {
   clearMessage();
   if (!validNotEmpty($("#reschedule_explanation").val())) {
@@ -223,42 +320,247 @@ var rescheduleAppointment = function(appointment_id, type) {
     $("#reschedule_explanation").focus();
   }
   else {
-    $.ajax({
-      type: 'GET',
-      url: '/reschedule_appointment',
-      dataType: "json",
-      data: { 
-      	'appointment_id': appointment_id,
-      	'reschedule_explanation': $("#reschedule_explanation").val()
-      },
-      success: function(data) {
-        if (data.status == "success") {
-          $("#generic_modal").modal("hide");
-          $("#reschedule_explanation").val("");
-          switch (type) {
-            case 0:
-              // code
-              break;
-            case 1:
-              reloadProviderAppointments();
-              break;
-            case 2:
-              // code
-              break;
-          }
-      	}
-      	else if (data.status == "fail") {
-      	  alertMessage("generic_modal_alert", "Appointment not found.", "warning", false);
-      	}
-      },
-      error: function(data) {
-        alertMessage("generic_modal_alert", "Some error happened.", "danger", false);
-      	console.log("error");
-      	console.log(data);
-      }
-    });
+    if (!working_on_rescheduling) {
+      working_on_rescheduling = true;
+      $.ajax({
+        type: 'GET',
+        url: '/reschedule_appointment',
+        dataType: "json",
+        data: { 
+        	'appointment_id': appointment_id,
+        	'reschedule_explanation': $("#reschedule_explanation").val()
+        },
+        success: function(data) {
+          if (data.status == "success") {
+            $("#generic_modal").modal("hide");
+            $("#reschedule_explanation").val("");
+            switch (type) {
+              case 0:
+                reloadAdminAppointments();
+                break;
+              case 1:
+                reloadProviderAppointments();
+                break;
+              case 2:
+                // code
+                break;
+            }
+        	}
+        	else if (data.status == "fail") {
+        	  alertMessage("generic_modal_alert", "Appointment not found.", "warning", false);
+        	}
+        	working_on_rescheduling = false;
+        },
+        error: function(data) {
+          alertMessage("generic_modal_alert", "Some error happened.", "danger", false);
+        	console.log("error");
+        	console.log(data);
+        	working_on_rescheduling = false;
+        }
+      });
+    }
   }
 };
+
+
+/**
+ * this function should reload the appointments
+ * in the admin's dashboard
+ * 
+ * @author: Thiago Melo
+ * @version: 2015-03-17
+ */
+var reloadAdminAppointments = function() {
+  $.ajax({
+    type: 'GET',
+    url: '/provider_appointments',
+    dataType: "json",
+    data: { 
+    	'provider_id': "0"
+    },
+    success: function(data) {
+      var tbody_pending = $('<tbody/>');
+      var tbody_confirmed = $('<tbody/>');
+      var tbody_denied = $('<tbody/>');
+      var has_pending = false;
+      var has_confirmed = false;
+      var has_denied = false;
+      
+      if (data.status == "success") {
+        $.each(data.appointments, function(i, appointment) {
+    		  if (appointment.accepted == 0) {
+    		    has_pending = true;
+    		    tbody_pending.append(
+    		      $('<tr/>').append(
+    		        $('<td/>').append(data.full_providers[i].first_name + " " + data.full_providers[i].last_name)
+    		      ).append(
+    		        $('<td/>').append(data.full_clients[i].first_name + " " + data.full_clients[i].last_name)
+    		      ).append(
+    		        $('<td/>').append(data.full_clients[i].email)
+    		      ).append(
+    		        $('<td/>').append(data.full_clients[i].phone)
+    		      ).append(
+    		        $('<td/>').append(data.dates[i])
+    		      ).append(
+    		        $('<td/>').prop('align', 'center').append(
+    		          $('<a/>').addClass('text-primary').click(function() {
+    		            acceptAppointmentWizard(appointment.id, 0);
+    		          }).append($('<i/>').addClass('fa fa-thumbs-o-up'))
+    		        )
+    		      ).append(
+    		        $('<td/>').prop('align', 'center').append(
+    		          $('<a/>').addClass('text-danger').click(function() {
+    		            denyAppointmentWizard(appointment.id, 0);
+    		          }).append($('<i/>').addClass('fa fa-thumbs-o-down'))
+    		        )
+    		      ).append(
+    		        $('<td/>').prop('align', 'center').append(
+    		          $('<a/>').addClass('text-primary').click(function() {
+    		            showAppointmentDetail(appointment.id, 0);
+    		          }).append($('<i/>').addClass('fa fa-arrow-circle-right'))
+    		        )
+    		      )
+    		    );
+    		  }
+    		  else if (appointment.accepted == 1) {
+    		    has_confirmed = true;
+    		    tbody_confirmed.append(
+    		      $('<tr/>').append(
+    		        $('<td/>').append(data.full_providers[i].first_name + " " + data.full_providers[i].last_name)
+    		      ).append(
+    		        $('<td/>').append(data.full_clients[i].first_name + " " + data.full_clients[i].last_name)
+    		      ).append(
+    		        $('<td/>').append(data.full_clients[i].email)
+    		      ).append(
+    		        $('<td/>').append(data.full_clients[i].phone)
+    		      ).append(
+    		        $('<td/>').append(data.dates[i])
+    		      ).append(
+    		        $('<td/>').prop('align', 'center').append(
+    		          $('<a/>').addClass('text-danger').click(function() {
+    		            denyAppointmentWizard(appointment.id, 0);
+    		          }).append($('<i/>').addClass('fa fa-thumbs-o-down'))
+    		        )
+    		      ).append(
+    		        $('<td/>').prop('align', 'center').append(
+    		          $('<a/>').addClass('text-primary').click(function() {
+    		            showAppointmentDetail(appointment.id, 0);
+    		          }).append($('<i/>').addClass('fa fa-arrow-circle-right'))
+    		        )
+    		      )
+    		    );
+    		  }
+    		  else if (appointment.accepted == 2) {
+    		    has_denied = true;
+    		    tbody_denied.append(
+    		      $('<tr/>').append(
+    		        $('<td/>').append(data.full_providers[i].first_name + " " + data.full_providers[i].last_name)
+    		      ).append(
+    		        $('<td/>').append(data.full_clients[i].first_name + " " + data.full_clients[i].last_name)
+    		      ).append(
+    		        $('<td/>').append(data.full_clients[i].email)
+    		      ).append(
+    		        $('<td/>').append(data.full_clients[i].phone)
+    		      ).append(
+    		        $('<td/>').append(data.dates[i])
+    		      ).append(
+    		        $('<td/>').prop('align', 'center').append(
+    		          $('<a/>').addClass('text-primary').click(function() {
+    		            acceptAppointmentWizard(appointment.id, 0);
+    		          }).append($('<i/>').addClass('fa fa-thumbs-o-up'))
+    		        )
+    		      ).append(
+    		        $('<td/>').prop('align', 'center').append(
+    		          $('<a/>').addClass('text-primary').click(function() {
+    		            showAppointmentDetail(appointment.id, 0);
+    		          }).append($('<i/>').addClass('fa fa-arrow-circle-right'))
+    		        )
+    		      )
+    		    );
+    		  }
+				});
+				
+        if (has_pending) {
+          $("#pending_appointments").empty().append(
+  		      $('<h2/>').append('Pending appointments')
+  		    ).append(
+		        $('<table/>').addClass('table table-striped table-hover').append(
+	            $('<thead/>').append(
+                $('<tr/>')
+                  .append($('<th/>').append('Provider'))
+                  .append($('<th/>').append('Client'))
+                  .append($('<th/>').append('Email'))
+                  .append($('<th/>').append('Phone'))
+                  .append($('<th/>').append('Date '))
+                  .append($('<th/>').prop('align', 'center').append('Accept'))
+                  .append($('<th/>').prop('align', 'center').append('Deny'))
+                  .append($('<th/>').prop('align', 'center').append('Details'))
+              )
+	          ).append(tbody_pending)
+		      ).append($('<hr>'));
+        }
+        else {
+          $("#pending_appointments").html("");
+          $("#no_pending_appointments").html("<br><br><h2>There is no pending appointments.</h2>");
+        }
+        
+        if (has_confirmed) {
+          $("#confirmed_appointments").empty().append(
+  		      $('<h2/>').append('Upcoming appointments')
+  		    ).append(
+		        $('<table/>').addClass('table table-striped table-hover').append(
+	            $('<thead/>').append(
+                $('<tr/>')
+                  .append($('<th/>').append('Provider'))
+                  .append($('<th/>').append('Client'))
+                  .append($('<th/>').append('Email'))
+                  .append($('<th/>').append('Phone'))
+                  .append($('<th/>').append('Date '))
+                  .append($('<th/>').prop('align', 'center').append('Deny'))
+                  .append($('<th/>').prop('align', 'center').append('Details'))
+              )
+	          ).append(tbody_confirmed)
+		      ).append($('<hr>'));
+        }
+        else {
+          $("#confirmed_appointments").html("");
+          $("#no_confirmed_appointments").html("<br><br><h2>There is no confirmed appointments.</h2>");
+        }
+        
+        if (has_denied) {
+          $("#denied_appointments").empty().append(
+  		      $('<h2/>').append('Denied appointments')
+  		    ).append(
+		        $('<table/>').addClass('table table-striped table-hover').append(
+	            $('<thead/>').append(
+                $('<tr/>')
+                  .append($('<th/>').append('Provider'))
+                  .append($('<th/>').append('Client'))
+                  .append($('<th/>').append('Email'))
+                  .append($('<th/>').append('Phone'))
+                  .append($('<th/>').append('Date '))
+                  .append($('<th/>').prop('align', 'center').append('Accept'))
+                  .append($('<th/>').prop('align', 'center').append('Details'))
+              )
+	          ).append(tbody_denied)
+		      ).append($('<hr>'));
+        }
+        else {
+          $("#denied_appointments").html("");
+          $("#no_denied_appointments").html("<br><br><h2>There is no denied appointments.</h2>");
+        }
+    	}
+    	else if (data.status == "fail") {
+    	  alertMessage("top_page_message", "Appointment not found.", "warning", false);
+    	}
+    },
+    error: function(data) {
+      alertMessage("top_page_message", "Some error happened.", "danger", false);
+    	console.log("error");
+    	console.log(data);
+    }
+  });
+}
 
 var reloadProviderAppointments = function() {
   $.ajax({
