@@ -120,7 +120,7 @@ class ClientsController < ApplicationController
     client = Client.find_by(email: params[:email].downcase)
     if client && client.authenticate(params[:password])
       csign_in client
-      container = { "client" => client.clean_for_ajax, "status" => "success"} # :only => [ :id, :name ] <- please, remember this
+      container = { "client" => client.clean_for_ajax, "status" => "success", "complete" => client.complete? }
       render :json => container.to_json
     else
       container = { "client" => nil, "status" => "fail"}

@@ -78,7 +78,9 @@
                           <input type="hidden" name="c_client_first_name" id="c_client_first_name" value="<%= current_client.first_name %>">
                           <input type="hidden" name="c_client_last_name" id="c_client_last_name" value="<%= current_client.last_name %>">
                           <input type="hidden" name="c_client_address" id="c_client_address" value="<%= current_client.address %>">
-                          <% if !current_client.phone.present? && !current_client.phone.nil? && !current_client.address.present? && !current_client.address.nil? && !current_client.weeks_pregnant.nil? %>
+                          <input type="hidden" name="c_client_address" id="c_client_phone" value="<%= current_client.phone %>">
+                          <input type="hidden" name="c_client_address" id="c_client_weeks_pregnant" value="<%= current_client.weeks_pregnant %>">
+                          <% if current_client.complete? %>
                             <input type="hidden" name="c_client_complete" id="c_client_complete" value="1"> 
                           <% else %>
                             <input type="hidden" name="c_client_complete" id="c_client_complete" value="0">  

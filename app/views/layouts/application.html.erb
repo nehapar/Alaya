@@ -50,9 +50,7 @@
                 <span class="sr-only">Toggle navigation</span>
                 <span class="fa fa-bars"></span>
               </button>
-              <%= link_to root_url do %>
-                <img src="assets/img/CareForMe_2.jpg" style="height: 50px; margin-top: -8px;">
-              <% end %>
+              <%= link_to(image_tag("careforme_logo.jpg", :style => "height: 40px; margin-top: -8px;", :alt => "CareForMe"), root_url, :class => "navbar-brand") %>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse navbar-responsive-collapse">

@@ -68,6 +68,11 @@ class Client < ActiveRecord::Base
     end
   end
   
+  def complete?
+    self.first_name.present? and self.last_name.present? and
+      self.address.present? and self.phone.present? and self.weeks_pregnant.present?
+  end
+  
   def send_password_reset
 	  generate_token(:password_reset_token)
 	  self.password_reset_sent_at = Time.zone.now

@@ -936,30 +936,30 @@ var enableEditSpecialties = function() {
 var resetSpecialtiesInfo = function() {
 	if (!$("#provider_specialty_text").prop("disabled")) {
 		$.ajax({
-		type: 'GET',
-		url: '/provider_simple_info',
-		dataType: "json",
-		data: {
-			'provider_id': $("#provider_id").val()
-		},
-		success: function(data) {
-			if (data.status == "success") {
-				$("#provider_specialty_text").val(data.provider.specialty_text);
-				$("#provider_specialty_text").prop("disabled", true);
-				
-				$("#edit_specialties_button").html("<i class=\"fa fa-toggle-off\"></i> Edit Specialties");
-				$("#save_specialties_button").hide();
-			}
-			else if (data.status == "fail") {
-				alertMessage("provider_edit_alert", "Please try again.", "warning", false);
-			}
-		},
-		error: function(data) {
-			console.log("error");
-			console.log(data);
-			alertMessage("provider_edit_alert", "Error, please contact us.", "danger", false);
-		}
-	});
+  		type: 'GET',
+  		url: '/provider_simple_info',
+  		dataType: "json",
+  		data: {
+  			'provider_id': $("#provider_id").val()
+  		},
+  		success: function(data) {
+  			if (data.status == "success") {
+  				$("#provider_specialty_text").val(data.provider.specialty_text);
+  				$("#provider_specialty_text").prop("disabled", true);
+  				
+  				$("#edit_specialties_button").html("<i class=\"fa fa-toggle-off\"></i> Edit Specialties");
+  				$("#save_specialties_button").hide();
+  			}
+  			else if (data.status == "fail") {
+  				alertMessage("provider_edit_alert", "Please try again.", "warning", false);
+  			}
+  		},
+  		error: function(data) {
+  			console.log("error");
+  			console.log(data);
+  			alertMessage("provider_edit_alert", "Error, please contact us.", "danger", false);
+  		}
+  	});
 	}
 };
 
@@ -977,4 +977,106 @@ var parseDate = function (dateTime) {
     var m = dateTime.substr(14, 2);
     var s = dateTime.substr(17, 2); 
     return new Date(yyyy, parseInt(mm, 10) - 1,dd,h,m,s);
+};
+
+
+/**
+ * this function should switch the provider availability
+ * for an specific time
+ * 
+ * @params: [provider_id] the provider's id
+ *          [cell_id] the time in the shape W_HH_MM, w is the weekday, sunday = 0
+ * 
+ * @author: Thiago Melo
+ * @version: 2015-03-21
+ */
+var switchProviderTimeAvailability = function(provider_id, cell_id) {
+  var next = nextTimeCellID(cell_id);
+  var prev = prevTimeCellID(cell_id);
+  
+  var prev_prev = prevTimeCellID(prevTimeCellID(cell_id));
+  if ($("#" + cell_id).hasClass("schedule-off")) {
+    $("#" + cell_id).removeClass("schedule-off");
+    $("#" + cell_id).addClass("schedule-on").addClass("info");
+    $("#" + next).removeClass("schedule-off");
+    $("#" + next).addClass("schedule-on").addClass("info");
+  } 
+  else {
+    $("#" + cell_id).addClass("schedule-off");
+    $("#" + cell_id).removeClass("schedule-on").removeClass("info");
+    $("#" + next).addClass("schedule-off");
+    $("#" + next).removeClass("schedule-on").removeClass("info");
+    if (!$("#" + prev_prev).hasClass("schedule-on")) {
+      $("#" + prev).addClass("schedule-off");
+      $("#" + prev).removeClass("schedule-on").removeClass("info");
+    }
+  }
+  $.ajax({
+		type: 'GET',
+		url: '/toogle_provider_time_availability',
+		dataType: "json",
+		data: {
+			'provider_id': provider_id,
+			'time': cell_id
+		},
+		success: function(data) {
+			if (data.status == "success") {
+				
+			}
+			else if (data.status == "fail") {
+				console.log("rapaz, voce ta fazendo merda em algum lugar ai...");
+			}
+		},
+		error: function(data) {
+			console.log("error");
+			console.log(data);
+			alertMessage("top_page_message", "Error, please contact us.", "danger", false);
+		}
+	});
+};
+
+/**
+ * for an entry ID_HH_MM
+ * it return the ID of half hour before
+ * 
+ * For 1_13_30, it returns 1_13_00
+ * For 1_13_00, it returns 1_12_30
+ * 
+ * @params: [id] the id of a cell to get the id of the cell before
+ * 
+ * @author: Thiago Melo
+ * @version: 2015-03-21
+ */
+var prevTimeCellID = function(id) {
+  var parts = id.split("_");
+  var hour = parseInt(parts[1], 10);
+  var minutes = parseInt(parts[2], 10);
+  hour = minutes == 0 ? hour - 1 : hour;
+  hour = hour >= 10 ? hour.toString() : "0" + hour.toString();
+  minutes = minutes == 0 ? 30 : 0;
+  minutes = minutes >= 10 ? minutes.toString() : "0" + minutes.toString();
+  return parts[0] + "_" + hour + "_" + minutes;
+};
+
+/**
+ * for an entry ID_HH_MM
+ * it return the ID of half hour after
+ * 
+ * For 1_13_30, it returns 1_14_00
+ * For 1_13_00, it returns 1_13_30
+ * 
+ * @params: [id] the id of a cell to get the id of the cell after
+ * 
+ * @author: Thiago Melo
+ * @version: 2015-03-21
+ */
+var nextTimeCellID = function(id) {
+  var parts = id.split("_");
+  var hour = parseInt(parts[1], 10);
+  var minutes = parseInt(parts[2], 10);
+  hour = minutes == 0 ? hour : hour + 1;
+  hour = hour >= 10 ? hour.toString() : "0" + hour.toString();
+  minutes = minutes == 0 ? 30 : 0;
+  minutes = minutes >= 10 ? minutes.toString() : "0" + minutes.toString();
+  return parts[0] + "_" + hour + "_" + minutes;
 };

@@ -84,6 +84,8 @@ CareForMe::Application.routes.draw do
   match 'delete_review_ajax', :to => 'providers#delete_review_ajax', via: 'get'
   match 'filter_provider_ajax', :to => 'providers#filter_provider_ajax', via: 'get'
   match 'signup', :to => 'providers#new', via: 'get'
+  match 'toogle_provider_time_availability', :to => 'providers#toogle_provider_time_availability_ajax', via: 'get'
+  match 'provider_time_availability', :to => 'providers#provider_time_availability_ajax', via: 'get'
   
   #sessions
   

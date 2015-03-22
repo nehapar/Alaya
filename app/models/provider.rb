@@ -6,6 +6,7 @@ class Provider < ActiveRecord::Base
 	has_many :reviews, dependent: :destroy
 	has_many :specialties, dependent: :destroy
 	has_many :clients, :through => :appointments
+	has_many :provider_schedules, dependent: :destroy
 	
 	before_save { self.email = email.downcase }
 	
@@ -54,6 +55,62 @@ class Provider < ActiveRecord::Base
 	  save!
 	  #UserMailer.password_recovery(self).deliver
 	  UserMailer.password_recovery_email(self)
+	end
+	
+	# this method return if the provider is available for some specific
+	# time received as param
+	#
+	# @params: [time] a string in with the shape W_HH:MM where W is the week
+  #          day, sunday = 0
+	#
+	# @author: Thiago Melo
+	# @version: 2015-03-21
+	def time_is_available(time)
+		slot = ProviderSchedule.where("provider_id = #{self.id} and time = '#{time}'").first
+		if !slot.nil?
+			return slot.available
+		else
+			return false
+		end
+	end
+	
+	# this method toggle a specifica time availability
+	#
+	# @params: [time] a string in with the shape W_HH:MM where W is the week
+  #          day, sunday = 0
+	#
+	# @author: Thiago Melo
+	# @version: 2015-03-21
+	def toggle_time(time)
+		slot = ProviderSchedule.where("provider_id = #{self.id} and time = '#{time}'").first
+    if !slot.nil?
+      slot.toggle :available
+    else
+      slot = ProviderSchedule.new
+      slot.provider_id = self.id
+      slot.time = time
+      slot.available = true
+    end
+    slot.save
+	end
+	
+	# this method sets a time slot to available or unavailable
+	#
+	# @params: [time] a string in with the shape W_HH:MM where W is the week
+  #          day, sunday = 0
+  #          [available] a boolean
+	#
+	# @author: Thiago Melo
+	# @version: 2015-03-21
+	def set_time_available(time, available)
+		slot = ProviderSchedule.where("provider_id = #{self.id} and time = '#{time}'").first
+    if slot.nil?
+      slot = ProviderSchedule.new
+      slot.provider_id = self.id
+      slot.time = time
+    end
+    slot.available = available
+    slot.save
 	end
 	
 	def generate_token(column)

@@ -6,8 +6,8 @@
 var adminShowUpProvider = function() {
   clearMessage("top_page_message");
   var provider_id = $("#providers_list").val();
+  cleanUpProvider();
   if (provider_id == "0") {
-    cleanUpProvider();
     return;
   }
   $.ajax({
@@ -19,7 +19,7 @@ var adminShowUpProvider = function() {
     },
     success: function(data) {
       if (data.status == "success") {
-        /* picture info begin */
+      	/* picture info begin */
         $("#provider_image_container").hide();
         $("#provider_picture_spin_container").show();
         var image = document.getElementById("provider_main_image");
@@ -74,6 +74,14 @@ var adminShowUpProvider = function() {
         $("#provider_password").val("");
         $("#provider_password_confirmation").val("");
         /* password end */
+        
+        /* provider schedule begin */
+        $.each(data.slots_available, function(index, slot) {
+			  	$("#" + slot.time).removeClass("schedule-off");
+          $("#" + slot.time).addClass("schedule-on").addClass("info");
+			  });
+        
+        /* provider schedule end */
     	}
     	else if (data.status == "fail") {
     	  alertMessage("top_page_message", "Provider not found.", "warning", false);
@@ -85,6 +93,93 @@ var adminShowUpProvider = function() {
     	console.log(data);
     }
   });
+};
+
+/**
+ * if the admin is trying to change the time availability of
+ * one provider, so this function is used, basicaly, it substitutes
+ * the provider_id for a value in a select, which is the current provider
+ * being edited
+ * 
+ * @params: [provider_id] the provider's id
+ *          [cell_id] the time in the shape W_HH_MM, w is the weekday, sunday = 0
+ * 
+ * @author: Thiago Melo
+ * @version: 2015-03-21
+ */
+var switchProviderTimeAvailabilityAdmin = function(cell_id) {
+  if ($("#providers_list").val() != "0") {
+    switchProviderTimeAvailability($("#providers_list").val(), cell_id);
+  }
+  else {
+    clearAvailabilityTable();
+  }
+};
+
+/**
+ * this function clears all the time availability table
+ * 
+ * @params: there is no params
+ * 
+ * @author: Thiago Melo
+ * @version: 2015-03-21
+ */
+var clearAvailabilityTable = function() {
+  var i = 0;
+  var j = 0;
+  for (i = 6; i <= 20; i++) {
+    for (j = 0; j < 7; j++) {
+      var hour = i >= 10 ? i.toString() : "0" + i.toString();
+      var cell_id_1 = j.toString() + "_" + hour + "_00";
+      var cell_id_2 = j.toString() + "_" + hour + "_30";
+      $("#" + cell_id_1).addClass("schedule-off");
+      $("#" + cell_id_1).removeClass("schedule-on").removeClass("info");
+      $("#" + cell_id_2).addClass("schedule-off");
+      $("#" + cell_id_2).removeClass("schedule-on").removeClass("info");
+    }
+  }
+};
+
+/**
+ * this function fills all the time availability table for a provider
+ * 
+ * please, don't use this in a provider/client perspective
+ * 
+ * @params: [provider_id] the provider's id
+ * 
+ * @author: Thiago Melo
+ * @version: 2015-03-21
+ */
+var fillAvailabilityTable = function(provider_id) {
+	if (provider_id != "0") {
+    $.ajax({
+  		type: 'GET',
+  		url: '/provider_time_availability',
+  		dataType: "json",
+  		data: {
+  			'provider_id': provider_id
+  		},
+  		success: function(data) {
+  			if (data.status == "success") {
+  				$.each(data.slots_available, function(index, slot) {
+				  	$("#" + slot.time).removeClass("schedule-off");
+	          $("#" + slot.time).addClass("schedule-on").addClass("info");
+				  });
+  			}
+  			else if (data.status == "fail") {
+  				console.log("rapaz, voce ta fazendo merda em algum lugar ai...");
+  			}
+  		},
+  		error: function(data) {
+  			console.log("error");
+  			console.log(data);
+  			alertMessage("top_page_message", "Error, please contact us.", "danger", false);
+  		}
+  	});
+  }
+  else {
+    clearAvailabilityTable();
+  }
 };
 
 /*
@@ -236,6 +331,7 @@ var cleanUpProvider = function() {
   /* password */
   $("#provider_password").val("");
   $("#provider_password_confirmation").val("");
+  clearAvailabilityTable();
 };
 
 /*

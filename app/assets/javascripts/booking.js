@@ -308,6 +308,7 @@ Weekly.prototype.print = function() {
 	var content = "";
 	var a_len = this.appointments.length;
 	var today = new Date();
+	var i, j, k, l;
 
 	var c_date = new Date(this.c_first_day.getTime());
 	content = content + "<div class=\"table-responsive\">";
@@ -398,7 +399,7 @@ Weekly.prototype.print = function() {
 				if (label[k] == "date_available") {
 					onClick = "onClick=\"requestAppointment(" + time_start.getTime() + ")\"";
 				}
-				content = content + "			<td " + onClick + " class=\"" + label[k] + "\">";
+				content = content + "			<td id=\"" + k + "_" + (i < 10 ? "0" + i : i) + "_" + (j < 10 ? "0" + j : j) + "\" " + onClick + " class=\"" + label[k] + "\">";
 				content = content + "				";
 				content = content + "			</td>";
 				cur_day.setDate(cur_day.getDate() + 1);
@@ -411,7 +412,73 @@ Weekly.prototype.print = function() {
 	content = content + "		</tbody>";
 	content = content + "	</table>";
 	content = content + "</div>";
+	
+	// invalid not available slots
+	invalidNotAvailableSlots();
 	$("#schedules_container").html(content);	
+};
+
+/**
+ * this function invalid the time slots where the provider is not available
+ * 
+ * @params: it is going to access global variables
+ * 
+ * @author: Thiago Melo (not proud of that)
+ * @version: 2015-03-22
+ * 
+ */
+var invalidNotAvailableSlots = function() {
+	var provider_id = $("#c_provider_id").val();
+	if (provider_id != "0") {
+		$.ajax({
+  		type: 'GET',
+  		url: '/provider_time_availability',
+  		dataType: "json",
+  		data: {
+  			'provider_id': provider_id
+  		},
+  		success: function(data) {
+  			if (data.status == "success") {
+  				console.log("aqui 3");
+  				var i, j;
+				  for (i = 6; i <= 20; i++) {
+				    for (j = 0; j < 7; j++) {
+				      var hour = i >= 10 ? i.toString() : "0" + i.toString();
+				      var cell_id_1 = j.toString() + "_" + hour + "_00";
+				      var cell_id_2 = j.toString() + "_" + hour + "_30";
+				      var available_1 = false;
+				      var available_2 = false;
+				      
+				      $.each(data.slots_available, function(index, slot) {
+						  	if (slot.time == cell_id_1) {
+						  		available_1 = true;
+						  	}
+						  	else if (slot.time == cell_id_2) {
+						  		available_2 = true;
+						  	}
+						  });
+				      if (!available_1) {
+				      	$("#" + cell_id_1).removeClass("date_available");
+				      	$("#" + cell_id_1).addClass("date_unavailable");
+				      }
+				      if (!available_2) {
+				      	$("#" + cell_id_2).removeClass("date_available");
+				      	$("#" + cell_id_2).addClass("date_unavailable");
+				      }
+				    }
+				  }
+  			}
+  			else if (data.status == "fail") {
+  				console.log("rapaz, voce ta fazendo merda em algum lugar ai...");
+  			}
+  		},
+  		error: function(data) {
+  			console.log("error");
+  			console.log(data);
+  			alertMessage("top_page_message", "Error, please contact us.", "danger", false);
+  		}
+  	});
+	}
 };
 
 /* Daily */
@@ -580,29 +647,29 @@ var requestAppointment = function(datetime) {
 		
 		content = content + "                    <div class=\"row margin-bottom-20\">";
 		content = content + "                        <div class=\"col-md-5 col-md-offset-1\">";
-		content = content + "                            <label for=\"first_name\">First name <i class=\"fa fa-asterisk\"></i></label>";
-		content = content + "                            <input type=\"text\" name=\"client[first_name]\" id=\"first_name\" class=\"form-control\" placeholder=\"First name\" required>";
+		content = content + "                            <label for=\"first_name\">First name <i class=\"fa fa-asterisk\"></i></label>"; 
+		content = content + "                            <input type=\"text\" name=\"client[first_name]\" id=\"first_name\" class=\"form-control\" placeholder=\"First name\" value=\"" + $("#c_client_first_name").val() + "\" required>";
 		content = content + "                        </div>";
 		content = content + "                        <div class=\"col-md-5 col-md-offset-0\">";
 		content = content + "                            <label for=\"last_name\">Last name <i class=\"fa fa-asterisk\"></i></label>";
-		content = content + "                            <input type=\"text\" name=\"client[last_name]\" id=\"last_name\" class=\"form-control\" placeholder=\"Last name\" required>";
+		content = content + "                            <input type=\"text\" name=\"client[last_name]\" id=\"last_name\" class=\"form-control\" placeholder=\"Last name\" value=\"" + $("#c_client_last_name").val() + "\" required>";
 		content = content + "                        </div>";
 		content = content + "                    </div>";
 		
 		content = content + "                    <div class=\"row margin-bottom-20\">";
 		content = content + "                        <div class=\"col-md-10 col-md-offset-1\">";
 		content = content + "                            <label for=\"address\">Address <i class=\"fa fa-asterisk\"></i></label>";
-		content = content + "                            <input type=\"text\" name=\"client[address]\" id=\"address\" class=\"form-control\" placeholder=\"Address\" required>";
+		content = content + "                            <input type=\"text\" name=\"client[address]\" id=\"address\" class=\"form-control\" placeholder=\"Address\" value=\"" + $("#c_client_address").val() + "\" required>";
 		content = content + "                        </div>";
 		content = content + "                    </div>";
 		content = content + "                    <div class=\"row margin-bottom-20\">";
 		content = content + "												 <div class=\"col-md-5 col-md-offset-1\">";
 		content = content + "                            <label for=\"phone\">Phone <i class=\"fa fa-asterisk\"></i></label>";
-		content = content + "                            <input type=\"text\" name=\"client[phone]\" id=\"phone\" class=\"form-control\" data-mask=\"(999) 999-9999\" placeholder=\"Phone\" required>";
+		content = content + "                            <input type=\"text\" name=\"client[phone]\" id=\"phone\" class=\"form-control\" data-mask=\"(999) 999-9999\" placeholder=\"Phone\" value=\"" + $("#c_client_phone").val() + "\" required>";
 		content = content + "                        </div>";
 		content = content + "                        <div class=\"col-md-5\">";
 		content = content + "                            <label for=\"weeks_pregnant\">Weeks pregnant <i class=\"fa fa-asterisk\"></i></label>";
-		content = content + "                            <input type=\"text\" name=\"client[weeks_pregnant]\" id=\"weeks_pregnant\" class=\"form-control\" placeholder=\"Weeks pregnant\" required>";
+		content = content + "                            <input type=\"text\" name=\"client[weeks_pregnant]\" id=\"weeks_pregnant\" class=\"form-control\" placeholder=\"Weeks pregnant\" value=\"" + $("#c_client_weeks_pregnant").val() + "\" required>";
 		content = content + "                        </div>";
 		content = content + "                    </div>";
 		content = content + "									</form>";
@@ -814,13 +881,13 @@ var signin = function(date) {
 var signup = function(date) {
 	clearMessage("schedules_alert");
 
-	if (!validateName($("#first_name").val())) {
+	if (!validateName($("#first_name").val()) || validAnyNumber($("#first_name").val())) {
 		alertMessage("schedules_alert", "First name empty.", "danger", false);
 		$("#first_name").focus();
 		return;
 	}
 
-	if (!validateName($("#last_name").val())) {
+	if (!validateName($("#last_name").val()) || validAnyNumber($("#last_name").val())) {
 		alertMessage("schedules_alert", "Last name empty.", "danger", false);
 		$("#last_name").focus();
 		return;
@@ -899,7 +966,9 @@ var signup = function(date) {
 				$("#c_client_first_name").val(data.client.first_name);
 				$("#c_client_last_name").val(data.client.last_name);
 				$("#c_client_address").val(data.client.address);
-				if (data.client.phone !== undefined && data.client.phone !== "" && data.client.address !== undefined && data.client.address !== "" && data.client.weeks_pregnant !== undefined && data.client.weeks_pregnant !== "") {
+				$("#c_client_phone").val(data.client.phone);
+				$("#c_client_weeks_pregnant").val(data.client.weeks_pregnant);
+				if (data.complete) {
 					$("#c_client_complete").val(1);
 				}
 				else {
@@ -932,32 +1001,32 @@ var signup = function(date) {
 var updateInfo = function(date) {
 	clearMessage("schedules_alert");
 
-	if (!validNotEmpty($("#first_name").val())) {
-		alertMessage("schedules_alert", "First name invalid.", "danger", false);
+	if (!validNotEmpty($("#first_name").val()) || validAnyNumber($("#first_name").val())) {
+		alertMessage("schedules_alert", "First name invalid.", "warning", false);
 		$("#first_name").focus();
 		return;
 	}
 
-	if (!validNotEmpty($("#last_name").val())) {
-		alertMessage("schedules_alert", "Last name invalid.", "danger", false);
+	if (!validNotEmpty($("#last_name").val()) || validAnyNumber($("#last_name").val())) {
+		alertMessage("schedules_alert", "Last name invalid.", "warning", false);
 		$("#last_name").focus();
 		return;
 	}
 	
+	if (!validateAddress($("#address").val())) {
+		alertMessage("schedules_alert", "Address empty.", "warning", false);
+		$("#address").focus();
+		return;
+	}
+	
 	if (!validatePhone($("#phone").val())) {
-		alertMessage("schedules_alert", "Phone invalid.", "danger", false);
+		alertMessage("schedules_alert", "Phone invalid.", "warning", false);
 		$("#phone").focus();
 		return;
 	}
 
-	if (!validateAddress($("#address").val())) {
-		alertMessage("schedules_alert", "Address empty.", "danger", false);
-		$("#address").focus();
-		return;
-	}
-
 	if (!validateWeeksPregnant($("#weeks_pregnant").val())) {
-		alertMessage("schedules_alert", "Invalid number of weeks pregnant.", "danger", false);
+		alertMessage("schedules_alert", "Invalid number of weeks pregnant.", "warning", false);
 		$("#weeks_pregnant").focus();
 		return;
 	}
@@ -1001,54 +1070,60 @@ var updateInfo = function(date) {
 };
 
 var working_on_request = false;
+
 var sendRequest = function(date) {
 	if (!working_on_request) {
+		$("#schedules_modal_action").html("<i class=\"fa fa-cog fa-spin\"></i> Confirm");
 		working_on_request = true;
-		m_current_date = new Date(date);
-		var MS_PER_MINUTE = 60000;
-		//var datestart = new Date(date - 20 * MS_PER_MINUTE);
-		//var dateend = new Date(date + 80 * MS_PER_MINUTE);
-		var datestart = new Date(date - 20 * MS_PER_MINUTE);
-		var dateend = new Date(date + 80 * MS_PER_MINUTE);
-		var d_start = datestart.getFullYear() + "-" + ("0" + (datestart.getMonth() + 1)).slice(-2) + "-" + ("0" + datestart.getDate()).slice(-2) + " " + ("0" + datestart.getHours()).slice(-2) + ":" + ("0" + datestart.getMinutes()).slice(-2) + ":00";
-		var d_end = dateend.getFullYear() + "-" + ("0" + (dateend.getMonth() + 1)).slice(-2) + "-" + ("0" + dateend.getDate()).slice(-2) + " " + ("0" + dateend.getHours()).slice(-2) + ":" + ("0" + dateend.getMinutes()).slice(-2) + ":00";
-		var send_confirmation = $('#send_confirmation').prop('checked');
-		$.ajax({
-			type: 'GET',
-			url: '/request_appointment_ajax',
-			dataType: "json",
-			data: { 
-				'appointment[start]': d_start,
-				'appointment[end]': d_end,
-				'appointment[provider_id]': $("#c_provider_id").val(),
-				'appointment[client_id]': $("#c_client_id").val(),
-				'appointment[client_observation]': $("#client_observation").val(),
-				'appointment[accepted]': 0,
-				'send_confirmation': send_confirmation
-			},
-			success: function(data) {
-				if (data.status == "success") {
-					$("#schedules_modal").modal("hide");
-					$('.modal-backdrop').remove();
-					alertMessage("schedules_body_alert", "Thank you for requesting an appointment. You will be contacted within a few hours about a confirmation.", "success", false);
-					$('html, body').animate({ scrollTop: $("#schedules_body_alert").offset().top }, 2000);
-					
-					//$('#p_weekly').attr('checked',true);
-					loadSchedule();
-				}
-				else if (data.status == "fail") {
-					alertMessage("schedules_alert", "Fail to update info, please try again.", "warning", false);
-				}
-				working_on_request = false;
-			},
-			error: function(data) {
-				console.log("error");
-				console.log(data);
-				alertMessage("schedules_alert", "Please contact us directly.", "danger", false);
-				working_on_request = false;
-			}
-		});
+		setTimeout(function(){ sendRequestPOG(date); }, 1000);
 	}
+};
+
+var sendRequestPOG = function(date) {
+	m_current_date = new Date(date);
+	var MS_PER_MINUTE = 60000;
+	//var datestart = new Date(date - 20 * MS_PER_MINUTE);
+	//var dateend = new Date(date + 80 * MS_PER_MINUTE);
+	var datestart = new Date(date - 20 * MS_PER_MINUTE);
+	var dateend = new Date(date + 80 * MS_PER_MINUTE);
+	var d_start = datestart.getFullYear() + "-" + ("0" + (datestart.getMonth() + 1)).slice(-2) + "-" + ("0" + datestart.getDate()).slice(-2) + " " + ("0" + datestart.getHours()).slice(-2) + ":" + ("0" + datestart.getMinutes()).slice(-2) + ":00";
+	var d_end = dateend.getFullYear() + "-" + ("0" + (dateend.getMonth() + 1)).slice(-2) + "-" + ("0" + dateend.getDate()).slice(-2) + " " + ("0" + dateend.getHours()).slice(-2) + ":" + ("0" + dateend.getMinutes()).slice(-2) + ":00";
+	var send_confirmation = $('#send_confirmation').prop('checked');
+	$.ajax({
+		type: 'GET',
+		url: '/request_appointment_ajax',
+		dataType: "json",
+		data: { 
+			'appointment[start]': d_start,
+			'appointment[end]': d_end,
+			'appointment[provider_id]': $("#c_provider_id").val(),
+			'appointment[client_id]': $("#c_client_id").val(),
+			'appointment[client_observation]': $("#client_observation").val(),
+			'appointment[accepted]': 0,
+			'send_confirmation': send_confirmation
+		},
+		success: function(data) {
+			if (data.status == "success") {
+				$("#schedules_modal").modal("hide");
+				$('.modal-backdrop').remove();
+				alertMessage("schedules_body_alert", "Thank you for requesting an appointment. You will be contacted within a few hours about a confirmation.", "success", false);
+				$('html, body').animate({ scrollTop: $("#schedules_body_alert").offset().top }, 2000);
+				
+				//$('#p_weekly').attr('checked',true);
+				loadSchedule();
+			}
+			else if (data.status == "fail") {
+				alertMessage("schedules_alert", "Fail to update info, please try again.", "warning", false);
+			}
+			working_on_request = false;
+		},
+		error: function(data) {
+			console.log("error");
+			console.log(data);
+			alertMessage("schedules_alert", "Please contact us directly.", "danger", false);
+			working_on_request = false;
+		}
+	});
 }
 
 var buildNonClientVersion = function(datetime) {

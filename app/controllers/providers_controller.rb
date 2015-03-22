@@ -23,7 +23,7 @@ class ProvidersController < ApplicationController
   end
 
   def profile_list
-  	@providers = Provider.where("active = 1").find(:all)
+  	@providers = Provider.where("active = 1")#.find(:all)
   end
 
   def profile_detail
@@ -177,6 +177,11 @@ class ProvidersController < ApplicationController
     else
       redirect_to root_url
     end
+    
+    @pending_appointments = @provider.appointments.where("accepted = 0").where(['start >= ?', DateTime.now]).order("start asc")
+    @confirmed_appointments = @provider.appointments.where("accepted = 1").where(['start >= ?', DateTime.now]).order("start asc")
+    @past_appointments = @provider.appointments.where(['start < ?', DateTime.now]).order("start desc")
+    @denied_appointments = @provider.appointments.where("accepted = 2").where(['start >= ?', DateTime.now]).order("start desc")
   end
   
   #--------------------------------------------------------------------------------------
@@ -190,7 +195,7 @@ class ProvidersController < ApplicationController
   	    service.provider_id = provider.id
   	    service.service = params[:service]
   	    if service.save
-  	      container = { "services" => provider.services.all, "status" => "success"}
+  	      container = { "services" => provider.services, "status" => "success"}
   	    else
   		  container = { "services" => nil, "status" => "fail"}
   	    end
@@ -211,7 +216,7 @@ class ProvidersController < ApplicationController
 	  if !provider.nil?
 	    service = Service.find(params[:service_id])
 	    if service.destroy
-	      container = { "services" => provider.services.all, "status" => "success"}
+	      container = { "services" => provider.services, "status" => "success"}
 	    else
 		  container = { "services" => nil, "status" => "fail"}
 	    end
@@ -230,7 +235,7 @@ class ProvidersController < ApplicationController
     if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
   	  provider = Provider.find(params[:provider_id])
   	  if !provider.nil?
-  	    container = { "services" => provider.services.all, "status" => "success"}
+  	    container = { "services" => provider.services, "status" => "success"}
   	  else
   	    container = { "services" => nil, "status" => "fail"}
   	  end
@@ -245,7 +250,7 @@ class ProvidersController < ApplicationController
   	  provider = Provider.find(params[:provider_id])
   	  provider.service_text = params[:service_text]
   	  if provider.save
-  	    container = { "services" => provider.services.all, "status" => "success"}
+  	    container = { "services" => provider.services, "status" => "success"}
   	  else
   	    container = { "services" => nil, "status" => "fail"}
   	  end
@@ -263,7 +268,7 @@ class ProvidersController < ApplicationController
   	    specialty.provider_id = provider.id
   	    specialty.specialty = params[:specialty]
   	    if specialty.save
-  	      container = { "specialties" => provider.specialties.all, "status" => "success"}
+  	      container = { "specialties" => provider.specialties, "status" => "success"}
   	    else
   		    container = { "specialties" => nil, "status" => "fail"}
   	    end
@@ -284,7 +289,7 @@ class ProvidersController < ApplicationController
   	  if !provider.nil?
   	    specialty = Specialty.find(params[:specialty_id])
   	    if specialty.destroy
-  	      container = { "specialties" => provider.specialties.all, "status" => "success"}
+  	      container = { "specialties" => provider.specialties, "status" => "success"}
   	    else
   		  container = { "specialties" => nil, "status" => "fail"}
   	    end
@@ -303,7 +308,7 @@ class ProvidersController < ApplicationController
     if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
   	  provider = Provider.find(params[:provider_id])
   	  if !provider.nil?
-  	    container = { "specialties" => provider.specialties.all, "status" => "success"}
+  	    container = { "specialties" => provider.specialties, "status" => "success"}
   	  else
   	    container = { "specialties" => nil, "status" => "fail"}
   	  end
@@ -318,7 +323,7 @@ class ProvidersController < ApplicationController
   	  provider = Provider.find(params[:provider_id])
   	  provider.specialty_text = params[:specialty_text]
   	  if provider.save
-  	    container = { "specialties" => provider.specialties.all, "status" => "success"}
+  	    container = { "specialties" => provider.specialties, "status" => "success"}
   	  else
   	    container = { "specialties" => nil, "status" => "fail"}
   	  end
@@ -336,7 +341,7 @@ class ProvidersController < ApplicationController
 	    certification.provider_id = provider.id
 	    certification.certification = params[:certification]
 	    if certification.save
-	      container = { "certifications" => provider.certifications.all, "status" => "success"}
+	      container = { "certifications" => provider.certifications, "status" => "success"}
 	    else
 		  container = { "certifications" => nil, "status" => "fail"}
 	    end
@@ -357,7 +362,7 @@ class ProvidersController < ApplicationController
 	  if !provider.nil?
 	    certification = Certification.find(params[:certification_id])
 	    if certification.destroy
-	      container = { "certifications" => provider.certifications.all, "status" => "success"}
+	      container = { "certifications" => provider.certifications, "status" => "success"}
 	    else
 		  container = { "certifications" => nil, "status" => "fail"}
 	    end
@@ -376,7 +381,7 @@ class ProvidersController < ApplicationController
     if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
   	  provider = Provider.find(params[:provider_id])
   	  if !provider.nil?
-  	    container = { "certifications" => provider.certifications.all, "status" => "success"}
+  	    container = { "certifications" => provider.certifications, "status" => "success"}
   	  else
   	    container = { "certifications" => nil, "status" => "fail"}
   	  end
@@ -391,7 +396,7 @@ class ProvidersController < ApplicationController
   	  provider = Provider.find(params[:provider_id])
   	  provider.certification_text = params[:certification_text]
   	  if provider.save
-  	    container = { "certifications" => provider.certifications.all, "status" => "success"}
+  	    container = { "certifications" => provider.certifications, "status" => "success"}
   	  else
   	    container = { "certifications" => nil, "status" => "fail"}
   	  end
@@ -424,7 +429,7 @@ class ProvidersController < ApplicationController
 	    area.provider_id = provider.id
 	    area.area = params[:area]
 	    if area.save
-	      container = { "areas" => provider.areas.all, "status" => "success"}
+	      container = { "areas" => provider.areas, "status" => "success"}
 	    else
 		  container = { "areas" => nil, "status" => "fail"}
 	    end
@@ -445,7 +450,7 @@ class ProvidersController < ApplicationController
 	  if !provider.nil?
 	    area = Area.find(params[:area_id])
 	    if area.destroy
-	      container = { "areas" => provider.areas.all, "status" => "success"}
+	      container = { "areas" => provider.areas, "status" => "success"}
 	    else
 		  container = { "areas" => nil, "status" => "fail"}
 	    end
@@ -464,7 +469,7 @@ class ProvidersController < ApplicationController
     if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
   	  provider = Provider.find(params[:provider_id])
   	  if !provider.nil?
-  	    container = { "areas" => provider.areas.all, "status" => "success"}
+  	    container = { "areas" => provider.areas, "status" => "success"}
   	  else
   	    container = { "areas" => nil, "status" => "fail"}
   	  end
@@ -479,7 +484,7 @@ class ProvidersController < ApplicationController
   	  provider = Provider.find(params[:provider_id])
   	  provider.area_text = params[:area_text]
   	  if provider.save
-  	    container = { "areas" => provider.areas.all, "status" => "success"}
+  	    container = { "areas" => provider.areas, "status" => "success"}
   	  else
   	    container = { "areas" => nil, "status" => "fail"}
   	  end
@@ -499,7 +504,7 @@ class ProvidersController < ApplicationController
 	    review.review = params[:review]
 	    review.author = params[:author]
 	    if review.save
-	      container = { "reviews" => provider.reviews.all, "status" => "success"}
+	      container = { "reviews" => provider.reviews, "status" => "success"}
 	    else
 		  container = { "reviews" => nil, "status" => "fail"}
 	    end
@@ -520,7 +525,7 @@ class ProvidersController < ApplicationController
   	  if !provider.nil?
   	    review = Review.find(params[:review_id])
   	    if review.destroy
-  	      container = { "reviews" => provider.reviews.all, "status" => "success"}
+  	      container = { "reviews" => provider.reviews, "status" => "success"}
   	    else
   		    container = { "reviews" => nil, "status" => "fail"}
   	    end
@@ -539,7 +544,7 @@ class ProvidersController < ApplicationController
     if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
   	  provider = Provider.find(params[:provider_id])
   	  if !provider.nil?
-  	    container = { "reviews" => provider.reviews.all, "status" => "success"}
+  	    container = { "reviews" => provider.reviews, "status" => "success"}
   	  else
   	    container = { "reviews" => nil, "status" => "fail"}
   	  end
@@ -592,6 +597,9 @@ class ProvidersController < ApplicationController
       appointments = current_client.appointments.where("start >= '" + params[:start] + "' AND end <= '" + params[:end] + "'")
       @appointments = @appointments.push(*appointments)
     end
+    
+    
+    
     container = { "appointments" => @appointments, "status" => "success"}
     render :json => container.to_json
   end
@@ -673,12 +681,14 @@ class ProvidersController < ApplicationController
   end
   
   def provider_info_ajax
-    if !signed_in? || !is_admin?
-      redirect_to root_url
-    end
-    provider = Provider.find(params[:provider_id])
-    if !provider.nil?
-      container = { "provider" => provider.without_secure_info, "specialties" => provider.specialties.all, "status" => "success" }
+    if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
+      provider = Provider.find(params[:provider_id])
+      if !provider.nil?
+        slots_available = provider.provider_schedules.where(:available => true)
+        container = { "provider" => provider.without_secure_info, "specialties" => provider.specialties, "status" => "success", "slots_available" => slots_available }
+      else
+        container = { "provider" => nil, "status" => "fail" }
+      end
     else
       container = { "provider" => nil, "status" => "fail" }
     end
@@ -864,6 +874,63 @@ class ProvidersController < ApplicationController
       end
       container = { "status" => "success", "appointments" => appointments.order(start: :asc), "clients" => clients, "dates" => dates, "full_clients" => full_clients, "full_providers" => full_providers }
     else
+      container = { "status" => "fail" }
+    end
+    render :json => container.to_json
+  end
+  
+  # this method toggle the provider time availability in a specific time
+  #
+  # there is a very important thing:
+  #
+  # IT TOGGLES THE TIME SPECIFIED AND THE NEXT HALF HOUR
+  # 
+  # BESIDES THAT, IF THE SECOND LAST HALF HOUR IS UNAVAILABLE, SO THE 
+  # IMMEDIATE HALF HOUR BEFOR THESE TIME BECOME UNAVAILABLE TOO
+  #
+  # @params: [provider_id] 
+  #          [time] a string in with the shape W_HH:MM where W is the week
+  #          day, sunday = 0
+  #
+  # @author: Thiago Melo
+  # @version: 2015-03-21
+  def toogle_provider_time_availability_ajax
+    if is_admin? or (signed_in? and current_provider.id == Integer(params[:provider_id]))
+      time = params[:time]
+      next_time = nextTimeCellID(time)
+      prev_time = prevTimeCellID(time)
+      prev_prev_time = prevTimeCellID(prev_time)
+      provider = is_admin? ? Provider.find(params[:provider_id]) : current_provider
+      
+      if provider.time_is_available(time)
+        provider.set_time_available(time, false)
+        provider.set_time_available(next_time, false)
+        if !provider.time_is_available(prev_prev_time)
+          provider.set_time_available(prev_time, false)
+        end
+      else
+        provider.set_time_available(time, true)
+        provider.set_time_available(next_time, true)
+      end
+      container = { "status" => "success" }
+    else
+      container = { "status" => "fail" }
+    end
+    render :json => container.to_json
+  end
+  
+  # these method return the time availability for a provider
+  #
+  # @params: [provider_id] the corresponding provider's id
+  #
+  # @author: Thiago Melo
+  # @version: 2015-03-21
+  def provider_time_availability_ajax
+    begin
+      provider = Provider.find(params[:provider_id])
+      slots_available = provider.provider_schedules.where(:available => true)
+      container = { "status" => "success", "slots_available" => slots_available }
+    rescue
       container = { "status" => "fail" }
     end
     render :json => container.to_json

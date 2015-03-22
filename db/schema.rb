@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150225052155) do
+ActiveRecord::Schema.define(version: 20150322071329) do
 
   create_table "appointments", force: true do |t|
     t.integer  "provider_id"
@@ -58,6 +58,14 @@ ActiveRecord::Schema.define(version: 20150225052155) do
   end
 
   add_index "clients", ["remember_token"], name: "index_clients_on_remember_token"
+
+  create_table "provider_schedules", force: true do |t|
+    t.integer  "provider_id"
+    t.string   "time"
+    t.boolean  "available"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "providers", force: true do |t|
     t.string   "first_name"

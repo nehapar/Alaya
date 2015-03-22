@@ -194,7 +194,6 @@
           
           <div class="tab-pane" id="schedule">
             <h2>Scheduling monitor</h2>
-
             <div class="row margin-bottom-20">
               <form id="schedules_periodicity" action="#" method="post">
                 <div class="col-md-4 col-md-offset-0">
@@ -279,7 +278,8 @@
             <hr>
             
             <ul class="nav nav-pills" role="tablist">
-              <li role="presentation" class="active"><a href="#provider_picture_tab" aria-controls="provider_picture_tab" role="tab" data-toggle="tab"><i class="fa fa-picture-o"></i> Picture</a></li>
+              <li role="presentation" class="active"><a href="#provider_weekly_schedule" aria-controls="provider_weekly_schedule" role="tab" data-toggle="tab"><i class="fa fa-clock-o"></i> Weekly Schedule</a></li>
+              <li role="presentation"><a href="#provider_picture_tab" aria-controls="provider_picture_tab" role="tab" data-toggle="tab"><i class="fa fa-picture-o"></i> Picture</a></li>
               <li role="presentation"><a href="#provider_primary_profile_tab" aria-controls="provider_primary_profile_tab" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Primary profile</a></li>
               <li role="presentation"><a href="#provider_specialty_tab" aria-controls="provider_specialty_tab" role="tab" data-toggle="tab"><i class="fa fa-star"></i> Specialties</a></li>
               <li role="presentation"><a href="#provider_service_tab" aria-controls="provider_service_tab" role="tab" data-toggle="tab"><i class="fa fa-briefcase"></i> Services</a></li>
@@ -294,7 +294,54 @@
             
             <!-- Tab panes -->
             <div class="tab-content">
-              <div role="tabpanel" class="tab-pane active" id="provider_picture_tab">
+              <div role="tabpanel" class="tab-pane active" id="provider_weekly_schedule">
+                <br>
+        				<div class="alert alert-info" role="alert">
+        					<p class="text-center"><strong><i class="fa fa-asterisk"></i> This schedule needs to be updated whenever your weekly plans change.</strong></p>
+        				</div>
+        				<br>
+        				<div class="row">
+        					<div class="col-md-10 col-sm-10 col-md-offset-1 col-sm-offset-1">
+        						<p><i class="fa fa-hand-o-right"></i> Select the time spaces when you want to be available for bookings.</p>
+        						<p><i class="fa fa-hand-o-right"></i> When an appointment is booked, the immediate half hour befor and the immediate half hour later are going to become unavailable.</p>
+        					</div>
+        				</div>
+        				<br>
+        				<div class="row">
+        					<div class="col-md-10 col-sm-10 col-md-offset-1 col-sm-offset-1" align="center">
+        						<table class="table table-bordered">
+        							<thead>
+        								<tr>
+        									<th></th>
+        									<th>Sunday</th>
+        									<th>Monday</th>
+        									<th>Tuesday</th>
+        									<th>Wednesday</th>
+        									<th>Thursday</th>
+        									<th>Friday</th>
+        									<th>Saturday</th>
+        								</tr>
+        							</thead>
+        							<tbody>
+        								<% (6..20).each do |i| %>
+        									<tr>
+        										<td rowspan="2"><%= "#{i.to_s.rjust(2, '0')}:00" %></td>
+        										<% (0..6).each do |j| %>
+        											<td id="<%= "#{j}_#{i.to_s.rjust(2, '0')}_00" %>" class="schedule-off" OnClick="switchProviderTimeAvailabilityAdmin('<%= "#{j}_#{i.to_s.rjust(2, '0')}_00" %>');"></td>
+        										<% end %>
+        									</tr>
+        									<tr>
+        										<% (0..6).each do |j| %>
+        											<td id="<%= "#{j}_#{i.to_s.rjust(2, '0')}_30" %>" class="schedule-off" OnClick="switchProviderTimeAvailabilityAdmin('<%= "#{j}_#{i.to_s.rjust(2, '0')}_30" %>');"></td>
+        										<% end %>
+        									</tr>
+        								<% end %>
+        							</tbody>
+        						</table>
+        					</div>
+        				</div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="provider_picture_tab">
                 <br><br>
                 <div class="row">
 									<div class="col-sm-6 col-md-6">
