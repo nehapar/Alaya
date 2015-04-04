@@ -47,19 +47,10 @@
               <div class="col-sm-3" style="height: 300px; margin-bottom: 150px;">
                 <div class="tag-box-v3">
 									<% if !provider.picture_path.nil? %>
-										<!--
-										<div class="easy-block-v1 flip-image" id="picture_<%= provider.id %>" onmouseover="changeToText(<%= provider.id %>);">
-											<%= link_to eval(provider.profile + '_path') do %>
-											  <div id="profile-img-<%= provider.id %>-container">
-											    <img class="img-responsive" src="<%= provider.picture_path %>" alt="<%= provider.first_name %> - <%= provider.expertise %>" style="height: 300px;">
-											    
-											  </div>
-											<% end %>
-										</div>
-										-->
 										<div id="profile-img-<%= provider.id %>-container" class="rounded easy-block-v1" align="center" style="cursor: pointer;" data-toggle="modal"data-target="#description_<%= provider.id %>"></div>
+									<% else %>
+									  <div id="profile-img-<%= provider.id %>-container" class="rounded easy-block-v1" align="center" style="cursor: pointer;" data-toggle="modal"data-target="#description_<%= provider.id %>"></div>
 									<% end %>
-									
 									<div id="text_<%= provider.id %>" class=" flip-text">
                     <div class="projects" style="height: 250px;">
   										<h4 align="center" style="cursor: pointer;" data-toggle="modal"data-target="#description_<%= provider.id %>"><%= provider.first_name %> <%= provider.last_name %></h4>
@@ -160,7 +151,7 @@
                               <% if !provider.picture_path.nil? %>
                                 [<%= provider.id %>, "<%= provider.picture_path %>", new Image()],
                               <% else %>
-                                [<%= provider.id %>, "", new Image()],
+                                [<%= provider.id %>, "../assets/img/profile_pic/provider_without_picture.png", new Image()],
                               <% end %>
                             <% else %>
                               <% if !provider.picture_path.nil? %>

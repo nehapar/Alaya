@@ -76,9 +76,9 @@ var adminShowUpProvider = function() {
         /* password end */
         
         /* provider schedule begin */
-        $.each(data.slots_available, function(index, slot) {
-			  	$("#" + slot.time).removeClass("schedule-off");
-          $("#" + slot.time).addClass("schedule-on").addClass("info");
+        $.each(data.slots_unavailable, function(index, slot) {
+			  	$("#" + slot.time).removeClass("schedule-free");
+          $("#" + slot.time).addClass("schedule-blocked").addClass("danger");
 			  });
         
         /* provider schedule end */
@@ -132,10 +132,10 @@ var clearAvailabilityTable = function() {
       var hour = i >= 10 ? i.toString() : "0" + i.toString();
       var cell_id_1 = j.toString() + "_" + hour + "_00";
       var cell_id_2 = j.toString() + "_" + hour + "_30";
-      $("#" + cell_id_1).addClass("schedule-off");
-      $("#" + cell_id_1).removeClass("schedule-on").removeClass("info");
-      $("#" + cell_id_2).addClass("schedule-off");
-      $("#" + cell_id_2).removeClass("schedule-on").removeClass("info");
+      $("#" + cell_id_1).addClass("schedule-free");
+      $("#" + cell_id_1).removeClass("schedule-blocked").removeClass("danger");
+      $("#" + cell_id_2).addClass("schedule-free");
+      $("#" + cell_id_2).removeClass("schedule-blocked").removeClass("danger");
     }
   }
 };
@@ -161,9 +161,9 @@ var fillAvailabilityTable = function(provider_id) {
   		},
   		success: function(data) {
   			if (data.status == "success") {
-  				$.each(data.slots_available, function(index, slot) {
-				  	$("#" + slot.time).removeClass("schedule-off");
-	          $("#" + slot.time).addClass("schedule-on").addClass("info");
+  				$.each(data.slots_unavailable, function(index, slot) {
+				  	$("#" + slot.time).removeClass("schedule-free");
+	          $("#" + slot.time).addClass("schedule-blocked").addClass("danger");
 				  });
   			}
   			else if (data.status == "fail") {

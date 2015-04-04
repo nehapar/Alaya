@@ -572,7 +572,7 @@ class UserMailer < ActionMailer::Base
       },
       { 
         "name" => "link" , 
-        "content" => "#{default_url}/profile_list/"
+        "content" => "#{default_url}/profile_list"
       },
       { 
         "name" => "date",
@@ -707,7 +707,7 @@ class UserMailer < ActionMailer::Base
       },
       { 
         "name" => "link" , 
-        "content" => "#{default_url}/profile_list/"
+        "content" => "#{default_url}/profile_list"
       },
       { 
         "name" => "date",

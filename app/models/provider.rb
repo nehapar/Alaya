@@ -65,10 +65,10 @@ class Provider < ActiveRecord::Base
 	#
 	# @author: Thiago Melo
 	# @version: 2015-03-21
-	def time_is_available(time)
+	def time_unavailable(time)
 		slot = ProviderSchedule.where("provider_id = #{self.id} and time = '#{time}'").first
 		if !slot.nil?
-			return slot.available
+			return slot.unavailable
 		else
 			return false
 		end
@@ -84,12 +84,12 @@ class Provider < ActiveRecord::Base
 	def toggle_time(time)
 		slot = ProviderSchedule.where("provider_id = #{self.id} and time = '#{time}'").first
     if !slot.nil?
-      slot.toggle :available
+      slot.toggle :unavailable
     else
       slot = ProviderSchedule.new
       slot.provider_id = self.id
       slot.time = time
-      slot.available = true
+      slot.unavailable = true
     end
     slot.save
 	end
@@ -98,18 +98,18 @@ class Provider < ActiveRecord::Base
 	#
 	# @params: [time] a string in with the shape W_HH:MM where W is the week
   #          day, sunday = 0
-  #          [available] a boolean
+  #          [unavailable] a boolean
 	#
 	# @author: Thiago Melo
 	# @version: 2015-03-21
-	def set_time_available(time, available)
+	def set_time_unavailable(time, unavailable)
 		slot = ProviderSchedule.where("provider_id = #{self.id} and time = '#{time}'").first
     if slot.nil?
       slot = ProviderSchedule.new
       slot.provider_id = self.id
       slot.time = time
     end
-    slot.available = available
+    slot.unavailable = unavailable
     slot.save
 	end
 	

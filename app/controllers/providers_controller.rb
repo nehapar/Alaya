@@ -1,4 +1,5 @@
 class ProvidersController < ApplicationController
+  skip_before_filter  :verify_authenticity_token
   
   def self.load
 	  CareForMe::Application.routes.draw do
@@ -684,8 +685,8 @@ class ProvidersController < ApplicationController
     if is_admin? || (signed_in? && current_provider.id == Integer(params[:provider_id]))
       provider = Provider.find(params[:provider_id])
       if !provider.nil?
-        slots_available = provider.provider_schedules.where(:available => true)
-        container = { "provider" => provider.without_secure_info, "specialties" => provider.specialties, "status" => "success", "slots_available" => slots_available }
+        slots_unavailable = provider.provider_schedules.where(:unavailable => true)
+        container = { "provider" => provider.without_secure_info, "specialties" => provider.specialties, "status" => "success", "slots_unavailable" => slots_unavailable }
       else
         container = { "provider" => nil, "status" => "fail" }
       end
@@ -900,17 +901,20 @@ class ProvidersController < ApplicationController
       next_time = nextTimeCellID(time)
       prev_time = prevTimeCellID(time)
       prev_prev_time = prevTimeCellID(prev_time)
+      next_next_time = nextTimeCellID(next_time)
       provider = is_admin? ? Provider.find(params[:provider_id]) : current_provider
       
-      if provider.time_is_available(time)
-        provider.set_time_available(time, false)
-        provider.set_time_available(next_time, false)
-        if !provider.time_is_available(prev_prev_time)
-          provider.set_time_available(prev_time, false)
-        end
+      if provider.time_unavailable(time)
+        provider.set_time_unavailable(time, false)
+        provider.set_time_unavailable(next_time, false)
       else
-        provider.set_time_available(time, true)
-        provider.set_time_available(next_time, true)
+        provider.set_time_unavailable(time, true)
+        if provider.time_unavailable(prev_prev_time)
+          provider.set_time_unavailable(prev_time, true)
+        end
+        if provider.time_unavailable(next_next_time)
+          provider.set_time_unavailable(next_time, true)
+        end
       end
       container = { "status" => "success" }
     else
@@ -928,8 +932,8 @@ class ProvidersController < ApplicationController
   def provider_time_availability_ajax
     begin
       provider = Provider.find(params[:provider_id])
-      slots_available = provider.provider_schedules.where(:available => true)
-      container = { "status" => "success", "slots_available" => slots_available }
+      slots_unavailable = provider.provider_schedules.where(:unavailable => true)
+      container = { "status" => "success", "slots_unavailable" => slots_unavailable }
     rescue
       container = { "status" => "fail" }
     end

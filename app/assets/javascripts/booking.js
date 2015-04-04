@@ -311,23 +311,26 @@ Weekly.prototype.print = function() {
 	var i, j, k, l;
 
 	var c_date = new Date(this.c_first_day.getTime());
+	
 	content = content + "<div class=\"table-responsive\">";
+	
+	content = content + "<div style=\"overflow: scroll; overflow-y: scroll; overflow-x: hidden;\">";
 	content = content + "	<table class=\"table table-striped table-hover text-center table-bordered\">";
 	content = content + "		<thead>";
 	content = content + "			<tr>";
-	content = content + "				<th class=\"text-center\"><a href=\"javascript: lastSchedule();\"><span class=\"glyphicon glyphicon-chevron-left\"></span></a>";
+	content = content + "				<th class=\"text-center\" style=\"width: 12.5%;\"><a href=\"javascript: lastSchedule();\"><span class=\"glyphicon glyphicon-chevron-left\"></span></a>";
 	content = content + "				</th>";
 	content = content + "				<th class=\"text-center\" colspan=\"6\">";
 	content = content + "				" + c_date.getDate() + " " + o_screen.month_short(c_date.getMonth() + 1) + " - " + this.c_last_day.getDate() + " " + o_screen.month_short(this.c_last_day.getMonth() + 1);
 	content = content + "				</th>";
-	content = content + "				<th class=\"text-center\"><a href=\"javascript: nextSchedule();\"><span class=\"glyphicon glyphicon-chevron-right\"></span></a>";
+	content = content + "				<th style=\"width: 12.5%;\" class=\"text-center\"><a href=\"javascript: nextSchedule();\"><span class=\"glyphicon glyphicon-chevron-right\"></span></a>";
 	content = content + "				</th>";
 	content = content + "			</tr>";
 	content = content + "			<tr>";
-	content = content + "				<th>";
+	content = content + "				<th style=\"width: 12.5%;\">";
 	content = content + "				</th>";
 	for (i = 0; i < 7; i++) {
-		content = content + "		<th class=\"text-center\">" + o_screen.weekday_short(c_date.getDay());
+		content = content + "		<th class=\"text-center\" style=\"width: 12.5%;\">" + o_screen.weekday_short(c_date.getDay());
 		content = content + "			<br>" + c_date.getDate() + " " + o_screen.month_short(c_date.getMonth() + 1);
 		content = content + "		</th>";
 		c_date.setDate(c_date.getDate() + 1);
@@ -335,8 +338,17 @@ Weekly.prototype.print = function() {
 	
 	content = content + "			</tr>";
 	content = content + "		</thead>";
+	content = content + "  </table>";
+	
+	content = content + "</div>";
+	
+	content = content + "<div style=\"overflow: scroll; overflow-y: auto; overflow-x: hidden; max-height: 50vh; border-bottom: 1.0px solid #CCC\">";
+	
+	content = content + "	<table class=\"table table-striped table-hover text-center table-bordered\">";
+	
+	
 	content = content + "		<tbody>";
-
+	
 	for (i = 6; i < 21; i++) {
 		for (j = 0; j < 60; j = j + 30) {
 			var label = [];
@@ -384,7 +396,7 @@ Weekly.prototype.print = function() {
 
 			content = content + "		<tr>";
 			if (j == 0 || j  == 0) {
-				content = content + "		<td rowspan=\"2\">";
+				content = content + "		<td rowspan=\"2\" style=\"width: 12.5%;\">";
 				content = content + "			" + (i < 10 ? "0" + i : i) + ":" + (j < 10 ? "0" + j : j);
 				content = content + "		</td>";
 			}
@@ -399,7 +411,7 @@ Weekly.prototype.print = function() {
 				if (label[k] == "date_available") {
 					onClick = "onClick=\"requestAppointment(" + time_start.getTime() + ")\"";
 				}
-				content = content + "			<td id=\"" + k + "_" + (i < 10 ? "0" + i : i) + "_" + (j < 10 ? "0" + j : j) + "\" " + onClick + " class=\"" + label[k] + "\">";
+				content = content + "			<td  style=\"width: 12.5%;\" id=\"" + k + "_" + (i < 10 ? "0" + i : i) + "_" + (j < 10 ? "0" + j : j) + "\" " + onClick + " class=\"" + label[k] + "\">";
 				content = content + "				";
 				content = content + "			</td>";
 				cur_day.setDate(cur_day.getDate() + 1);
@@ -411,6 +423,9 @@ Weekly.prototype.print = function() {
 	//content = content + "			</tr>";
 	content = content + "		</tbody>";
 	content = content + "	</table>";
+	
+	content = content + "</div>";
+	
 	content = content + "</div>";
 	
 	// invalid not available slots
@@ -439,31 +454,28 @@ var invalidNotAvailableSlots = function() {
   		},
   		success: function(data) {
   			if (data.status == "success") {
-  				console.log("aqui 3");
   				var i, j;
 				  for (i = 6; i <= 20; i++) {
 				    for (j = 0; j < 7; j++) {
 				      var hour = i >= 10 ? i.toString() : "0" + i.toString();
 				      var cell_id_1 = j.toString() + "_" + hour + "_00";
 				      var cell_id_2 = j.toString() + "_" + hour + "_30";
-				      var available_1 = false;
-				      var available_2 = false;
+				      var available_1 = true;
+				      var available_2 = true;
 				      
-				      $.each(data.slots_available, function(index, slot) {
+				      $.each(data.slots_unavailable, function(index, slot) {
 						  	if (slot.time == cell_id_1) {
-						  		available_1 = true;
+						  		available_1 = false;
 						  	}
 						  	else if (slot.time == cell_id_2) {
-						  		available_2 = true;
+						  		available_2 = false;
 						  	}
 						  });
 				      if (!available_1) {
-				      	$("#" + cell_id_1).removeClass("date_available");
-				      	$("#" + cell_id_1).addClass("date_unavailable");
+				      	$("#" + cell_id_1).removeClass("date_available").addClass("date_unavailable").off('click');;
 				      }
 				      if (!available_2) {
-				      	$("#" + cell_id_2).removeClass("date_available");
-				      	$("#" + cell_id_2).addClass("date_unavailable");
+				      	$("#" + cell_id_2).removeClass("date_available").addClass("date_unavailable").off('click');;
 				      }
 				    }
 				  }
@@ -616,10 +628,27 @@ var showDate = function(date) {
 	loadSchedule();
 };
 
+var appointment_types = [];
+appointment_types[0] = "Pregnancy Massage";
+appointment_types[1] = "Lactation Consultation";
+appointment_types[2] = "Birth Doula Consultation";
+appointment_types[3] = "PostPartum Doula Consultation";
+appointment_types[4] = "Follow-up Visit";
+
+var setAppointmentType = function() {
+	$.each(appointment_types, function(index, type) {
+		if ($("#appointment_type_" + index).is(":checked")) {
+			$("#appointment_type").val(index);
+		}
+	});
+};
+
 var requestAppointment = function(datetime) {
 	var q_screens = new Screens();
 	var content = "";
 	var today = new Date();
+	var appointment_type = $("#appointment_type").val();
+	
 	m_current_date = new Date(datetime);
 	
 	$("#schedules_title").html("Appointment requesting");
@@ -633,6 +662,35 @@ var requestAppointment = function(datetime) {
 		content = content + "        </div>";
 		$("#schedules_modal_action").html("Close Frame");
 		$("#schedules_modal_action").attr("data-dismiss", "modal");
+	}
+	else if ($("#appointment_type").val() == -1) {
+		appointment_type = 0;
+		$("#appointment_type").val(0)
+		var appointment_types_options = $("<div/>");
+		
+		$.each(appointment_types, function(index, type) {
+			appointment_types_options.append(
+				$("<p/>").append(
+					$("<label/>").append(
+						$("<input/>").prop("type", "radio").prop("id", "appointment_type_" + index).prop("name", "appointment_type_chosen").change(function() {
+							setAppointmentType();
+						}).attr("checked", appointment_type == index || (appointment_type == -1 && index == 0))
+					).append(" " + type)
+				)
+			);
+		});
+		
+		content = $("<div/>").addClass("row").append(
+			$("<div/>").addClass("col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1").append(
+				$("<div/>").addClass("headline").append(
+					$("<h2/>").append("Booking type")
+				)
+			).append($("<p/>").append("Please choose the booking type:")).append(appointment_types_options)
+		);
+		
+		
+		$("#schedules_modal_action").html("Continue");
+		$("#schedules_modal_action").attr("href", "javascript: requestAppointment(" + datetime + ");");
 	}
 	else if ($("#c_client_id").val() == "0" && $("#c_client_complete").val() == "0" && m_is_admin) {
 		buildNonClientVersion(datetime);
@@ -1100,6 +1158,7 @@ var sendRequestPOG = function(date) {
 			'appointment[client_id]': $("#c_client_id").val(),
 			'appointment[client_observation]': $("#client_observation").val(),
 			'appointment[accepted]': 0,
+			'appointment[appointment_type]': $("#appointment_type").val(),
 			'send_confirmation': send_confirmation
 		},
 		success: function(data) {
@@ -1116,12 +1175,14 @@ var sendRequestPOG = function(date) {
 				alertMessage("schedules_alert", "Fail to update info, please try again.", "warning", false);
 			}
 			working_on_request = false;
+			$("#appointment_type").val(-1);
 		},
 		error: function(data) {
 			console.log("error");
 			console.log(data);
 			alertMessage("schedules_alert", "Please contact us directly.", "danger", false);
 			working_on_request = false;
+			$("#appointment_type").val(-1);
 		}
 	});
 }

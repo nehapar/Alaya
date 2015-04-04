@@ -31,7 +31,7 @@
 												<% @client.appointments.where("accepted = 0 or accepted = 1").where(['start >= ?', DateTime.now]).order(start: :asc).each_with_index do |appointment, index| %>
 													<tr id="appointment_<%= appointment.id %>">
 														<td>
-															You have an upcoming appointment with <%= link_to eval("#{appointment.provider.profile}_path"), :target => "_blank" do %><strong><%= appointment.provider.first_name %> <%= appointment.provider.last_name %></strong><% end %> on <strong><%= (appointment.start + 20.minutes).strftime("%A, %m/%d/%Y") %></strong> at <strong><%= (appointment.start + 20.minutes).strftime("%I:%M %p") %></strong> at <strong><%= appointment.client.address %></strong>
+															You have an upcoming <strong><%= appointment_types[appointment.appointment_type] %></strong> appointment with <%= link_to eval("#{appointment.provider.profile}_path"), :target => "_blank" do %><strong><%= appointment.provider.first_name %> <%= appointment.provider.last_name %></strong><% end %> on <strong><%= (appointment.start + 20.minutes).strftime("%A, %m/%d/%Y") %></strong> at <strong><%= (appointment.start + 20.minutes).strftime("%I:%M %p") %></strong> at <strong><%= appointment.client.address %></strong>
 														</td>
 														<!--	
 														<td><%= appointment.provider.expertise %></td>

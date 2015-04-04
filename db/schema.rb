@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150322071329) do
+ActiveRecord::Schema.define(version: 20150330181412) do
 
   create_table "appointments", force: true do |t|
     t.integer  "provider_id"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 20150322071329) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "client_observation"
+    t.integer  "appointment_type",   default: 0
   end
 
   add_index "appointments", ["provider_id", "created_at"], name: "index_appointments_on_provider_id_and_created_at"
@@ -62,7 +63,7 @@ ActiveRecord::Schema.define(version: 20150322071329) do
   create_table "provider_schedules", force: true do |t|
     t.integer  "provider_id"
     t.string   "time"
-    t.boolean  "available"
+    t.boolean  "unavailable"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

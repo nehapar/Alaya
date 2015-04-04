@@ -347,7 +347,7 @@ class ClientsController < ApplicationController
     end
     
     def appointment_params
-      params.require(:appointment).permit(:provider_id, :client_id, :start, :end, :client_observation, :accepted)
+      params.require(:appointment).permit(:provider_id, :client_id, :start, :end, :client_observation, :accepted, :appointment_type)
     end
 
     def client_update_params

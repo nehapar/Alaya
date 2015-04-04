@@ -112,7 +112,7 @@
 				<br>
 				<div class="row">
 					<div class="col-md-10 col-sm-10 col-md-offset-1 col-sm-offset-1">
-						<p><i class="fa fa-hand-o-right"></i> Select the time spaces when you want to be available for bookings.</p>
+						<p><i class="fa fa-hand-o-right"></i> Block the time spaces when you don't want to be available for bookings.</p>
 						<p><i class="fa fa-hand-o-right"></i> When an appointment is booked, the immediate half hour befor and the immediate half hour later are going to become unavailable.</p>
 					</div>
 				</div>
@@ -120,7 +120,12 @@
 				<div class="row">
 					<div class="col-md-10 col-sm-10 col-md-offset-1 col-sm-offset-1" align="center">
 						<table class="table table-bordered">
-							<thead>
+							<thead align="center">
+								<tr>
+									<th class="text-center"><a onClick="weekProviderSchedule(<%= (Date.today - 1.weeks).strftime('%U, %Y') %>)" id="provider_prev_week_button"><i class="fa fa-chevron-left"></i></a></th>
+									<th colspan="6" class="text-center" id="provider_month_year_display">April 2015</th>
+									<th class="text-center"><a onClick="weekProviderSchedule(<%= (Date.today + 1.weeks).strftime('%U, %Y') %>)" id="provider_next_week_button"><i class="fa fa-chevron-right"></i></a></th>
+								</tr>
 								<tr>
 									<th></th>
 									<th>Sunday</th>
@@ -132,17 +137,17 @@
 									<th>Saturday</th>
 								</tr>
 							</thead>
-							<tbody>
+							<tbody id="provider_weekly_schedule_desktop">
 								<% (6..20).each do |i| %>
 									<tr>
 										<td rowspan="2"><%= "#{i.to_s.rjust(2, '0')}:00" %></td>
 										<% (0..6).each do |j| %>
-											<td id="<%= "#{j}_#{i.to_s.rjust(2, '0')}_00" %>" class="<%= current_provider.time_is_available("#{j}_#{i.to_s.rjust(2, '0')}_00") ? "schedule-on info" : "schedule-off" %>" OnClick="switchProviderTimeAvailability(<%= current_provider.id %>, '<%= "#{j}_#{i.to_s.rjust(2, '0')}_00" %>');"></td>
+											<td id="<%= "#{Time.now.strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_00" %>" class="<%= current_provider.time_unavailable("#{Time.now.strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_00") ? "schedule-blocked danger" : "schedule-free" %>" OnClick="switchProviderTimeAvailability(<%= current_provider.id %>, '<%= "#{Time.now.strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_00" %>');"></td>
 										<% end %>
 									</tr>
 									<tr>
 										<% (0..6).each do |j| %>
-											<td id="<%= "#{j}_#{i.to_s.rjust(2, '0')}_30" %>" class="<%= current_provider.time_is_available("#{j}_#{i.to_s.rjust(2, '0')}_30") ? "schedule-on info" : "schedule-off" %>" OnClick="switchProviderTimeAvailability(<%= current_provider.id %>, '<%= "#{j}_#{i.to_s.rjust(2, '0')}_30" %>');"></td>
+											<td id="<%= "#{Time.now.strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_30" %>" class="<%= current_provider.time_unavailable("#{Time.now.strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_30") ? "schedule-blocked danger" : "schedule-free" %>" OnClick="switchProviderTimeAvailability(<%= current_provider.id %>, '<%= "#{Time.now.strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_30" %>');"></td>
 										<% end %>
 									</tr>
 								<% end %>

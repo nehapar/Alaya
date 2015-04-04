@@ -1,10 +1,9 @@
 <% provide(:title, @provider.first_name + " " + @provider.last_name) %>
   <!--=== Profile ===-->
   <div class="profile">	
-  	
-  	
+		
   	<% if !signed_in? or is_admin?  %>
-	  	<div class="container">
+	  	<div class="container-fluid">
 	  		<br>
 	  		<div class="row">
 	        <div class="col-md-12">
@@ -20,50 +19,11 @@
   	<% end %>
   	
     
-    <div class="container content">
-    	<div class="row">
-        <div class="col-md-12">
-          <!--Profile Body-->
-          
-          <div class="profile-body">
-            <div class="profile-bio">
-              <div class="row">
-								<% if !@provider.picture_path.nil? %>
-									<div class="col-sm-5 col-md-5">
-										<img class="img-responsive md-margin-bottom-10" src="<%= @provider.picture_path %>" alt="<%= @provider.first_name %> - <%= @provider.expertise %>">
-									</div>
-									<div class="col-sm-7 col-md-7">
-										<h1><%= @provider.first_name %> <%= @provider.last_name %></h1>
-										<h2><%= @provider.expertise %></h2>
-										<hr>
-										<p> </p>
-									</div>
-								<% else %>
-									<div class="col-sm-12 col-md-12">
-										<h1><%= @provider.first_name %> <%= @provider.last_name %></h1>
-										<h2><%= @provider.expertise %></h2>
-										<hr>
-										<p> </p>
-									</div>
-								<% end %>
-              </div>  
-            </div><!--/end row-->
-                      
-            <div class="clearfix margin-bottom-30"></div>
-            
-            <!-- Therapist Bio -->
-            <% if !@provider.about.nil?  %>
-							<div class="shadow-wrapper">
-								<div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
-									<h2>About</h2>
-									<p><%= simple_format(@provider.about, class: 'paragraph_bottom') %></p> 
-								</div>
-							</div>
-            <% end %>
-						<!-- Therapist Bio -->
-						
-						<!-- Appointment -->          
-            <div class="panel panel-profile">
+    <div class="container-fluid content">
+    	<div class="row profile-body">
+    		<div class="col-md-6 col-md-offset-0 col-md-push-6 col-sm-6 col-sm-offset-0 col-sm-push-6 col-xs-12 col-xs-offset-0" id="calendar_column">
+        	<!-- Appointment -->          
+            <div class="panel panel-profile" id="booking_calendar">
               <div class="panel-heading overflow-h">
                 <h2 class="panel-title heading-sm pull-left"><i class="fa fa-calendar"></i>Schedule an Appointment</h2>
               </div>
@@ -90,6 +50,7 @@
                           <input type="hidden" name="c_client_complete" id="c_client_complete" value="0">
                         <% end %>
                         
+                        <input type="hidden" name="appointment_type" id="appointment_type" value="-1">
                         <input type="hidden" name="c_provider_id" id="c_provider_id" value="<%= @provider.id %>">
                         <input type="hidden" name="c_provider_first_name" id="c_provider_first_name" value="<%= @provider.first_name %>">
                         <input type="hidden" name="c_provider_last_name" id="c_provider_last_name" value="<%= @provider.last_name %>">
@@ -115,37 +76,8 @@
                   </div>
                   <br>
                   <div class="row">
-                    <div class="col-xs-12" id="schedules_container">
-                    	<script type="text/javascript">
-											  /*
-											  var poll;
-											  var timeout = 100;
-												var script = document.createElement('script');
-												script.type = 'text/javascript';
-												script.src = '/assets/javascripts/booking.js';
-												document.body.appendChild(script);
-												poll = function () {
-													setTimeout(function () {
-														timeout--;
-														if (typeof loadSchedule !== 'undefined') {
-															loadSchedule();
-														}
-														else if (timeout > 0) {
-															poll();
-														}
-														else {
-														// External library failed to load
-														}
-													}, 100);
-												};
-												poll();
-												*/
-											</script>
-                    	
-                    </div>
-                    <!--<div class="col-xs-4" id="schedule_descriptions"></div>-->
+                    <div class="col-xs-12" id="schedules_container"></div>
                   </div>
-                  
                   <div class="modal fade" id="schedules_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                       <div class="modal-content">
@@ -170,174 +102,203 @@
               </div>
             </div>
             <!-- End Appointment -->
+    		</div>
+    		
+    		<div class="col-md-6 col-md-offset-0 col-md-pull-6 col-sm-6 col-sm-offset-0 col-sm-pull-6 col-xs-12 col-xs-offset-0" id="profile_column">
+          <div class="profile-bio">
+            <div class="row">
+							<div class="col-sm-5 col-md-5">
+								<% if @provider.picture_path.present? %> 
+									<img class="img-responsive md-margin-bottom-10" src="<%= @provider.picture_path %>" alt="<%= @provider.first_name %> - <%= @provider.expertise %>">
+								<% else %>
+									<img class="img-responsive md-margin-bottom-10" src="../assets/img/profile_pic/provider_without_picture.png">
+								<% end %>
+							</div>
+							<div class="col-sm-7 col-md-7">
+								<h1><%= @provider.first_name %> <%= @provider.last_name %></h1>
+								<h2><%= @provider.expertise %></h2>
+								<hr>
+								<p> </p>
+							</div>
+							
+            </div>  
+          </div><!--/end row-->
+                    
+          <div class="clearfix margin-bottom-30"></div>
+          
+          <!-- Therapist Bio -->
+          <% if !@provider.about.nil?  %>
+						<div class="shadow-wrapper">
+							<div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
+								<h2>About</h2>
+								<p><%= simple_format(@provider.about, class: 'paragraph_bottom') %></p> 
+							</div>
+						</div>
+          <% end %>
+					<!-- Therapist Bio -->
+					
+					<!--Specialties-->
+					<% if @provider.specialties.length > 0 || !@provider.specialty_text.nil?  %>
+						<div class="panel panel-profile">
+							<div class="panel-heading overflow-h">
+								<h2 class="panel-title heading-sm pull-left"><i class="fa fa-briefcase"></i> Specialties</h2>
+							</div>
+							<div class="panel-body margin-bottom-40">
+								<p><%= simple_format(@provider.specialty_text, class: 'paragraph_bottom') %></p>
+								<div class="row">
+									<div class="col-sm-6">
+										<ul class="list-unstyled">
+											<% @provider.specialties.all.each_with_index do |specialty, index| %>
+												<% if index < (@provider.specialties.length / 2.0) %>
+													<li><i class="fa fa-check color-green"></i> <%= specialty.specialty %></li>
+												<% end %> 
+											<% end %>
+										</ul>
+									</div>
+									<div class="col-sm-6">
+										<ul class="list-unstyled">
+											<% @provider.specialties.all.each_with_index do |specialty, index| %>
+												<% if index >= (@provider.specialties.length / 2.0) %>
+													<li><i class="fa fa-check color-green"></i> <%= specialty.specialty %></li>
+												<% end %> 
+											<% end %>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+          <% end %>
+          <!--End Specialties -->
+          
+          <!--Services-->
+					<% if @provider.services.length > 0 || !@provider.service_text.nil?  %>
+						<div class="panel panel-profile">
+							<div class="panel-heading overflow-h">
+								<h2 class="panel-title heading-sm pull-left"><i class="fa fa-briefcase"></i> Services Offered</h2>
+							</div>
+							<div class="panel-body margin-bottom-40">
+								<p><%= simple_format(@provider.service_text, class: 'paragraph_bottom') %></p>
+								<div class="row">
+									<div class="col-sm-6">
+										<ul class="list-unstyled">
+											<% @provider.services.all.each_with_index do |service, index| %>
+												<% if index < (@provider.services.length / 2.0) %>
+													<li><i class="fa fa-check color-green"></i> <%= service.service %></li>
+												<% end %> 
+											<% end %>
+										</ul>
+									</div>
+									<div class="col-sm-6">
+										<ul class="list-unstyled">
+											<% @provider.services.all.each_with_index do |service, index| %>
+												<% if index >= (@provider.services.length / 2.0) %>
+													<li><i class="fa fa-check color-green"></i> <%= service.service %></li>
+												<% end %> 
+											<% end %>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+          <% end %>
+          <!--End Services -->
 
-						<!--Specialties-->
-						<% if @provider.specialties.length > 0 || !@provider.specialty_text.nil?  %>
-							<div class="panel panel-profile">
-								<div class="panel-heading overflow-h">
-									<h2 class="panel-title heading-sm pull-left"><i class="fa fa-briefcase"></i> Specialties</h2>
-								</div>
-								<div class="panel-body margin-bottom-40">
-									<p><%= simple_format(@provider.specialty_text, class: 'paragraph_bottom') %></p>
-									<div class="row">
-										<div class="col-sm-6">
-											<ul class="list-unstyled">
-												<% @provider.specialties.all.each_with_index do |specialty, index| %>
-													<% if index < (@provider.specialties.length / 2.0) %>
-														<li><i class="fa fa-check color-green"></i> <%= specialty.specialty %></li>
-													<% end %> 
-												<% end %>
-											</ul>
-										</div>
-										<div class="col-sm-6">
-											<ul class="list-unstyled">
-												<% @provider.specialties.all.each_with_index do |specialty, index| %>
-													<% if index >= (@provider.specialties.length / 2.0) %>
-														<li><i class="fa fa-check color-green"></i> <%= specialty.specialty %></li>
-													<% end %> 
-												<% end %>
-											</ul>
-										</div>
+          <!--Certifications-->
+          <% if @provider.certifications.length > 0 %>
+						<div class="panel panel-profile">
+							<div class="panel-heading overflow-h">
+								<h2 class="panel-title heading-sm pull-left"><i class="fa fa-graduation-cap"></i>Certifications</h2>
+							</div>
+							<div class="panel-body margin-bottom-40">
+								<p><p>
+								<div class="row">
+									<div class="col-sm-6">
+										<ul class="list-unstyled">
+											<% @provider.certifications.all.each_with_index do |certification, index| %>
+												<% if index < (@provider.certifications.length / 2.0) %>
+													<li><i class="fa fa-check color-green"></i> <%= certification.certification %></li>
+												<% end %> 
+											<% end %>
+										</ul>
+									</div>
+									<div class="col-sm-6">
+										<ul class="list-unstyled">
+											<% @provider.certifications.all.each_with_index do |certification, index| %>
+												<% if index >= (@provider.certifications.length / 2.0) %>
+													<li><i class="fa fa-check color-green"></i> <%= certification.certification %></li>
+												<% end %> 
+											<% end %>
+										</ul>
 									</div>
 								</div>
 							</div>
-            <% end %>
-            <!--End Specialties -->
-            
-            <!--Services-->
-						<% if @provider.services.length > 0 || !@provider.service_text.nil?  %>
-							<div class="panel panel-profile">
-								<div class="panel-heading overflow-h">
-									<h2 class="panel-title heading-sm pull-left"><i class="fa fa-briefcase"></i> Services Offered</h2>
-								</div>
-								<div class="panel-body margin-bottom-40">
-									<p><%= simple_format(@provider.service_text, class: 'paragraph_bottom') %></p>
-									<div class="row">
-										<div class="col-sm-6">
-											<ul class="list-unstyled">
-												<% @provider.services.all.each_with_index do |service, index| %>
-													<% if index < (@provider.services.length / 2.0) %>
-														<li><i class="fa fa-check color-green"></i> <%= service.service %></li>
-													<% end %> 
-												<% end %>
-											</ul>
-										</div>
-										<div class="col-sm-6">
-											<ul class="list-unstyled">
-												<% @provider.services.all.each_with_index do |service, index| %>
-													<% if index >= (@provider.services.length / 2.0) %>
-														<li><i class="fa fa-check color-green"></i> <%= service.service %></li>
-													<% end %> 
-												<% end %>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-            <% end %>
-            <!--End Services -->
+						</div>
+					<% end %>
+          <!--End Certifications-->
 
-            <!--Certifications-->
-            <% if @provider.certifications.length > 0 %>
-							<div class="panel panel-profile">
-								<div class="panel-heading overflow-h">
-									<h2 class="panel-title heading-sm pull-left"><i class="fa fa-graduation-cap"></i>Certifications</h2>
-								</div>
-								<div class="panel-body margin-bottom-40">
-									<p><p>
-									<div class="row">
-										<div class="col-sm-6">
-											<ul class="list-unstyled">
-												<% @provider.certifications.all.each_with_index do |certification, index| %>
-													<% if index < (@provider.certifications.length / 2.0) %>
-														<li><i class="fa fa-check color-green"></i> <%= certification.certification %></li>
-													<% end %> 
-												<% end %>
-											</ul>
-										</div>
-										<div class="col-sm-6">
-											<ul class="list-unstyled">
-												<% @provider.certifications.all.each_with_index do |certification, index| %>
-													<% if index >= (@provider.certifications.length / 2.0) %>
-														<li><i class="fa fa-check color-green"></i> <%= certification.certification %></li>
-													<% end %> 
-												<% end %>
-											</ul>
-										</div>
+          <!--Areas-->
+          <% if @provider.areas.length > 0 %>
+						<div class="panel panel-profile">
+							<div class="panel-heading overflow-h">
+								<h2 class="panel-title heading-sm pull-left"><i class="fa fa-map-marker"></i>Areas Served</h2>
+							</div>
+							<div class="panel-body margin-bottom-40">
+								<p></p>
+								<div class="row">
+									<div class="col-sm-6">
+										<ul class="list-unstyled">
+											<% @provider.areas.all.each_with_index do |area, index| %>
+												<% if index < (@provider.areas.length / 2.0) %>
+													<li><i class="fa fa-check color-green"></i> <%= area.area %></li>
+												<% end %> 
+											<% end %>
+										</ul>
+									</div>
+									<div class="col-sm-6">
+										<ul class="list-unstyled">
+											<% @provider.areas.all.each_with_index do |area, index| %>
+												<% if index >= (@provider.areas.length / 2.0) %>
+													<li><i class="fa fa-check color-green"></i> <%= area.area %></li>
+												<% end %> 
+											<% end %>
+										</ul>
 									</div>
 								</div>
 							</div>
-						<% end %>
-            <!--End Certifications-->
+						</div>
+          <% end %>
+          <!--End Areas-->
 
-            <!--Areas-->
-            <% if @provider.areas.length > 0 %>
-							<div class="panel panel-profile">
-								<div class="panel-heading overflow-h">
-									<h2 class="panel-title heading-sm pull-left"><i class="fa fa-map-marker"></i>Areas Served</h2>
-								</div>
-								<div class="panel-body margin-bottom-40">
-									<p></p>
-									<div class="row">
-										<div class="col-sm-6">
-											<ul class="list-unstyled">
-												<% @provider.areas.all.each_with_index do |area, index| %>
-													<% if index < (@provider.areas.length / 2.0) %>
-														<li><i class="fa fa-check color-green"></i> <%= area.area %></li>
-													<% end %> 
-												<% end %>
-											</ul>
-										</div>
-										<div class="col-sm-6">
-											<ul class="list-unstyled">
-												<% @provider.areas.all.each_with_index do |area, index| %>
-													<% if index >= (@provider.areas.length / 2.0) %>
-														<li><i class="fa fa-check color-green"></i> <%= area.area %></li>
-													<% end %> 
-												<% end %>
-											</ul>
-										</div>
-									</div>
+          <!--Payment & Policies-->
+          <% if !@provider.policies.nil? %>
+						<div class="panel panel-profile">
+							<div class="panel-heading overflow-h">
+								<h2 class="panel-title heading-sm pull-left"><i class="fa fa-briefcase"></i>Payment & Policies</h2>
+							</div>
+							<div class="panel-body margin-bottom-40">
+								<p><%= simple_format(@provider.policies, class: 'paragraph_bottom') %></p>
 								</div>
 							</div>
-            <% end %>
-            <!--End Areas-->
-
-            <!--Payment & Policies-->
-            <% if !@provider.policies.nil? %>
-							<div class="panel panel-profile">
-								<div class="panel-heading overflow-h">
-									<h2 class="panel-title heading-sm pull-left"><i class="fa fa-briefcase"></i>Payment & Policies</h2>
-								</div>
-								<div class="panel-body margin-bottom-40">
-									<p><%= simple_format(@provider.policies, class: 'paragraph_bottom') %></p>
-									</div>
-								</div>
+          <% end %>
+          <!--End Payment & Policies-->
+          
+          <!-- Review -->
+          <% if @provider.reviews.length > 0 %>
+						<div class="shadow-wrapper">
+							<div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
+								<center><h2>Reviews</h2></center>
+								<% @provider.reviews.all.each_with_index do |review, index| %>
+									<blockquote>
+										<%= simple_format("\"" + review.review + "\"", class: 'paragraph_bottom') %>
+										<footer><%= review.author %></footer>
+									</blockquote>
+								<% end %>
 							</div>
-            <% end %>
-            <!--End Payment & Policies-->
-            
-            
-            <!-- Review -->
-            <% if @provider.reviews.length > 0 %>
-							<div class="shadow-wrapper">
-								<div class="tag-box tag-box-v1 box-shadow shadow-effect-2">
-									<center><h2>Reviews</h2></center>
-									<% @provider.reviews.all.each_with_index do |review, index| %>
-										<blockquote>
-											<%= simple_format("\"" + review.review + "\"", class: 'paragraph_bottom') %>
-											<footer><%= review.author %></footer>
-										</blockquote>
-									<% end %>
-								</div>
-							</div>
-            <% end %>
-            <!-- End Review -->
-            
-          </div>
-          <!--End Profile Body-->
+						</div>
+          <% end %>
+          <!-- End Review -->    
         </div>
       </div><!--/end row-->
     </div><!--/container-->  
-  </div>		
+  </div>	
   <!--=== End Profile ===-->

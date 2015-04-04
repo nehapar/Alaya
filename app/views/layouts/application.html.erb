@@ -74,6 +74,11 @@
                               <i class="fa fa-home"></i>&nbsp;Admin home
                             <% end %>
                           </li>
+                          <li>
+                            <%= link_to signup_path do %>
+                              <i class="fa fa-plus"></i>&nbsp;Add Provider
+                            <% end %>
+                          </li>
                         <% else %>
                           <li>
                             <%= link_to provider_dashboard_path do %>
@@ -353,12 +358,15 @@
       <div class="modal fade" id="signinModal" tabindex="-1" role="dialog" aria-labelledby="signinModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="myModalLabel">Sign In</h4>
-            </div>
             <%= form_for(:session, url: sessions_path) do |f| %>
               <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <div class="row">
+                  <div class="col-md-10 col-md-offset-1">
+                    <div class="headline"><h2>Sign In</h2></div>
+                  </div>           
+                </div>
+                
                 <div id="signin_alert_message"></div>
                 <div class="row">
                   <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">
@@ -385,14 +393,17 @@
                 <br>
                 <div class="row">
                   <div class="col-md-10 col-md-offset-1">
-                    <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#signupModal" class="pull-left">Don't you have an account?</a>
-                    <!--<%= link_to "Don't you have an account?", csignup_path, class: "pull-left" %>--></1-->
+                    <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#signupModal" class="pull-left">Don't have an account?</a>
                     <%= link_to "Forgot your password?", password_recovery_path, class: "pull-right" %>
                   </div>
                 </div>
-              </div>
-              <div class="modal-footer">
-                <%= f.submit "Sign In", class: "btn-u", onclick: "return validateSign()", :data => { :valid_signin => 'somevalue' } %>
+                <br>
+                <div class="row">
+                  <div class="col-md-10 col-md-offset-1" align="center">
+                    <%= f.submit "Sign In", class: "btn-u", onclick: "return validateSign()", :data => { :valid_signin => 'somevalue' } %>
+                  </div>                
+                </div>
+                <br>
               </div>
             <% end %>
           </div>
@@ -400,7 +411,7 @@
       </div>
       
       <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-body">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -411,26 +422,32 @@
                     <div class="headline"><h2>Sign Up</h2></div>
                   </div>           
                 </div>
-                
                 <div class="row">
-                  <div class="col-md-10 col-md-offset-1">
+                  <div class="col-md-6 col-md-offset-3">
                     <%= f.label :email %>&nbsp;<i class="fa fa-asterisk"></i>
                     <%= f.text_field :email, class: "form-control", placeholder: "Email", required: "required" %>
                   </div>                
                 </div>
                 <br>
                 <div class="row margin-bottom-20">
-                  <div class="col-md-10 col-md-offset-1">
+                  <div class="col-md-6 col-md-offset-3">
                     <%= f.label :password %>&nbsp;<i class="fa fa-asterisk"></i>
                     <%= f.password_field :password, class: "form-control", placeholder: "Password", required: "required" %>
                   </div>
                 </div>
                 <br>
                 <div class="row">
-                  <div class="col-md-10 col-md-offset-1" align="center">
+                  <div class="col-md-6 col-md-offset-3" align="center">
                     <%= f.submit "Create my account", onclick: "return validateClientSignupPop()", class: "btn-u" %>
                   </div>                
                 </div>
+                <br>
+                <div class="row">
+                  <div class="col-md-10 col-md-offset-1">
+                    <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#signinModal" class="pull-center">Already have an account?</a>
+                  </div>
+                </div>
+                <br>
               <% end %>
             </div>  
           </div>
@@ -478,6 +495,16 @@
         //$("#signupFromSignModal").modal("show");
       <% end %>
     });
+    
+    
+    $(window).scroll(function(){
+      if($("#booking_calendar").val() !== undefined && !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))) {
+        var scrollTop = $(window).scrollTop();
+        if (scrollTop + $("#booking_calendar").height() < $('#profile_column').position().top + $('#profile_column').outerHeight(true) && scrollTop > $('#profile_column').position().top) {
+          $("#booking_calendar").css('margin-top', $(window).scrollTop() - 115);
+        }
+      }
+  	});
     </script>
     <!--[if lt IE 9]>
     <script src="assets/plugins/respond.js"></script>

@@ -2,14 +2,14 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.schedule-off {
+.schedule-free {
 	cursor: pointer;
 	
+}
+
+.schedule-blocked {
+	cursor: pointer;
 	&:hover {
 		background-color: #5bc0de;
 	}
-}
-
-.schedule-on {
-	cursor: pointer;
 }

@@ -42,7 +42,7 @@ CareForMe::Application.routes.draw do
   
   # providers
   
-  match 'update_provider_information', :to => 'providers#update_provider_information_ajax', via: 'get'
+  match 'update_provider_information', :to => 'providers#update_provider_information_ajax', via: 'post'
   match 'provider_simple_info', :to => 'providers#provider_simple_info_ajax', via: 'get'
   match 'profile_list', :to => 'providers#profile_list', via: 'get'
   match 'profile_detail', :to => 'providers#profile_detail', via: 'get'

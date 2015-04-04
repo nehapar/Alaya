@@ -36,6 +36,12 @@ var showAppointmentDetail = function(appointment_id, type, past) {
               )
             ).append(
               $('<div/>').addClass('row').append(
+                $('<div/>').addClass('col-md-10 col-md-offset-1').append(
+                  $('<label/>').append('Appontment type')
+                ).append($('<br>')).append(appointment_types[data.appointment.appointment_type])
+              )
+            ).append($('<br>')).append(
+              $('<div/>').addClass('row').append(
                 $('<div/>').addClass('col-md-5 col-md-offset-1').append(
                   $('<label/>').append('Client')
                 ).append($('<br>')).append(data.client.first_name + " " + data.client.last_name)
@@ -116,6 +122,12 @@ var showAppointmentDetail = function(appointment_id, type, past) {
             });
             break;
           case 1:
+            content += "<div class=\"row\">";
+            content += "  <div class=\"col-md-10 col-md-offset-1\">";
+            content += "    <label>Appointment type:</label> " + appointment_types[data.appointment.appointment_type];
+            content += "  </div>";
+            content += "</div>";
+            
             content += "<div class=\"row\">";
             content += "  <div class=\"col-md-5 col-md-offset-1\">";
             content += "    <label>Client:</label> " + data.client.first_name + " " + data.client.last_name;
@@ -741,23 +753,25 @@ var saveEditProvider = function() {
 	dataToSend["provider[about]"] = $("#provider_about").val();
 	dataToSend["provider[abstract]"] = $("#provider_abstract").val();
 	
+	var formData = new FormData();
+	formData.append("provider_id", $("#provider_id").val());
+	formData.append("provider[first_name]", $("#provider_first_name").val());
+	formData.append("provider[last_name]", $("#provider_last_name").val());
+	formData.append("provider[email]", $("#provider_email").val());
+	formData.append("provider[phone]", $("#provider_phone").val());
+	formData.append("provider[expertise]", $("#provider_expertise").val());
+	formData.append("provider[about]", $("#provider_about").val());
+	formData.append("provider[abstract]", $("#provider_abstract").val());
 	
 	if (!$("#provider_first_name").prop("disabled") && validateProviderUpdateInfoShort()) {
 		$.ajax({
-			type: 'GET',
+			type: 'post',
 			url: '/update_provider_information',
-			dataType: "json",
-			data: {
-				'provider_id': $("#provider_id").val(),
-				'provider[first_name]': $("#provider_first_name").val(),
-				'provider[last_name]': $("#provider_last_name").val(),
-				'provider[email]': $("#provider_email").val(),
-				'provider[phone]': $("#provider_phone").val(),
-				'provider[expertise]': $("#provider_expertise").val(),
-				'provider[about]': $("#provider_about").val(),
-				'provider[abstract]': $("#provider_abstract").val()
-				
-			},
+			data: formData,
+			async: false,
+			cache: false,
+			contentType: false,
+			processData: false,
 			success: function(data) {
 				if (data.status == "success") {
 					enableEditProvider();
@@ -995,21 +1009,28 @@ var switchProviderTimeAvailability = function(provider_id, cell_id) {
   var prev = prevTimeCellID(cell_id);
   
   var prev_prev = prevTimeCellID(prevTimeCellID(cell_id));
-  if ($("#" + cell_id).hasClass("schedule-off")) {
-    $("#" + cell_id).removeClass("schedule-off");
-    $("#" + cell_id).addClass("schedule-on").addClass("info");
-    $("#" + next).removeClass("schedule-off");
-    $("#" + next).addClass("schedule-on").addClass("info");
+  var next_next = nextTimeCellID(nextTimeCellID(cell_id));
+  
+  if ($("#" + cell_id).hasClass("schedule-free")) {
+    
+    $("#" + cell_id).removeClass("schedule-free");
+    $("#" + cell_id).addClass("schedule-blocked").addClass("danger");
+    
+    if ($("#" + next_next).hasClass("schedule-blocked")) {
+      $("#" + next).removeClass("schedule-free");
+      $("#" + next).addClass("schedule-blocked").addClass("danger");
+    }
+    if ($("#" + prev_prev).hasClass("schedule-blocked")) {
+      $("#" + prev).removeClass("schedule-free");
+      $("#" + prev).addClass("schedule-blocked").addClass("danger");
+    }
   } 
   else {
-    $("#" + cell_id).addClass("schedule-off");
-    $("#" + cell_id).removeClass("schedule-on").removeClass("info");
-    $("#" + next).addClass("schedule-off");
-    $("#" + next).removeClass("schedule-on").removeClass("info");
-    if (!$("#" + prev_prev).hasClass("schedule-on")) {
-      $("#" + prev).addClass("schedule-off");
-      $("#" + prev).removeClass("schedule-on").removeClass("info");
-    }
+    $("#" + cell_id).addClass("schedule-free");
+    $("#" + cell_id).removeClass("schedule-blocked").removeClass("danger");
+    
+    $("#" + next).addClass("schedule-free");
+    $("#" + next).removeClass("schedule-blocked").removeClass("danger");
   }
   $.ajax({
 		type: 'GET',
@@ -1036,11 +1057,11 @@ var switchProviderTimeAvailability = function(provider_id, cell_id) {
 };
 
 /**
- * for an entry ID_HH_MM
+ * for an entry YYYY_MM_DD_ID_HH_MM
  * it return the ID of half hour before
  * 
- * For 1_13_30, it returns 1_13_00
- * For 1_13_00, it returns 1_12_30
+ * For 2015_04_03_1_13_30, it returns 2015_04_03_1_13_00
+ * For 2015_04_03_1_13_00, it returns 2015_04_03_1_12_30
  * 
  * @params: [id] the id of a cell to get the id of the cell before
  * 
@@ -1049,21 +1070,22 @@ var switchProviderTimeAvailability = function(provider_id, cell_id) {
  */
 var prevTimeCellID = function(id) {
   var parts = id.split("_");
-  var hour = parseInt(parts[1], 10);
-  var minutes = parseInt(parts[2], 10);
+  var minutes = parseInt(parts.pop(), 10);
+  var hour = parseInt(parts.pop(), 10);
+  
   hour = minutes == 0 ? hour - 1 : hour;
   hour = hour >= 10 ? hour.toString() : "0" + hour.toString();
   minutes = minutes == 0 ? 30 : 0;
   minutes = minutes >= 10 ? minutes.toString() : "0" + minutes.toString();
-  return parts[0] + "_" + hour + "_" + minutes;
+  return parts.join('_') + "_" + hour + "_" + minutes;
 };
 
 /**
- * for an entry ID_HH_MM
+ * for an entry YYYY_MM_DD_ID_HH_MM
  * it return the ID of half hour after
  * 
- * For 1_13_30, it returns 1_14_00
- * For 1_13_00, it returns 1_13_30
+ * For 2015_04_03_1_13_30, it returns 2015_04_03_1_14_00
+ * For 2015_04_03_1_13_00, it returns 2015_04_03_1_13_30
  * 
  * @params: [id] the id of a cell to get the id of the cell after
  * 
@@ -1072,11 +1094,131 @@ var prevTimeCellID = function(id) {
  */
 var nextTimeCellID = function(id) {
   var parts = id.split("_");
-  var hour = parseInt(parts[1], 10);
-  var minutes = parseInt(parts[2], 10);
+  var minutes = parseInt(parts.pop(), 10);
+  var hour = parseInt(parts.pop(), 10);
+  
   hour = minutes == 0 ? hour : hour + 1;
   hour = hour >= 10 ? hour.toString() : "0" + hour.toString();
   minutes = minutes == 0 ? 30 : 0;
   minutes = minutes >= 10 ? minutes.toString() : "0" + minutes.toString();
-  return parts[0] + "_" + hour + "_" + minutes;
+  return parts.join('_') + "_" + hour + "_" + minutes;
+};
+
+/**
+ * this function should replace the current provider's schedule been
+ * shown by its next orprevious week
+ * 
+ * @params: [week] next week number (1..54)
+ *          [year] the year
+ * 
+ * @author: Thiago Melo
+ * @version: 2015-04-03
+ */
+var weekProviderSchedule = function(week, year, provider_id) {
+  // erase the current desktop
+  var provider_weekly_schedule_desktop = $('#provider_weekly_schedule_desktop').empty();
+  // get date of first week's day
+  var first_day = firstDayOfWeek(year, week);
+  var i, j;
+  for (i = 6; i < 21; i++) {
+    var first_row = $('<tr/>').append($('<td/>').prop('rowspan', '2').append((i > 9 ? '' : '0') + i.toString() + ':00'));
+    var second_row = $('<tr/>');
+    var other_day = first_day;
+    for (j = 0; j < 7; j++) {
+      var time_id = [];
+      time_id.push(other_day.getUTCFullYear());
+      time_id.push(other_day.getUTCMonth() + 1);
+      time_id.push(other_day.getUTCDate());
+      time_id.push(j);
+      time_id.push((i > 9 ? '' : '0') + i.toString());
+      var time_id_f = time_id.join('_') + '_00';
+      var time_id_s = time_id.join('_') + '_30';
+      first_row.append(
+        $('<td/>').addClass('').prop('id', time_id_f).click(function() {
+          switchProviderTimeAvailability(provider_id, time_id_f);
+        })
+      );
+      second_row.append(
+        $('<td/>').addClass('').prop('id', time_id_s).click(function() {
+          switchProviderTimeAvailability(provider_id, time_id_s);
+        })
+      );
+      other_day.setDate(other_day.getDate() + 1);
+    }
+    provider_weekly_schedule_desktop.append(first_row).append(second_row);
+  }
+  $('#provider_prev_week_button').empty().append($('<i/>').addClass('fa fa-chevron-left')).click(function() {
+    weekProviderSchedule(week - 1, year, provider_id);
+  });
+  $('#provider_next_week_button').empty().append($('<i/>').addClass('fa fa-chevron-right')).click(function() {
+    weekProviderSchedule(week + 1, year, provider_id);
+  });
+  $('#provider_month_year_display').empty().append(monthName(first_day.getUTCMonth() + 1) + ' ' + year.toString());
+};
+
+/**
+ * this function receives a week number and the year and returns
+ * the date of the first day of this week
+ * 
+ * @params: [week] prev week number (1..54)
+ *          [year] the year 
+ * 
+ * @author: http://stackoverflow.com/questions/7580824/how-to-convert-a-week-number-to-a-date-in-javascript
+ * @version: 2015-04-03
+ */
+var firstDayOfWeek = function(year, week) {
+
+    // Jan 1 of 'year'
+    var d = new Date(year, 0, 1),
+        offset = d.getTimezoneOffset();
+
+    // ISO: week 1 is the one with the year's first Thursday 
+    // so nearest Thursday: current date + 4 - current day number
+    // Sunday is converted from 0 to 7
+    d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+
+    // 7 days * (week - overlapping first week)
+    d.setTime(d.getTime() + 7 * 24 * 60 * 60 * 1000 
+        * (week + (year == d.getFullYear() ? -1 : 0 )));
+
+    // daylight savings fix
+    d.setTime(d.getTime() 
+        + (d.getTimezoneOffset() - offset) * 60 * 1000);
+
+    // back to Monday (from Thursday)
+    d.setDate(d.getDate() - 3);
+
+    return d;
+};
+
+/**
+ * month name (1..12)
+ */
+var monthName = function(month) {
+  switch (month) {
+    case 1:
+      return 'January';
+    case 2:
+      return 'February';
+    case 3:
+      return 'March';
+    case 4:
+      return 'April';
+    case 5:
+      return 'May';
+    case 6:
+      return 'June';
+    case 7:
+      return 'July';
+    case 8:
+      return 'August';
+    case 9:
+      return 'September';
+    case 10:
+      return 'October';
+    case 11:
+      return 'November';
+    case 12:
+      return 'December';
+  }
 };
