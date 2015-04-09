@@ -314,7 +314,8 @@ Weekly.prototype.print = function() {
 	
 	content = content + "<div class=\"table-responsive\">";
 	
-	content = content + "<div style=\"overflow: scroll; overflow-y: scroll; overflow-x: hidden;\">";
+	//content = content + "<div style=\"overflow: scroll; overflow-y: scroll; overflow-x: hidden;\">";
+	
 	content = content + "	<table class=\"table table-striped table-hover text-center table-bordered\">";
 	content = content + "		<thead>";
 	content = content + "			<tr>";
@@ -338,13 +339,13 @@ Weekly.prototype.print = function() {
 	
 	content = content + "			</tr>";
 	content = content + "		</thead>";
-	content = content + "  </table>";
+	//content = content + "  </table>";
 	
-	content = content + "</div>";
+	//content = content + "</div>";
 	
-	content = content + "<div style=\"overflow: scroll; overflow-y: auto; overflow-x: hidden; max-height: 50vh; border-bottom: 1.0px solid #CCC\">";
+	//content = content + "<div style=\"overflow: scroll; overflow-y: auto; overflow-x: hidden; max-height: 50vh; border-bottom: 1.0px solid #CCC\">";
 	
-	content = content + "	<table class=\"table table-striped table-hover text-center table-bordered\">";
+	//content = content + "	<table class=\"table table-striped table-hover text-center table-bordered\">";
 	
 	
 	content = content + "		<tbody>";
@@ -432,7 +433,7 @@ Weekly.prototype.print = function() {
 	content = content + "		</tbody>";
 	content = content + "	</table>";
 	
-	content = content + "</div>";
+	//content = content + "</div>";
 	
 	content = content + "</div>";
 	
