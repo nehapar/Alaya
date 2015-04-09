@@ -35,11 +35,12 @@
                       <form id="schedules_periodicity" action="#" method="post">
                         <% if csigned_in? %>
                           <input type="hidden" name="c_client_id" id="c_client_id" value="<%= current_client.id %>">
+                          <input type="hidden" name="c_client_info_filled" id="c_client_info_filled" value="0">
                           <input type="hidden" name="c_client_first_name" id="c_client_first_name" value="<%= current_client.first_name %>">
                           <input type="hidden" name="c_client_last_name" id="c_client_last_name" value="<%= current_client.last_name %>">
                           <input type="hidden" name="c_client_address" id="c_client_address" value="<%= current_client.address %>">
-                          <input type="hidden" name="c_client_address" id="c_client_phone" value="<%= current_client.phone %>">
-                          <input type="hidden" name="c_client_address" id="c_client_weeks_pregnant" value="<%= current_client.weeks_pregnant %>">
+                          <input type="hidden" name="c_client_phone" id="c_client_phone" value="<%= current_client.phone %>">
+                          <input type="hidden" name="c_client_weeks_pregnant" id="c_client_weeks_pregnant" value="<%= current_client.weeks_pregnant %>">
                           <% if current_client.complete? %>
                             <input type="hidden" name="c_client_complete" id="c_client_complete" value="1"> 
                           <% else %>
@@ -48,6 +49,13 @@
                         <% else %>
                           <input type="hidden" name="c_client_id" id="c_client_id" value="0">
                           <input type="hidden" name="c_client_complete" id="c_client_complete" value="0">
+                          <input type="hidden" name="c_client_info_filled" id="c_client_info_filled" value="0">
+                          <input type="hidden" name="c_client_first_name" id="c_client_first_name" value="">
+                          <input type="hidden" name="c_client_last_name" id="c_client_last_name" value="">
+                          <input type="hidden" name="c_client_address" id="c_client_address" value="">
+                          <input type="hidden" name="c_client_phone" id="c_client_phone" value="">
+                          <input type="hidden" name="c_client_weeks_pregnant" id="c_client_weeks_pregnant" value="">
+                          
                         <% end %>
                         
                         <input type="hidden" name="appointment_type" id="appointment_type" value="-1">

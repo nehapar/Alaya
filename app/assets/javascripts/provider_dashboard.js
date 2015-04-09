@@ -673,14 +673,26 @@ var reloadProviderAppointments = function() {
  */
 var selfChangeProviderPassword = function() {
 	clearMessage("top_page_message");
-	if (!validPassword($("#provider_old_password").val()) || !validPassword($("#provider_password").val()) || !validPassword($("#provider_password_confirmation").val()) || $("#provider_password").val() != $("#provider_password_confirmation").val()) {
+	
+	// validate password
+	if (!validPassword($("#provider_old_password").val()) || !validPassword($("#provider_password").val()) || !validPassword($("#provider_password_confirmation").val())) {
 		$("#provider_old_password").val("");
 		$("#provider_password_confirmation").val("");
 		$("#provider_password").val("");
 		$("#provider_password").focus();
-		alertMessage("top_page_message", "Invalid passwords. Password must be at least 6 characteres long.", "warning", false);
+		alertMessage("top_page_message", "Invalid passwords. Password must be at least 6 characters long.", "warning", false);
 		return;
 	}
+	
+	if ($("#provider_password").val() != $("#provider_password_confirmation").val()) {
+		$("#provider_old_password").val("");
+		$("#provider_password_confirmation").val("");
+		$("#provider_password").val("");
+		$("#provider_password").focus();
+		alertMessage("top_page_message", "Password don't match.", "warning", false);
+		return;
+	}
+	
 	$.ajax({
     type: 'GET',
     url: '/self_change_provider_password',
@@ -1012,7 +1024,6 @@ var switchProviderTimeAvailability = function(provider_id, cell_id) {
   var next_next = nextTimeCellID(nextTimeCellID(cell_id));
   
   if ($("#" + cell_id).hasClass("schedule-free")) {
-    
     $("#" + cell_id).removeClass("schedule-free");
     $("#" + cell_id).addClass("schedule-blocked").addClass("danger");
     
@@ -1028,7 +1039,6 @@ var switchProviderTimeAvailability = function(provider_id, cell_id) {
   else {
     $("#" + cell_id).addClass("schedule-free");
     $("#" + cell_id).removeClass("schedule-blocked").removeClass("danger");
-    
     $("#" + next).addClass("schedule-free");
     $("#" + next).removeClass("schedule-blocked").removeClass("danger");
   }
@@ -1038,7 +1048,7 @@ var switchProviderTimeAvailability = function(provider_id, cell_id) {
 		dataType: "json",
 		data: {
 			'provider_id': provider_id,
-			'time': cell_id
+			'timeid': cell_id
 		},
 		success: function(data) {
 			if (data.status == "success") {
@@ -1119,41 +1129,82 @@ var weekProviderSchedule = function(week, year, provider_id) {
   var provider_weekly_schedule_desktop = $('#provider_weekly_schedule_desktop').empty();
   // get date of first week's day
   var first_day = firstDayOfWeek(year, week);
-  var i, j;
-  for (i = 6; i < 21; i++) {
-    var first_row = $('<tr/>').append($('<td/>').prop('rowspan', '2').append((i > 9 ? '' : '0') + i.toString() + ':00'));
-    var second_row = $('<tr/>');
-    var other_day = first_day;
-    for (j = 0; j < 7; j++) {
-      var time_id = [];
-      time_id.push(other_day.getUTCFullYear());
-      time_id.push(other_day.getUTCMonth() + 1);
-      time_id.push(other_day.getUTCDate());
-      time_id.push(j);
-      time_id.push((i > 9 ? '' : '0') + i.toString());
-      var time_id_f = time_id.join('_') + '_00';
-      var time_id_s = time_id.join('_') + '_30';
-      first_row.append(
-        $('<td/>').addClass('').prop('id', time_id_f).click(function() {
-          switchProviderTimeAvailability(provider_id, time_id_f);
-        })
-      );
-      second_row.append(
-        $('<td/>').addClass('').prop('id', time_id_s).click(function() {
-          switchProviderTimeAvailability(provider_id, time_id_s);
-        })
-      );
-      other_day.setDate(other_day.getDate() + 1);
-    }
-    provider_weekly_schedule_desktop.append(first_row).append(second_row);
+  var last_day = new Date(first_day.getTime());
+  last_day.setDate(last_day.getDate() + 6);
+  
+  var possible_hours = [];
+  var possible_weekdays = [];
+  for (var i = 6; i < 21; i++) {
+    possible_hours.push(i);
   }
-  $('#provider_prev_week_button').empty().append($('<i/>').addClass('fa fa-chevron-left')).click(function() {
-    weekProviderSchedule(week - 1, year, provider_id);
-  });
-  $('#provider_next_week_button').empty().append($('<i/>').addClass('fa fa-chevron-right')).click(function() {
-    weekProviderSchedule(week + 1, year, provider_id);
-  });
-  $('#provider_month_year_display').empty().append(monthName(first_day.getUTCMonth() + 1) + ' ' + year.toString());
+  for (var j = 0; j < 7; j++) {
+    possible_weekdays.push(j);
+  }
+  
+  $.ajax({
+		type: 'GET',
+		url: '/provider_schedules_appointments',
+		dataType: "json",
+		data: {
+			'provider_id': provider_id,
+			'start': first_day.getTime(),
+			'end': last_day.getTime()
+		},
+		success: function(data) {
+			if (data.status == "success") {
+			  $.each(possible_hours, function(i_index, i) {
+		      var first_row = $('<tr/>').append($('<td/>').prop('rowspan', '2').append((i > 9 ? '' : '0') + i.toString() + ':00'));
+          var second_row = $('<tr/>');
+          var other_day = new Date(first_day.getTime());
+          $.each(possible_weekdays, function(j_index, j) {
+            var time_id = [];
+            time_id.push(other_day.getUTCFullYear());
+            time_id.push(other_day.getUTCMonth() + 1 > 9 ? other_day.getUTCMonth() + 1 : '0' + (other_day.getUTCMonth() + 1).toString());
+            time_id.push(other_day.getUTCDate() > 9 ? other_day.getUTCDate() : '0' + (other_day.getUTCDate()).toString());
+            time_id.push(j.toString());
+            time_id.push((i > 9 ? '' : '0') + i.toString());
+            var time_id_f = time_id.join('_') + '_00';
+            var time_id_s = time_id.join('_') + '_30';
+            
+            var f_available = true;
+            var s_available = true;
+            $.each(data.schedules, function(s_index, schedule) {
+              if (schedule.unavailable && schedule.timeid == time_id_f) {
+                f_available = false;
+              } else if (schedule.unavailable && schedule.timeid == time_id_s) {
+                s_available = false;
+              }
+            });
+            first_row.append(
+              $('<td/>').addClass(f_available ? "schedule-free" : "schedule-blocked danger").css('cursor', 'pointer').prop('id', time_id_f).on('click', function() {
+                switchProviderTimeAvailability(provider_id, time_id_f);
+              })
+            );
+            second_row.append(
+              $('<td/>').addClass(s_available ? "schedule-free" : "schedule-blocked danger").css('cursor', 'pointer').prop('id', time_id_s).on('click', function() {
+                switchProviderTimeAvailability(provider_id, time_id_s);
+              })
+            );
+            $('#weekday_' + j).empty().append((other_day.getUTCMonth() + 1) + '/' + other_day.getUTCDate());
+            other_day.setDate(other_day.getDate() + 1);
+          });
+          provider_weekly_schedule_desktop.append(first_row).append(second_row);  
+			  });
+			  
+        $('#provider_prev_week_button').prop('href', 'javascript: weekProviderSchedule(' + (week - 1) + ', ' + year + ', ' + provider_id + ')');
+        $('#provider_next_week_button').prop('href', 'javascript: weekProviderSchedule(' + (week + 1) + ', ' + year + ', ' + provider_id + ')');
+        $('#provider_month_year_display').empty().append(year);
+			}
+			else if (data.status == "fail") {
+				console.log("rapaz, voce ta fazendo merda em algum lugar ai...");
+			}
+		},
+		error: function(data) {
+			console.log("error");
+			console.log(data);
+			alertMessage("top_page_message", "Error, please contact us.", "danger", false);
+		}
+	});
 };
 
 /**
@@ -1185,8 +1236,8 @@ var firstDayOfWeek = function(year, week) {
     d.setTime(d.getTime() 
         + (d.getTimezoneOffset() - offset) * 60 * 1000);
 
-    // back to Monday (from Thursday)
-    d.setDate(d.getDate() - 3);
+    // back to Sunday (from Thursday)
+    d.setDate(d.getDate() - 4);
 
     return d;
 };

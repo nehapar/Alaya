@@ -409,9 +409,17 @@ Weekly.prototype.print = function() {
 				time_end.setHours(i, j + 15, 0, 0);
 				var onClick = "";
 				if (label[k] == "date_available") {
-					onClick = "onClick=\"requestAppointment(" + time_start.getTime() + ")\"";
+					onClick = "onClick=\"$('#appointment_type').val(-1);requestAppointment(" + time_start.getTime() + ")\"";
 				}
-				content = content + "			<td  style=\"width: 12.5%;\" id=\"" + k + "_" + (i < 10 ? "0" + i : i) + "_" + (j < 10 ? "0" + j : j) + "\" " + onClick + " class=\"" + label[k] + "\">";
+				
+				var time_id = [];
+				time_id.push(cur_day.getUTCFullYear());
+        time_id.push(cur_day.getUTCMonth() + 1 > 9 ? cur_day.getUTCMonth() + 1 : '0' + (cur_day.getUTCMonth() + 1).toString());
+        time_id.push(cur_day.getUTCDate() > 9 ? cur_day.getUTCDate() : '0' + (cur_day.getUTCDate()).toString());
+        time_id.push(k.toString());
+				
+				
+				content = content + "			<td  style=\"width: 12.5%;\" id=\"" + time_id.join("_") + "_" + (i < 10 ? "0" + i : i) + "_" + (j < 10 ? "0" + j : j) + "\" " + onClick + " class=\"" + label[k] + "\">";
 				content = content + "				";
 				content = content + "			</td>";
 				cur_day.setDate(cur_day.getDate() + 1);
@@ -445,38 +453,58 @@ Weekly.prototype.print = function() {
 var invalidNotAvailableSlots = function() {
 	var provider_id = $("#c_provider_id").val();
 	if (provider_id != "0") {
+		
+		var year = m_current_date.getFullYear();
+		var week = getWeekNumber(m_current_date)[1];
+		
+		var first_day = firstDayOfWeek(year, week);
+	  var last_day = new Date(first_day.getTime());
+	  last_day.setDate(last_day.getDate() + 6);
+	  
+		
 		$.ajax({
   		type: 'GET',
   		url: '/provider_time_availability',
   		dataType: "json",
   		data: {
-  			'provider_id': provider_id
+  			'provider_id': provider_id,
+  			'start': first_day.getTime(),
+				'end': last_day.getTime()
   		},
   		success: function(data) {
   			if (data.status == "success") {
+
   				var i, j;
 				  for (i = 6; i <= 20; i++) {
+				  	var other_day = new Date(first_day.getTime());
 				    for (j = 0; j < 7; j++) {
-				      var hour = i >= 10 ? i.toString() : "0" + i.toString();
-				      var cell_id_1 = j.toString() + "_" + hour + "_00";
-				      var cell_id_2 = j.toString() + "_" + hour + "_30";
-				      var available_1 = true;
+							var time_id = [];
+	            time_id.push(other_day.getUTCFullYear());
+	            time_id.push(other_day.getUTCMonth() + 1 > 9 ? other_day.getUTCMonth() + 1 : '0' + (other_day.getUTCMonth() + 1).toString());
+	            time_id.push(other_day.getUTCDate() > 9 ? other_day.getUTCDate() : '0' + (other_day.getUTCDate()).toString());
+	            time_id.push(j.toString());
+	            time_id.push((i > 9 ? '' : '0') + i.toString());
+	            var cell_id_1 = time_id.join('_') + '_00';
+	            var cell_id_2 = time_id.join('_') + '_30';		    	
+				    	var available_1 = true;
 				      var available_2 = true;
 				      
 				      $.each(data.slots_unavailable, function(index, slot) {
-						  	if (slot.time == cell_id_1) {
+						  	if (slot.timeid == cell_id_1) {
 						  		available_1 = false;
 						  	}
-						  	else if (slot.time == cell_id_2) {
+						  	else if (slot.timeid == cell_id_2) {
 						  		available_2 = false;
 						  	}
 						  });
+						  
 				      if (!available_1) {
-				      	$("#" + cell_id_1).removeClass("date_available").addClass("date_unavailable").off('click');;
+				      	$("#" + cell_id_1).removeClass("date_available").addClass("date_unavailable").attr('onclick','').unbind('click');
 				      }
 				      if (!available_2) {
-				      	$("#" + cell_id_2).removeClass("date_available").addClass("date_unavailable").off('click');;
+				      	$("#" + cell_id_2).removeClass("date_available").addClass("date_unavailable").attr('onclick','').unbind('click');
 				      }
+				      other_day.setDate(other_day.getDate() + 1);
 				    }
 				  }
   			}
@@ -506,7 +534,6 @@ function Daily(appointments, m_first_day, m_last_day, c_first_day, c_last_day) {
 Daily.prototype.print = function() {
 	var o_screen = new Screens();
 	var content = "";
-	var a_len = this.appointments.length;
 	var c_date = new Date(this.c_first_day.getFullYear(), this.c_first_day.getMonth(), this.c_first_day.getDate());
 	
 	content = content + "<div class=\"table-responsive\">";
@@ -522,7 +549,7 @@ Daily.prototype.print = function() {
 	content = content + "		</thead>";
 	content = content + "		<tbody>";
 	
-	for (i = 6; i < 22; i++) {
+	for (var i = 6; i < 22; i++) {
 		content = content + "		<tr>";
 		content = content + "			<td colspan=\"2\">";
 		content = content + "				" + (i < 10 ? "0" + i : i) + ":00";
@@ -566,7 +593,7 @@ var loadSchedule = function() {
 	}
 	m_current_date = m_current_date === undefined ? new Date() : m_current_date;
 	var provider_id = $("#c_provider_id").val();
-	var periodicity = parseInt($("input[name=periodicity]:checked", "#schedules_periodicity").val());
+	var periodicity = parseInt($("input[name=periodicity]:checked", "#schedules_periodicity").val(), 10);
 	switch (periodicity) {
 		case 1:
 			$("#periodicity_options").hide();
@@ -584,7 +611,7 @@ var loadSchedule = function() {
 
 var nextSchedule = function() {
 	var provider_id = $("#c_provider_id").val();
-	var periodicity = parseInt($("input[name=periodicity]:checked", "#schedules_periodicity").val());
+	var periodicity = parseInt($("input[name=periodicity]:checked", "#schedules_periodicity").val(), 10);
 	switch (periodicity) {
 		case 1:
 			m_current_date.setMonth(m_current_date.getMonth() + 1);
@@ -605,7 +632,7 @@ var nextSchedule = function() {
 
 var lastSchedule = function() {
 	var provider_id = $("#c_provider_id").val();
-	var periodicity = parseInt($("input[name=periodicity]:checked", "#schedules_periodicity").val());
+	var periodicity = parseInt($("input[name=periodicity]:checked", "#schedules_periodicity").val(), 10);
 	switch (periodicity) {
 		case 1:
 			m_current_date.setMonth(m_current_date.getMonth() - 1);
@@ -665,7 +692,7 @@ var requestAppointment = function(datetime) {
 	}
 	else if ($("#appointment_type").val() == -1) {
 		appointment_type = 0;
-		$("#appointment_type").val(0)
+		$("#appointment_type").val(0);
 		var appointment_types_options = $("<div/>");
 		
 		$.each(appointment_types, function(index, type) {
@@ -688,7 +715,7 @@ var requestAppointment = function(datetime) {
 			).append($("<p/>").append("Please choose the booking type:")).append(appointment_types_options)
 		);
 		
-		
+		$("#c_client_info_filled").val(0);
 		$("#schedules_modal_action").html("Continue");
 		$("#schedules_modal_action").attr("href", "javascript: requestAppointment(" + datetime + ");");
 	}
@@ -696,23 +723,40 @@ var requestAppointment = function(datetime) {
 		buildNonClientVersion(datetime);
 		return;
 	}
-	else if ($("#c_client_id").val() != "0" && $("#c_client_complete").val() == "0") {
+	else if ($("#c_client_id").val() != "0" && ($("#c_client_complete").val() == "0" || $("#c_client_info_filled").val() == "0")) {
+		
 		content = content + "        <div class=\"row margin-bottom-30\">";
 		content = content + "            <div class=\"col-md-10 col-md-offset-1 mb-margin-bottom-30\">";
 		content = content + "                <div class=\"headline\"><h2>Confirm personal information</h2></div>";
 		content = content + "                <p class=\"lead\">Please confirm your personal information in order to continue:<p>";
 		content = content + "                <form action=\"request_appointment_confirm_info\" method=\"post\">";
 		
-		content = content + "                    <div class=\"row margin-bottom-20\">";
-		content = content + "                        <div class=\"col-md-5 col-md-offset-1\">";
-		content = content + "                            <label for=\"first_name\">First name <i class=\"fa fa-asterisk\"></i></label>"; 
-		content = content + "                            <input type=\"text\" name=\"client[first_name]\" id=\"first_name\" class=\"form-control\" placeholder=\"First name\" value=\"" + $("#c_client_first_name").val() + "\" required>";
-		content = content + "                        </div>";
-		content = content + "                        <div class=\"col-md-5 col-md-offset-0\">";
-		content = content + "                            <label for=\"last_name\">Last name <i class=\"fa fa-asterisk\"></i></label>";
-		content = content + "                            <input type=\"text\" name=\"client[last_name]\" id=\"last_name\" class=\"form-control\" placeholder=\"Last name\" value=\"" + $("#c_client_last_name").val() + "\" required>";
-		content = content + "                        </div>";
-		content = content + "                    </div>";
+		
+		if ($("#c_client_first_name").val() == "" || $("#c_client_last_name").val() == "") {
+			content = content + "                    <div class=\"row margin-bottom-20\">";
+			content = content + "                        <div class=\"col-md-5 col-md-offset-1\">";
+			content = content + "                            <label for=\"first_name\">First name <i class=\"fa fa-asterisk\"></i></label>"; 
+			content = content + "                            <input type=\"text\" name=\"client[first_name]\" id=\"first_name\" class=\"form-control\" placeholder=\"First name\" value=\"" + $("#c_client_first_name").val() + "\" required>";
+			content = content + "                        </div>";
+			content = content + "                        <div class=\"col-md-5 col-md-offset-0\">";
+			content = content + "                            <label for=\"last_name\">Last name <i class=\"fa fa-asterisk\"></i></label>";
+			content = content + "                            <input type=\"text\" name=\"client[last_name]\" id=\"last_name\" class=\"form-control\" placeholder=\"Last name\" value=\"" + $("#c_client_last_name").val() + "\" required>";
+			content = content + "                        </div>";
+			content = content + "                    </div>";	
+		}
+		else {
+			content = content + "                    <div class=\"row margin-bottom-20\">";
+			content = content + "                        <div class=\"col-md-5 col-md-offset-1\">";
+			content = content + "                            <label for=\"first_name\">First name <i class=\"fa fa-asterisk\"></i></label>"; 
+			content = content + "                            <input type=\"text\" name=\"client[first_name]\" id=\"first_name\" class=\"form-control\" placeholder=\"First name\" value=\"" + $("#c_client_first_name").val() + "\" disabled required>";
+			content = content + "                        </div>";
+			content = content + "                        <div class=\"col-md-5 col-md-offset-0\">";
+			content = content + "                            <label for=\"last_name\">Last name <i class=\"fa fa-asterisk\"></i></label>";
+			content = content + "                            <input type=\"text\" name=\"client[last_name]\" id=\"last_name\" class=\"form-control\" placeholder=\"Last name\" value=\"" + $("#c_client_last_name").val() + "\" disabled required>";
+			content = content + "                        </div>";
+			content = content + "                    </div>";	
+		}
+		
 		
 		content = content + "                    <div class=\"row margin-bottom-20\">";
 		content = content + "                        <div class=\"col-md-10 col-md-offset-1\">";
@@ -734,42 +778,22 @@ var requestAppointment = function(datetime) {
 		content = content + "           </div>";
 		content = content + "        </div>";
 
-		$("#schedules_modal_action").html("Update Info");
+		$("#schedules_modal_action").html("Confirm Info");
 		$("#schedules_modal_action").attr("href", "javascript: updateInfo(" + datetime + ");");
 	}
 	else if ($("#c_client_id").val() != "0") {
 		$("#schedules_title").html("<h3>Booking Confirmation</h3>");
-		//$("#schedules_title").html("Message for " + $("#c_provider_first_name").val() + " " + $("#c_provider_last_name").val());
-		
-		
 		content = content + "        <div class=\"row margin-bottom-30\">";
 		content = content + "            <div class=\"col-md-10 col-md-offset-1 mb-margin-bottom-30\">";
-		//content = content + "                <div class=\"headline\"><h3>Booking Confirmation</h3></div>";
-	//	content = content + "                <p class=\"lead\">Please confirm your request for an appointment with "+ $("#c_provider_first_name").val() + " " + $("#c_provider_last_name").val() + "<p>";
-		content = content + "  					<p class=\"lead\">You are about to book an appointment with  "+ $("#c_provider_first_name").val() + " " + $("#c_provider_last_name").val() +"."+" "+  "Please confirm the below details:"  + "<p>";
-		//content = content + "                <blockquote>";
+		content = content + "  					<p class=\"lead\">You are about to book an appointment with  " + $("#c_provider_first_name").val() + " " + $("#c_provider_last_name").val() + ".<p>";
 		content = content + "       		   <p><strong>Date & Time:</strong> " +  m_current_date.getHours() + ":" + ("0" + m_current_date.getMinutes()).slice(-2) + (m_current_date.getHours() < 12 ? " AM" : " PM") + " on " + q_screens.month(m_current_date.getMonth() + 1) + " " + m_current_date.getDate() + "th, " + m_current_date.getFullYear() +" </p>";
-		//content = content + "           	   <p><strong>Time:</strong> " +  </p>";
 		content = content + "           	   <p><strong>Location:</strong> " +  $("#c_client_address").val() + "</p>";	
-		
-		//content = content + "                	<p class=\"lead\">" + $("#c_provider_first_name").val() + " " + $("#c_provider_last_name").val() + "</p>";
-		//content = content + "                	<footer>" + $("#c_provider_expertise").val() + "</footer>";
-		//content = content + "                </blockquote>";
-
 		content = content + "                <form action=\"request_appointment\" method=\"post\">";
-		
 		content = content + "                    <div class=\"row margin-bottom-20\">";
 		content = content + "                        <div class=\"col-md-12 col-md-offset-0\">";
-	//	content = content + "                            <label for=\"client_observation\">Please, feel free to let us know about whatever detail that you wish.</label>";
 		content = content + "                            <textarea name=\"client_observation\" id=\"client_observation\" rows=4 class=\"form-control\" placeholder=\"Don't forget to mention your special requests to " + $("#c_provider_first_name").val() + "\"></textarea>";
 		content = content + "                        </div>";
 		content = content + "                    </div>";
-
-		//content = content + "					<div class=\"checkbox\">";
-	    //content = content + "						<label>";
-	    //content = content + "							<input id=\"send_confirmation\" type=\"checkbox\" checked> Send me an email confirmation.";
-	    //content = content + "						</label>";
-	    //content = content + "					</div>";
 		content = content + "               </form>";
 		content = content + "           </div>";
 		content = content + "        </div>";
@@ -785,7 +809,7 @@ var requestAppointment = function(datetime) {
 		content = content + "               </div>";
 		content = content + "            	<div class=\"headline\"><h2>Sign In</h2></div>";
 		content = content + "                <form action=\"request_appointment_signin\" method=\"post\">";
-		content = content + "					<div class=\"row margin-bottom-20\">";
+		content = content + "										<div class=\"row margin-bottom-20\">";
 		content = content + "                    	 <div class=\"col-md-10 col-md-offset-1\">";
 		content = content + "                           <span class=\"pull-right\">Haven't you already registered? <a href=\"javascript: signInUp('signup', " + datetime + ");\" >Sign Up</a></span>";
 		content = content + "                        </div>";
@@ -802,7 +826,14 @@ var requestAppointment = function(datetime) {
 		content = content + "                            <input type=\"password\" name=\"password\" id=\"password\" class=\"form-control\" placeholder=\"Password\" required>";
 		content = content + "                        </div>";
 		content = content + "                    </div>";
-		content = content + "				</form>";
+		
+		content = content + "										<div class=\"row\">";
+		content = content + "                    	 <div class=\"col-md-10 col-md-offset-1\">";
+		content = content + "                           <a href=\"javascript: window.open('/password_recovery');\">Forgot your password?</a>";
+		content = content + "                        </div>";
+		content = content + "                    </div>";
+		
+		content = content + "								</form>";
 		content = content + "            </div>";
 		content = content + "        </div>";
 
@@ -825,6 +856,7 @@ var requestAppointment = function(datetime) {
 		content = content + "                        </div>";
 		content = content + "                    </div>";
 
+
 		content = content + "					<div class=\"row margin-bottom-20\">";
 		content = content + "						<div class=\"col-md-5 col-md-offset-1\">";
 		content = content + "                            <label for=\"first_name\">First name <i class=\"fa fa-asterisk\"></i></label>";
@@ -834,7 +866,9 @@ var requestAppointment = function(datetime) {
 		content = content + "                            <label for=\"last_name\">Last name<i class=\"fa fa-asterisk\"></i></label>";
 		content = content + "                            <input type=\"text\" name=\"last_name\" id=\"last_name\" class=\"form-control\" placeholder=\"Last name\" required>";
 		content = content + "                        </div>";
-		content = content + "                    </div>";
+		content = content + "         </div>";
+		
+		
 		content = content + "					<div class=\"row margin-bottom-20\">";
 		content = content + "                    	<div class=\"col-md-10 col-md-offset-1\">";
 		content = content + "                            <label for=\"email\">Email <i class=\"fa fa-asterisk\"></i></label>";
@@ -875,7 +909,39 @@ var requestAppointment = function(datetime) {
 		$("#schedules_modal_action").html("Create my account");
 		$("#schedules_modal_action").attr("href", "javascript: signup(" + datetime + ");");
 	}
+	
+	$("#schedules_modal_action").blur();
+	$("#schedulse_modal_content").html(content);
+	$('#schedules_modal').modal('show');
+};
 
+var requestAppointmentPOG = function(datetime) {
+	var q_screens = new Screens();
+	var content = "";
+	
+	m_current_date = new Date(datetime);
+	
+	$("#schedules_title").html("Appointment requesting");
+
+	$("#schedules_title").html("<h3>Booking Confirmation</h3>");
+	content = content + "        <div class=\"row margin-bottom-30\">";
+	content = content + "            <div class=\"col-md-10 col-md-offset-1 mb-margin-bottom-30\">";
+	content = content + "  					<p class=\"lead\">You are about to book an appointment with  " + $("#c_provider_first_name").val() + " " + $("#c_provider_last_name").val() + ".<p>";
+	content = content + "       		   <p><strong>Date & Time:</strong> " +  m_current_date.getHours() + ":" + ("0" + m_current_date.getMinutes()).slice(-2) + (m_current_date.getHours() < 12 ? " AM" : " PM") + " on " + q_screens.month(m_current_date.getMonth() + 1) + " " + m_current_date.getDate() + "th, " + m_current_date.getFullYear() +" </p>";
+	content = content + "           	   <p><strong>Location:</strong> " +  $("#c_client_address").val() + "</p>";	
+	content = content + "                <form action=\"request_appointment\" method=\"post\">";
+	content = content + "                    <div class=\"row margin-bottom-20\">";
+	content = content + "                        <div class=\"col-md-12 col-md-offset-0\">";
+	content = content + "                            <textarea name=\"client_observation\" id=\"client_observation\" rows=4 class=\"form-control\" placeholder=\"Don't forget to mention your special requests to " + $("#c_provider_first_name").val() + "\"></textarea>";
+	content = content + "                        </div>";
+	content = content + "                    </div>";
+	content = content + "               </form>";
+	content = content + "           </div>";
+	content = content + "        </div>";
+
+	$("#schedules_modal_action").html("Confirm");
+	$("#schedules_modal_action").attr("href", "javascript: sendRequest(" + datetime + ");");
+	$("#schedules_modal_action").blur();
 	$("#schedulse_modal_content").html(content);
 	$('#schedules_modal').modal('show');
 };
@@ -909,17 +975,16 @@ var signin = function(date) {
 		},
 		success: function(data) {
 			if (data.status == "success") {
+				
+				console.log(data);
 				$("#c_client_id").val(data.client.id);
 				$("#c_client_first_name").val(data.client.first_name);
 				$("#c_client_last_name").val(data.client.last_name);
 				$("#c_client_address").val(data.client.address);
-				if (data.client.phone !== undefined && data.client.phone !== "" && data.client.address !== undefined && data.client.address !== "" && data.client.weeks_pregnant !== undefined && data.client.weeks_pregnant !== "") {
-					$("#c_client_complete").val(1);
-				}
-				else {
-					$("#c_client_complete").val(0);
-				}
-				clearMessage("schedules_alert");
+				$("#c_client_phone").val(data.client.phone);
+				$("#c_client_weeks_pregnant").val(data.client.weeks_pregnant);
+				
+				clearMessages();
 				changeNavLinksSignedIn(data.client.profile);
 				requestAppointment(date);
 			}
@@ -1026,20 +1091,14 @@ var signup = function(date) {
 				$("#c_client_address").val(data.client.address);
 				$("#c_client_phone").val(data.client.phone);
 				$("#c_client_weeks_pregnant").val(data.client.weeks_pregnant);
-				if (data.complete) {
-					$("#c_client_complete").val(1);
-				}
-				else {
-					$("#c_client_complete").val(0);
-				}
-				clearMessage("schedules_alert");
+				clearMessages();
 				changeNavLinksSignedIn(data.client.profile);
 				requestAppointment(date);
 			}
 			else if (data.status == "email_exists") {
 				$("#password").val("");
 				$("#password_confirmation").val("");
-				alertMessage("schedules_alert", "Email already registered. <a href=\"\">Forgot your password?</a>", "warning", false);
+				alertMessage("schedules_alert", "Email already registered. <a href=\"javascript: window.open('/password_recovery');\">Forgot your password?</a>", "warning", false);
 
 			}
 			else if (data.status == "fail") {
@@ -1106,14 +1165,8 @@ var updateInfo = function(date) {
 				$("#c_client_first_name").val(data.client.first_name);
 				$("#c_client_last_name").val(data.client.last_name);
 				$("#c_client_address").val(data.client.address);
-				if (data.client.phone !== undefined && data.client.phone !== "" && data.client.address !== undefined && data.client.address !== "" && data.client.weeks_pregnant !== undefined && data.client.weeks_pregnant !== "") {
-					$("#c_client_complete").val(1);
-				}
-				else {
-					$("#c_client_complete").val(0);
-				}
-				clearMessage("schedules_alert");
-				requestAppointment(date);
+				clearMessages();
+				requestAppointmentPOG(date);
 			}
 			else if (data.status == "fail") {
 				alertMessage("schedules_alert", "Fail to update info, please try again.", "warning", false);
@@ -1132,6 +1185,7 @@ var working_on_request = false;
 var sendRequest = function(date) {
 	if (!working_on_request) {
 		$("#schedules_modal_action").html("<i class=\"fa fa-cog fa-spin\"></i> Confirm");
+		$("#schedules_modal_action").blur();
 		working_on_request = true;
 		setTimeout(function(){ sendRequestPOG(date); }, 1000);
 	}
@@ -1140,8 +1194,6 @@ var sendRequest = function(date) {
 var sendRequestPOG = function(date) {
 	m_current_date = new Date(date);
 	var MS_PER_MINUTE = 60000;
-	//var datestart = new Date(date - 20 * MS_PER_MINUTE);
-	//var dateend = new Date(date + 80 * MS_PER_MINUTE);
 	var datestart = new Date(date - 20 * MS_PER_MINUTE);
 	var dateend = new Date(date + 80 * MS_PER_MINUTE);
 	var d_start = datestart.getFullYear() + "-" + ("0" + (datestart.getMonth() + 1)).slice(-2) + "-" + ("0" + datestart.getDate()).slice(-2) + " " + ("0" + datestart.getHours()).slice(-2) + ":" + ("0" + datestart.getMinutes()).slice(-2) + ":00";
@@ -1176,6 +1228,7 @@ var sendRequestPOG = function(date) {
 			}
 			working_on_request = false;
 			$("#appointment_type").val(-1);
+			$("#c_client_info_filled").val(0);
 		},
 		error: function(data) {
 			console.log("error");
@@ -1429,3 +1482,34 @@ var get_nth_suffix = function(date) {
         return 'th';
    }
  };
+ 
+ /* For a given date, get the ISO week number
+ *
+ * Based on information at:
+ *
+ *    http://www.merlyn.demon.co.uk/weekcalc.htm#WNR
+ *
+ * Algorithm is to find nearest thursday, it's year
+ * is the year of the week number. Then get weeks
+ * between that date and the first day of that year.
+ *
+ * Note that dates in one year can be weeks of previous
+ * or next year, overlap is up to 3 days.
+ *
+ * e.g. 2014/12/29 is Monday in week  1 of 2015
+ *      2012/1/1   is Sunday in week 52 of 2011
+ */
+function getWeekNumber(d) {
+    // Copy date so don't modify original
+    d = new Date(+d);
+    d.setHours(0,0,0);
+    // Set to nearest Thursday: current date + 4 - current day number
+    // Make Sunday's day number 7
+    d.setDate(d.getDate() + 4 - (d.getDay()||7));
+    // Get first day of year
+    var yearStart = new Date(d.getFullYear(),0,1);
+    // Calculate full weeks to nearest Thursday
+    var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7)
+    // Return array of year and week number
+    return [d.getFullYear(), weekNo];
+}

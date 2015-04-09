@@ -135,17 +135,17 @@ class ClientsController < ApplicationController
       client = Client.new(client_params)
       client.create_adjusts
       if client.save
+        client.reload_routes
         csign_in client
-        container = { "client" => client.clean_for_ajax, "status" => "success"} # :only => [ :id, :name ] <- please, remember this
-        render :json => container.to_json
+        UserMailer.welcome_client_email(client)
+        container = { "client" => client.clean_for_ajax, "status" => "success", "complete" => client.complete? }
       else
         container = { "client" => nil, "status" => "fail"}
-        render :json => container.to_json
       end
     else
       container = { "client" => nil, "status" => "email_exists"}
-      render :json => container.to_json
     end
+    render :json => container.to_json
   end
 
   # before booking, if the client is already registered, but some information
@@ -161,7 +161,7 @@ class ClientsController < ApplicationController
       #client.weeks_pregnant = params[:weeks_pregnant]
       #if client.save
       if client.update_attributes(client_update_params)
-        container = { "client" => client.clean_for_ajax, "status" => "success"} # :only => [ :id, :name ] <- please, remember this
+        container = { "client" => client.clean_for_ajax, "status" => "success", "complete" => client.complete? } # :only => [ :id, :name ] <- please, remember this
         render :json => container.to_json
       else
         container = { "client" => nil, "status" => "fail"}

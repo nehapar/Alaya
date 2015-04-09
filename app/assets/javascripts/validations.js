@@ -316,7 +316,7 @@ var validateProviderEdit = function() {
 	return true;	
 };
 
-var validadeContact = function() {
+var validateContact = function() {
 	if (!validNotEmpty($("#name").val())) {
 		alertMessage("top_page_contact", "Name is required.", "danger", false);
 		$("#name").focus();
@@ -332,5 +332,5 @@ var validadeContact = function() {
 		$("#message").focus();
 		return false;
 	}
-	return true;	
+	return true;
 }

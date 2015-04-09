@@ -45,17 +45,19 @@
         <div class="navbar navbar-default" role="navigation">
           <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <div class="navbar-header" style="height: 65px;">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse"  style="margin-top: 20px;">
                 <span class="sr-only">Toggle navigation</span>
-                <span class="fa fa-bars"></span>
+                <span class="fa fa-user"></span>
               </button>
-              <%= link_to(image_tag("careforme_logo.jpg", :style => "height: 40px; margin-top: -8px;", :alt => "CareForMe"), root_url, :class => "navbar-brand") %>
+              <%= link_to(image_tag("logo.png", :style => "height: 70px; margin-top: -12px;", :alt => "CareForMe"), root_url, :class => "navbar-brand hidden-xs") %>
+              <%= link_to(image_tag("logo.png", :style => "height: 70px; margin-top: -20px;", :alt => "CareForMe"), root_url, :class => "navbar-brand hidden-sm hidden-md hidden-lg") %>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse navbar-responsive-collapse">
+            <div class="collapse navbar-collapse navbar-responsive-collapse" style="padding-top: 15px;">
               <div id="nav_links">
                 <ul class="nav navbar-nav" style="margin-top: -7px;">
+                  <!--
                   <% if yield(:title) == "Welcome" %>
                     <li>
                       <a href="#" data-section="why-CareForMe">WHY CareForMe?</a>
@@ -64,6 +66,7 @@
                       <a href="#" data-section="how-does-it-work">HOW DOES IT WORK?</a>
                     </li>
                   <% end %>
+                  -->
                   <% if signed_in? %>
                     <li class="dropdown">
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%= current_provider.first_name %></a>
@@ -210,7 +213,7 @@
                 <ul class="social-icons">
                   <li><a href="javascript: window.open('https://www.facebook.com/pages/CareForMe/512356292228538?ref=hl');" data-original-title="Facebook" class="social_facebook"></a></li>
                   <li><a href="#" data-original-title="Twitter" class="social_twitter"></a></li>
-                  <li><a href="javascript: window.open('https://www.pinterest.com/careformeco/');" data-original-title="Pintrest" class="social_pintrest"></a></li>
+                  <li><a href="javascript: window.open('https://www.pinterest.com/careformeco/');" data-original-title="Pinterest" class="social_pintrest"></a></li>
                 </ul>
                 <!-- End Social Link -->
               </div><!--/col-md-4-->  
@@ -254,7 +257,7 @@
                   </dl>
                   <dl class="dl-horizontal">
                     <dd>
-                      <p><a href="javascript: window.open('https://www.pinterest.com/careformeco/');">Pintrest</a></p> 
+                      <p><a href="javascript: window.open('https://www.pinterest.com/careformeco/');">Pinterest</a></p> 
                     </dd>
                   </dl>
                 </div>

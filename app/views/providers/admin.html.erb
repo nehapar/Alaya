@@ -227,6 +227,13 @@
                   <input type="hidden" name="c_provider_last_name" id="c_provider_last_name" value="0">
                   <input type="hidden" name="c_provider_expertise" id="c_provider_expertise" value="0">
                   <input type="hidden" name="is_admin" id="is_admin" value="1">
+                  
+                  <input type="hidden" name="c_client_info_filled" id="c_client_info_filled" value="0">
+                  <input type="hidden" name="c_client_first_name" id="c_client_first_name" value="">
+                  <input type="hidden" name="c_client_last_name" id="c_client_last_name" value="">
+                  <input type="hidden" name="c_client_address" id="c_client_address" value="">
+                  <input type="hidden" name="c_client_phone" id="c_client_phone" value="">
+                  <input type="hidden" name="c_client_weeks_pregnant" id="c_client_weeks_pregnant" value="">
                   <!-- end: varibles to be used by ajax -->
                 </div>
               </form>
@@ -310,33 +317,34 @@
         				<div class="row">
         					<div class="col-md-10 col-sm-10 col-md-offset-1 col-sm-offset-1" align="center">
         						<table class="table table-bordered">
-        							<thead>
-        								<tr>
+        							<thead align="center">
+        								<tr class="info">
+        									<th class="text-center"><a href="#" id="provider_prev_week_button"><i class="fa fa-chevron-left"></i></a></th>
+        									<th colspan="6" class="text-center" id="provider_month_year_display"><%= Date.today.strftime('%Y') %></th>
+        									<th class="text-center"><a href="#" id="provider_next_week_button"><i class="fa fa-chevron-right"></i></a></th>
+        								</tr>
+        								<tr class="active">
         									<th></th>
-        									<th>Sunday</th>
-        									<th>Monday</th>
-        									<th>Tuesday</th>
-        									<th>Wednesday</th>
-        									<th>Thursday</th>
-        									<th>Friday</th>
-        									<th>Saturday</th>
+        									<th class="text-center">Sunday</th>
+        									<th class="text-center">Monday</th>
+        									<th class="text-center">Tuesday</th>
+        									<th class="text-center">Wednesday</th>
+        									<th class="text-center">Thursday</th>
+        									<th class="text-center">Friday</th>
+        									<th class="text-center">Saturday</th>
+        								</tr>
+        								<tr>
+        									<th class="text-center success"></th>
+        									<th class="text-center success" id="weekday_0"><%= (Date.today.beginning_of_week - 1.day).strftime('%m/%d') %></th>
+        									<th class="text-center success" id="weekday_1"><%= (Date.today.beginning_of_week + 0.day).strftime('%m/%d') %></th>
+        									<th class="text-center success" id="weekday_2"><%= (Date.today.beginning_of_week + 1.day).strftime('%m/%d') %></th>
+        									<th class="text-center success" id="weekday_3"><%= (Date.today.beginning_of_week + 2.day).strftime('%m/%d') %></th>
+        									<th class="text-center success" id="weekday_4"><%= (Date.today.beginning_of_week + 3.day).strftime('%m/%d') %></th>
+        									<th class="text-center success" id="weekday_5"><%= (Date.today.beginning_of_week + 4.day).strftime('%m/%d') %></th>
+        									<th class="text-center success" id="weekday_6"><%= (Date.today.beginning_of_week + 5.day).strftime('%m/%d') %></th>
         								</tr>
         							</thead>
-        							<tbody>
-        								<% (6..20).each do |i| %>
-        									<tr>
-        										<td rowspan="2"><%= "#{i.to_s.rjust(2, '0')}:00" %></td>
-        										<% (0..6).each do |j| %>
-        											<td id="<%= "#{j}_#{i.to_s.rjust(2, '0')}_00" %>" class="schedule-off" OnClick="switchProviderTimeAvailabilityAdmin('<%= "#{j}_#{i.to_s.rjust(2, '0')}_00" %>');"></td>
-        										<% end %>
-        									</tr>
-        									<tr>
-        										<% (0..6).each do |j| %>
-        											<td id="<%= "#{j}_#{i.to_s.rjust(2, '0')}_30" %>" class="schedule-off" OnClick="switchProviderTimeAvailabilityAdmin('<%= "#{j}_#{i.to_s.rjust(2, '0')}_30" %>');"></td>
-        										<% end %>
-        									</tr>
-        								<% end %>
-        							</tbody>
+        							<tbody id="provider_weekly_schedule_desktop"></tbody>
         						</table>
         					</div>
         				</div>

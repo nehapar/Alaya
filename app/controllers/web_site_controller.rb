@@ -23,9 +23,9 @@ class WebSiteController < ApplicationController
   def contact_message
     begin
       UserMailer.contact_message_email(params[:name], params[:email], params[:message])
-      redirect_to contact_path, :success => "Your message has been sent. Thank you so much."
+      redirect_to contact_path, :flash => { :success => "Your message has been sent. Thank you so much for contact us." }
     rescue
-      redirect_to contact_path, :danger => "Sorry, we have a problem, your message has not been sent."
+      redirect_to contact_path, :flash => { :danger => "Sorry, we have a problem, your message has not been sent." }
     end
   end
   

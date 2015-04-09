@@ -60,13 +60,13 @@ class Provider < ActiveRecord::Base
 	# this method return if the provider is available for some specific
 	# time received as param
 	#
-	# @params: [time] a string in with the shape W_HH:MM where W is the week
+	# @params: [timeid] a string in with the shape W_HH:MM where W is the week
   #          day, sunday = 0
 	#
 	# @author: Thiago Melo
 	# @version: 2015-03-21
-	def time_unavailable(time)
-		slot = ProviderSchedule.where("provider_id = #{self.id} and time = '#{time}'").first
+	def time_unavailable(timeid)
+		slot = ProviderSchedule.where("provider_id = ? and timeid = ?", self.id, timeid).first
 		if !slot.nil?
 			return slot.unavailable
 		else
@@ -76,38 +76,40 @@ class Provider < ActiveRecord::Base
 	
 	# this method toggle a specifica time availability
 	#
-	# @params: [time] a string in with the shape W_HH:MM where W is the week
+	# @params: [timeid] a string in with the shape W_HH:MM where W is the week
   #          day, sunday = 0
 	#
 	# @author: Thiago Melo
 	# @version: 2015-03-21
-	def toggle_time(time)
-		slot = ProviderSchedule.where("provider_id = #{self.id} and time = '#{time}'").first
+	def toggle_time(timeid)
+		slot = ProviderSchedule.where("provider_id = ? and timeid = ?", self.id, timeid).first
     if !slot.nil?
       slot.toggle :unavailable
     else
       slot = ProviderSchedule.new
       slot.provider_id = self.id
-      slot.time = time
+      slot.timeid = timeid
       slot.unavailable = true
+      slot.time = Date.strptime(timeid,"%Y_%m_%d_%w_%H_%M")
     end
     slot.save
 	end
 	
-	# this method sets a time slot to available or unavailable
+	# this method sets a timeid slot to available or unavailable
 	#
-	# @params: [time] a string in with the shape W_HH:MM where W is the week
+	# @params: [timeid] a string in with the shape W_HH:MM where W is the week
   #          day, sunday = 0
   #          [unavailable] a boolean
 	#
 	# @author: Thiago Melo
 	# @version: 2015-03-21
-	def set_time_unavailable(time, unavailable)
-		slot = ProviderSchedule.where("provider_id = #{self.id} and time = '#{time}'").first
+	def set_time_unavailable(timeid, unavailable)
+		slot = ProviderSchedule.where("provider_id = ? and timeid = ?", self.id, timeid).first
     if slot.nil?
       slot = ProviderSchedule.new
       slot.provider_id = self.id
-      slot.time = time
+      slot.timeid = timeid
+      slot.time = Time.strptime(timeid,"%Y_%m_%d_%w_%H_%M")
     end
     slot.unavailable = unavailable
     slot.save

@@ -157,11 +157,11 @@ class ProvidersController < ApplicationController
     if @provider.profile.include? "-"
       @provider.profile = @provider.profile.gsub("-","_")
     end
-    
+    @provider.generate_token(:password_reset_token)
     if @provider.save
-	    sign_in @provider
-      UserMailer.welcome_provider_email(@provider)
-      redirect_to :controller => 'providers', :action => 'dashboard'
+      flash.now[:success] = "Welcome to CareForMe! Please check your email for validation."
+  	  UserMailer.welcome_provider_email(@provider)
+  	  redirect_to signin_path, :flash => { :success => "Welcome to CareForMe! Please check your email for validation." } #profile_list_path #csignup_helper_path
     else
   	  if Provider.where("email = '" + @provider.email + "'").length > 0
   		  flash.now[:error] = 'Email already registered. Have you forgot your password?'
@@ -686,7 +686,7 @@ class ProvidersController < ApplicationController
       provider = Provider.find(params[:provider_id])
       if !provider.nil?
         slots_unavailable = provider.provider_schedules.where(:unavailable => true)
-        container = { "provider" => provider.without_secure_info, "specialties" => provider.specialties, "status" => "success", "slots_unavailable" => slots_unavailable }
+        container = { "provider" => provider.without_secure_info, "specialties" => provider.specialties, "status" => "success", "slots_unavailable" => slots_unavailable, "current_week" => (Date.today + 1.week).strftime('%U').to_i, "current_year" => Date.today.strftime('%Y').to_i }
       else
         container = { "provider" => nil, "status" => "fail" }
       end
@@ -880,7 +880,7 @@ class ProvidersController < ApplicationController
     render :json => container.to_json
   end
   
-  # this method toggle the provider time availability in a specific time
+  # this method toggle the provider time availability in a specific timeid
   #
   # there is a very important thing:
   #
@@ -890,25 +890,26 @@ class ProvidersController < ApplicationController
   # IMMEDIATE HALF HOUR BEFOR THESE TIME BECOME UNAVAILABLE TOO
   #
   # @params: [provider_id] 
-  #          [time] a string in with the shape W_HH:MM where W is the week
+  #          [timeid] a string in with the shape YYYY_MM_DD_W_HH:MM where W is the week
   #          day, sunday = 0
   #
   # @author: Thiago Melo
   # @version: 2015-03-21
   def toogle_provider_time_availability_ajax
     if is_admin? or (signed_in? and current_provider.id == Integer(params[:provider_id]))
-      time = params[:time]
-      next_time = nextTimeCellID(time)
-      prev_time = prevTimeCellID(time)
+      timeid = params[:timeid]
+      next_time = nextTimeCellID(timeid)
+      prev_time = prevTimeCellID(timeid)
       prev_prev_time = prevTimeCellID(prev_time)
       next_next_time = nextTimeCellID(next_time)
+      
       provider = is_admin? ? Provider.find(params[:provider_id]) : current_provider
       
-      if provider.time_unavailable(time)
-        provider.set_time_unavailable(time, false)
+      if provider.time_unavailable(timeid)
+        provider.set_time_unavailable(timeid, false)
         provider.set_time_unavailable(next_time, false)
       else
-        provider.set_time_unavailable(time, true)
+        provider.set_time_unavailable(timeid, true)
         if provider.time_unavailable(prev_prev_time)
           provider.set_time_unavailable(prev_time, true)
         end
@@ -926,19 +927,56 @@ class ProvidersController < ApplicationController
   # these method return the time availability for a provider
   #
   # @params: [provider_id] the corresponding provider's id
+  #          [start] usually, the first day of the week
+  #          [end] usually the last day of the week
   #
   # @author: Thiago Melo
   # @version: 2015-03-21
   def provider_time_availability_ajax
     begin
+      time_start = Time.at((params[:start].to_f)/1000).change({ hour: 0, min: 0, sec: 0 })
+      time_end = Time.at((params[:end].to_f)/1000).change({ hour: 23, min: 59, sec: 59 })
+      
       provider = Provider.find(params[:provider_id])
-      slots_unavailable = provider.provider_schedules.where(:unavailable => true)
+      slots_unavailable = provider.provider_schedules.where("time >= ? and time <= ? and unavailable = ?", time_start, time_end, true)
       container = { "status" => "success", "slots_unavailable" => slots_unavailable }
     rescue
       container = { "status" => "fail" }
     end
     render :json => container.to_json
   end
+  
+  
+  # this function should return the appointments and schedule for a provider
+  # between to dates including
+  #
+  # @params: [provider_id] the corresponding provider's id
+  #          [start] the start date
+  #          [end] the end date
+  #
+  # @author: Thiago Melo
+  # @version: 2015-04-05
+  def provider_schedules_appointments_ajax
+    time_start = Time.at((params[:start].to_f)/1000).change({ hour: 0, min: 0, sec: 0 })
+    time_end = Time.at((params[:end].to_f)/1000).change({ hour: 23, min: 59, sec: 59 })
+    
+    schedules = ProviderSchedule.where("provider_id = ? and time >= ? and time <= ?", params[:provider_id], time_start, time_end)
+    
+    time_start_pog = time_start - 30.minute
+    time_end_pog = time_end + 30.minute
+    
+    appointments = Appointment.where("provider_id = ? and start >= ? and end <= ?", params[:provider_id], time_start_pog, time_end_pog)
+    
+    if !is_admin? and !(signed_in? and current_provider.id == Integer(params[:provider_id]))
+      appointments.each_with_index do |appointment, index|
+        appointments[index] = appointment.safe
+      end
+    end
+    
+    container = { "status" => "success", "appointments" => appointments, "schedules" => schedules }
+    render :json => container.to_json
+  end
+  
 
   #--------------------------------------------------------------------------------------
   # admin methods

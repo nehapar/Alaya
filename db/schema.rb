@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150330181412) do
+ActiveRecord::Schema.define(version: 20150405083550) do
 
   create_table "appointments", force: true do |t|
     t.integer  "provider_id"
@@ -62,10 +62,11 @@ ActiveRecord::Schema.define(version: 20150330181412) do
 
   create_table "provider_schedules", force: true do |t|
     t.integer  "provider_id"
-    t.string   "time"
+    t.string   "timeid"
     t.boolean  "unavailable"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "time"
   end
 
   create_table "providers", force: true do |t|

@@ -76,11 +76,7 @@ var adminShowUpProvider = function() {
         /* password end */
         
         /* provider schedule begin */
-        $.each(data.slots_unavailable, function(index, slot) {
-			  	$("#" + slot.time).removeClass("schedule-free");
-          $("#" + slot.time).addClass("schedule-blocked").addClass("danger");
-			  });
-        
+        weekProviderSchedule(data.current_week, data.current_year, provider_id);
         /* provider schedule end */
     	}
     	else if (data.status == "fail") {
@@ -1150,4 +1146,4 @@ var passwordRecovery = function() {
 			alertMessage("password_recovery_alert", "Error, please contact us.", "danger", false);
 		}
 	});
-}
+};

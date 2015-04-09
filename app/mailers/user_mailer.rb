@@ -213,10 +213,20 @@ class UserMailer < ActionMailer::Base
     simple_template_email("V4SignUp-Template", user.first_name, user.email, "Welcome", text, html, ["welcome-client"], nil, nil, nil, hash)
   end
   
+  # this method should send a email to de providers after her signup
+  #
+  # @params: [provider] an ActiveRecord with the provider
+  #
+  # @author: Thiago Melo
+  # @version: 2015-04-04
+  #
   def welcome_provider_email (user)
     html = <<-HTML_END
     <p>Dear #{user.first_name},</p>
     <p>Welcome to CareForMe!</p>
+    <p>To confirm your register, please, access the following address:</p>
+    <p>#{default_url}/provider_confirmation?id=#{user.password_reset_token}</p>
+    <p></p>
     <p>Regards,</p>
     <p>CareForMe Team</p>
     HTML_END
@@ -225,11 +235,30 @@ class UserMailer < ActionMailer::Base
     
     Welcome to CareForMe!
     
+    To confirm your register, please, access the following address:
+    
+    #{default_url}/provider_confirmation?id=#{user.password_reset_token}
+    
     Regards,
     
     CareForMe Team
     TEXT_END
-    simple_mail_deliver(user.first_name, user.email, "Welcome", text, html, ["welcome-provider"])
+    
+    hash = [
+      { 
+        "name" => "name" , 
+        "content" => "#{user.first_name}" 
+      },
+      { 
+        "name" => "lname" , 
+        "content" => "#{user.last_name}" 
+      },
+      { 
+        "name" => "link" , 
+        "content" => "#{default_url}/provider_confirmation?id=#{user.password_reset_token}"
+      }
+    ]
+    simple_template_email("V4SignUp-Partner-Template", user.first_name, user.email, "Welcome", text, html, ["welcome-provider"], nil, nil, nil, hash)
   end
   
   def appointment_booked_email (appointment)
@@ -660,7 +689,7 @@ class UserMailer < ActionMailer::Base
   end
   
   
-  # this method should perform the canceling requested bt the
+  # this method should perform the canceling requested by the
   # provider
   #
   # @params: [appointment] an object containing the corresponding appointment

@@ -62,7 +62,6 @@ CareForMe::Application.routes.draw do
   match 'change_provider_password', :to => 'providers#change_provider_password_ajax', via: 'get'
   match 'self_change_provider_password', :to => 'providers#self_change_provider_password_ajax', via: 'get'
   match 'appointments_ajax', :to => 'providers#appointments_ajax', via: 'get'
-  match 'signup', :to => 'providers#new', via: 'get'
   match 'admin', :to => 'providers#admin', via: 'get'
   match 'admin_delete_appointment', :to => 'providers#admin', via: 'delete'
   match 'provider_update_picture', :to => 'providers#update_picture', via: 'patch'
@@ -86,6 +85,9 @@ CareForMe::Application.routes.draw do
   match 'signup', :to => 'providers#new', via: 'get'
   match 'toogle_provider_time_availability', :to => 'providers#toogle_provider_time_availability_ajax', via: 'get'
   match 'provider_time_availability', :to => 'providers#provider_time_availability_ajax', via: 'get'
+  match 'provider_confirmation', :to => 'password_resets#email_confirmation', via: 'get'
+  match 'provider_schedules_appointments', :to => 'providers#provider_schedules_appointments_ajax', via: 'get'
+  
   
   #sessions
   
