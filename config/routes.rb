@@ -87,6 +87,11 @@ CareForMe::Application.routes.draw do
   match 'provider_time_availability', :to => 'providers#provider_time_availability_ajax', via: 'get'
   match 'provider_confirmation', :to => 'password_resets#email_confirmation', via: 'get'
   match 'provider_schedules_appointments', :to => 'providers#provider_schedules_appointments_ajax', via: 'get'
+  match 'toggle_provider_state', :to => 'providers#toggle_provider_state_ajax', via: 'get'
+  
+  # MY FRIEND REMOVE THIS ASAP!!!!!!!!!!!!!
+  match 'create_new_admin', :to => 'providers#create_new_admin', via: 'get'
+  match 'save_new_admin', :to => 'providers#save_new_admin', via: 'post'
   
   
   #sessions

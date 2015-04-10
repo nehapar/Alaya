@@ -1,0 +1,53 @@
+<% provide(:title, 'Sign up for ADMIN!') %>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        
+        <h1 class="text-center">Admin Sign Up</h1>
+        <p class="lead text-center">Dear, see that you are goint to become an admin =D</p>
+        <p class="lead text-center">Fill this form properly, there is no validation.</p>
+        <p class="lead text-center">I am counting on you ;)</p>
+        
+        <%= form_for(@provider, url: save_new_admin_path) do |f| %>
+          <div class="row margin-bottom-20">
+						<div class="col-md-3 col-md-offset-3">
+						  <%= f.label :first_name %>
+              <%= f.text_field :first_name, class: "form-control", placeholder: "First name", required: "required" %>
+						</div>
+						<div class="col-md-3">
+              <%= f.label :last_name %>
+              <%= f.text_field :last_name, class: "form-control", placeholder: "Last name", required: "required" %>
+            </div>
+          </div>
+          
+          <div class="row margin-bottom-20">
+        	  <div class="col-md-6 col-md-offset-3">
+        	    <%= f.label :email %>
+              <%= f.text_field :email, class: "form-control", placeholder: "Email", value: @provider.email, required: "required" %>
+            </div>                
+          </div>
+          
+          <div class="row margin-bottom-20">
+            <div class="col-md-6 col-md-offset-3">
+              <%= f.label :password %>
+              <%= f.password_field :password, class: "form-control", placeholder: "Password", required: "required" %>
+            </div>                
+          </div>
+          
+          <div class="row margin-bottom-20">
+            <div class="col-md-6 col-md-offset-3">
+              <%= f.label :password_confirmation, "Password confirmation" %>
+              <%= f.password_field :password_confirmation, class: "form-control", placeholder: "Password confirmation", required: "required" %>
+            </div>                
+          </div>
+          
+          <div class="row margin-bottom-20">
+            <div class="col-md-6 col-md-offset-3" align="center">
+              <%= f.submit "Create my POWERFUL account", class: "btn-u" %>
+            </div>                
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>

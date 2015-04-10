@@ -78,6 +78,67 @@ var adminShowUpProvider = function() {
         /* provider schedule begin */
         weekProviderSchedule(data.current_week, data.current_year, provider_id);
         /* provider schedule end */
+        
+        /* provider active begin */
+        $('#provider_active_radio').empty().append(
+        	$('<div/>').addClass('btn-group').attr('data-toggle', 'buttons').append(
+        		$('<label/>').prop('id', 'provider_active_true').addClass('btn btn-primary ' + (data.provider.active ? 'active' : '')).append(' Active').click(function() {
+							$.ajax({
+								type: 'GET',
+								url: '/toggle_provider_state',
+								dataType: "json",
+								data: { 
+									'provider_id': provider_id,
+									'active': 'true'
+								},
+								success: function(data) {
+									if (data.status == "success") {
+										$('#provider_active_false').removeClass('active');
+										$('#provider_active_true').addClass('active');
+									}
+									else if (data.status == "fail") {
+										alertMessage("top_page_message", "Please, try again.", "warning", false);
+									}
+								},
+								error: function(data) {
+									console.log("error");
+									console.log(data);
+									alertMessage("top_page_message", "Some error happened.", "danger", false);
+								}
+							});
+						})
+        	)
+        ).append(
+        	$('<div/>').addClass('btn-group').attr('data-toggle', 'buttons').append(
+        		$('<label/>').prop('id', 'provider_active_false').addClass('btn btn-primary ' + (!data.provider.active ? 'active' : '')).append('Disabled').click(function() {
+							$.ajax({
+								type: 'GET',
+								url: '/toggle_provider_state',
+								dataType: "json",
+								data: { 
+									'provider_id': provider_id,
+									'active': 'false'
+								},
+								success: function(data) {
+									if (data.status == "success") {
+										$('#provider_active_true').removeClass('active');
+										$('#provider_active_false').addClass('active');
+									}
+									else if (data.status == "fail") {
+										alertMessage("top_page_message", "Please, try again.", "warning", false);
+									}
+								},
+								error: function(data) {
+									console.log("error");
+									console.log(data);
+									alertMessage("top_page_message", "Some error happened.", "danger", false);
+								}
+							});
+						})
+        	)
+        );
+        /* provider active end */
+        
     	}
     	else if (data.status == "fail") {
     	  alertMessage("top_page_message", "Provider not found.", "warning", false);

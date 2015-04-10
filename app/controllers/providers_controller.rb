@@ -769,6 +769,24 @@ class ProvidersController < ApplicationController
       redirect_to root_url
     end
   end
+  
+  
+  # this method toggle the provider's state
+  def toggle_provider_state_ajax
+    if is_admin?
+      provider = Provider.find(params[:provider_id])
+      if !provider.nil?
+        provider.active = params[:active] == "true"
+        provider.save
+        container = { "status" => "success" }
+      else
+        container = { "status" => "fail" }
+      end
+    else
+      container = { "status" => "fail" }
+    end
+    render :json => container.to_json
+  end
 
   #--------------------------------------------------------------------------------------
   # appointments methods
@@ -1025,6 +1043,51 @@ class ProvidersController < ApplicationController
     end
     @appointment = Appointment.find(params[:id])
   end
+  
+  
+  
+  #############################################################################
+  ################## YOU CAN KNOW THAT THERE IS SOME ##########################
+  ## PROBLEM WHEN YOU FIND SOMETHING LIKE THIS, YES, THIS IS A PROBLEM ########
+  ########################## REMOVE THIS ######################################
+  
+  def create_new_admin
+    @provider = Provider.new
+  end
+  
+  def save_new_admin
+    @provider = Provider.new(provider_minimum_params)
+    @provider.admin = 1
+    @provider.active = 1
+    if @provider.last_name.include? "'"
+      @provider.profile = @provider.first_name.downcase + "_" + @provider.last_name.downcase.gsub("'","")
+    else
+      @provider.profile = @provider.first_name.downcase + "_" + @provider.last_name.downcase
+    end
+    
+    if @provider.profile.include? " "
+      @provider.profile = @provider.profile.gsub(" ","_")
+    end
+    
+    if @provider.profile.include? "-"
+      @provider.profile = @provider.profile.gsub("-","_")
+    end
+    @provider.generate_token(:password_reset_token)
+    if @provider.save
+      redirect_to signin_path, :flash => { :success => "Now you are a very POWERFUL admin. A great power comes with a great responsibility!" } #profile_list_path #csignup_helper_path
+    else
+  	  if Provider.where("email = '" + @provider.email + "'").length > 0
+  		  flash.now[:error] = 'Email already registered. Have you forgot your password?'
+  	  else
+  	    flash.now[:error] = 'It was not possible to create your user.'
+  	  end
+      render 'new'
+    end
+  end
+  
+  #############################################################################
+  #############################################################################
+  #############################################################################
 
   #--------------------------------------------------------------------------------------
 
@@ -1037,7 +1100,7 @@ class ProvidersController < ApplicationController
     def provider_params
       params.require(:provider).permit(:first_name, :last_name, :email, :phone, :about, :specialty_text, :policies)
     end
-
+    
     def provider_personal
       params.require(:provider).permit(:first_name, :last_name, :email, :expertise, :abstract, :phone)	
     end

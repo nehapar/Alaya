@@ -295,6 +295,7 @@
               <li role="presentation"><a href="#provider_payment_tab" aria-controls="provider_payment_tab" role="tab" data-toggle="tab"><i class="fa fa-credit-card"></i> Policies</a></li>
               <li role="presentation"><a href="#provider_reviews_tab" aria-controls="provider_reviews_tab" role="tab" data-toggle="tab"><i class="fa fa-group"></i> Reviews</a></li>
               <li role="presentation"><a href="#provider_change_password_tab" aria-controls="provider_change_password_tab" role="tab" data-toggle="tab"><i class="fa fa-lock"></i> Password</a></li>
+              <li role="presentation"><a href="#provider_state_tab" aria-controls="provider_state_tab" role="tab" data-toggle="tab"><i class="fa fa-ban"></i> State</a></li>
             </ul>
             
             <%= csrf_meta_tag %>
@@ -616,6 +617,32 @@
                   </div>
                 </div>
               </div>
+              
+              <div role="tabpanel" class="tab-pane" id="provider_state_tab">
+                <br><br>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row margin-bottom-20">
+    									<div class="col-md-10 col-md-offset-1">
+    										<h1><i class="fa fa-ban"></i> Active or Disable Provider</h1>
+    									</div>        
+    								</div>
+                  	<div class="row margin-bottom-20">
+  										<div class="col-md-10 col-md-offset-1" align="center" id="provider_active_radio">
+    										<div class="btn-group" data-toggle="buttons">
+                          <label class="btn btn-primary active">
+                            <input type="radio" name="provider_active" id="provider_active" autocomplete="off" checked> Active
+                          </label>
+                          <label class="btn btn-primary">
+                            <input type="radio" name="provider_active" id="provider_disable" autocomplete="off"> Disable
+                          </label>
+                        </div>
+  										</div>        
+  									</div>
+                  </div>
+                </div>
+              </div>
+              
             </div>
             
           </div>
