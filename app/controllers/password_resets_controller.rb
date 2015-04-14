@@ -48,10 +48,10 @@ class PasswordResetsController < ApplicationController
       
       if client
         csign_in @user
-        redirect_to profile_list_path, :flash => { :success => "Welcome to CareForMe! Start by booking some appointment right now!" }
+        redirect_to profile_list_path#, :flash => { :success => "Welcome to CareForMe! Start by booking some appointment right now!" }
       else
         sign_in @user
-        redirect_to provider_dashboard_path, :flash => { :success => "Welcome to CareForMe! Start by booking some appointment right now!" }
+        redirect_to provider_dashboard_path#, :flash => { :success => "Welcome to CareForMe! Start by booking some appointment right now!" }
       end
     else
       redirect_to root_url

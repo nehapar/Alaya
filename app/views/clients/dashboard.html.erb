@@ -1,4 +1,4 @@
-		<% provide(:title, current_client.first_name.present? ? ", " + current_client.first_name : "Profile") %>
+		<% provide(:title, current_client.first_name.present? ? current_client.first_name : "Profile") %>
 		<!--=== Container ===-->
 		<div class="container content">
 			<div class="row margin-bottom-30">
@@ -70,7 +70,7 @@
 												<% @client.appointments.where("accepted = 0 or accepted = 1").where(['start < ?', DateTime.now]).order(start: :desc).each_with_index do |appointment, index| %>
 													<tr id="appointment_<%= appointment.id %>">
 														<td>
-															<%= link_to eval("#{appointment.provider.profile}_path") do %>
+															<%= link_to eval("#{appointment.provider.profile}_path"), :target => "_blank" do %>
 																<strong><%= appointment.provider.first_name %> <%= appointment.provider.last_name %></strong>
 															<% end %>
 														</td>

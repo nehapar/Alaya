@@ -135,10 +135,8 @@ class ClientsController < ApplicationController
       client = Client.new(client_params)
       client.create_adjusts
       if client.save
-        client.reload_routes
-        csign_in client
         UserMailer.welcome_client_email(client)
-        container = { "client" => client.clean_for_ajax, "status" => "success", "complete" => client.complete? }
+        container = { "status" => "success", "complete" => client.complete? }
       else
         container = { "client" => nil, "status" => "fail"}
       end

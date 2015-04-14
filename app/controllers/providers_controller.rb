@@ -172,6 +172,7 @@ class ProvidersController < ApplicationController
     end
   end
 
+  # this method provides info to the provider's view
   def dashboard
     if signed_in?
   	  @provider = current_provider
@@ -183,6 +184,8 @@ class ProvidersController < ApplicationController
     @confirmed_appointments = @provider.appointments.where("accepted = 1").where(['start >= ?', DateTime.now]).order("start asc")
     @past_appointments = @provider.appointments.where(['start < ?', DateTime.now]).order("start desc")
     @denied_appointments = @provider.appointments.where("accepted = 2").where(['start >= ?', DateTime.now]).order("start desc")
+    
+    require 'date'
   end
   
   #--------------------------------------------------------------------------------------
@@ -599,8 +602,6 @@ class ProvidersController < ApplicationController
       @appointments = @appointments.push(*appointments)
     end
     
-    
-    
     container = { "appointments" => @appointments, "status" => "success"}
     render :json => container.to_json
   end
@@ -980,10 +981,7 @@ class ProvidersController < ApplicationController
     
     schedules = ProviderSchedule.where("provider_id = ? and time >= ? and time <= ?", params[:provider_id], time_start, time_end)
     
-    time_start_pog = time_start - 30.minute
-    time_end_pog = time_end + 30.minute
-    
-    appointments = Appointment.where("provider_id = ? and start >= ? and end <= ?", params[:provider_id], time_start_pog, time_end_pog)
+    appointments = Appointment.where("provider_id = ? and start >= ? and end <= ?", params[:provider_id], time_start, time_end)
     
     if !is_admin? and !(signed_in? and current_provider.id == Integer(params[:provider_id]))
       appointments.each_with_index do |appointment, index|

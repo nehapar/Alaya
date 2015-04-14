@@ -3,14 +3,33 @@
   <div class="search-block parallaxBg">
     <div class="container">
       <div class="col-md-12">
-        <h1><b>Find Pregnancy Massage Therapists and Lactation Consultants in your area. <br />
+        <h1><b>Find Pregnancy Massage Therapists and Lactation Consultants<br/><br/>
         Book a home visit today!</b><br /><br /></h1>
 
-        <div class="input-group">
-          <span class="input-group-btn">
-            <%= link_to "Search", profile_list_path, class: "btn-u btn-u-lg rounded" %>
-          </span>
+        <div class="row">
+          <div class="col-md-4 col-md-offset-4">
+            
+            
+            <!--
+            <div class="input-group">
+              <span class="input-group-btn">
+                <%= link_to "San Francisco Bay Area", profile_list_path, class: "btn-u btn-u-lg rounded" %>
+              </span>
+            </div>
+            -->
+            
+            
+            <div class="input-group">
+              <input type="text" onclick="document.location.href = '/profile_list';" class="form-control input-lg" placeholder="San Francisco Bay Area" value="San Francisco Bay Area" onfocus="blur()" style="background-color: #fff; color: #000; cursor: pointer; height: 50px;">
+              <div class="input-group-btn">
+                <%= link_to "Search", profile_list_path, class: "btn-u btn-u-lg ", style: " height: 50px;" %>
+              </div>       
+            </div>
+            
+          </div>
         </div>
+
+        
       </div>
     </div>  
   </div><!--/container-->   
@@ -44,11 +63,13 @@
     <!--Title Box-->     
     <div class="title-box col-sm-8 col-sm-offset-2 no-border">
       <div class="title-box-text">WHY CareForMe?</div>
+      <!--
       <div class="tag-box tag-box-v1 tag-box-v0 box-shadow shadow-effect-1 no-margin-bottom">
         <span>You are a mom or are going to be one very soon.
          <br />Do you really want to get dressed and battle traffic to go to a salon?
          <br /> Why not have a massage therapist come home to you?</span>
       </div>
+      -->
     </div>
     
     <!-- Promo Box -->  
@@ -57,7 +78,7 @@
         <div class="promo-box">
           <i class="fa fa-xlg fa-thumbs-up"></i>
           <strong>Trust & Safety</strong>
-          <p>All professionals listed here have gone through a background check and license verification process. They also carry liability insurance. We take safety very seriously and do all we can to make this a safe platform for our clients and professionals.</p>        
+          <p>All professionals listed here have been vetted and verified and are highly experienced. We take safety very seriously and do all we can to make this a safe platform for our clients and professionals.</p>        
         </div>    
       </div>
 
@@ -65,7 +86,7 @@
         <div class="promo-box">
           <i class="fa fa-xlg fa-home"></i>
           <strong>Don't leave home</strong>
-          <p>Sometimes you just don't want to leave home! Every pregnant woman and new mom should have the option of being able to get a massage at home. Save your time spent driving for something else. Read a book. Take a nap. Take another nap! Pamper yourself a little.</p>
+          <p>Sometimes you just don't want to leave home! Every pregnant woman and new mom should have the option of being able to get a massage at home. After the baby, get help from a lactation specialist at your comfort zone. Save your time spent driving for something else. Read a book. Take a nap. Take another nap! Pamper yourself a little.</p>
         </div>
       </div>
 
@@ -90,22 +111,22 @@
     
     <!-- Promo Box -->  
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-6">
         <div class="promo-box">
           <i class="fa fa-xlg fa-search"></i>
-          <strong>1. Search</strong>
+          <strong>Search</strong>
           <p>Browse profiles of licensed prenatal massage therapists in your area. Filter by availability, service type & price. Read reviews from other customers. Pick a therapist to suit your budget.</p>        
         </div>    
       </div>
 
-      <div class="col-md-4">
+      <div class="col-md-6">
         <div class="promo-box">
           <i class="fa fa-xlg fa-calendar"></i>
-          <strong>2. Book</strong>
+          <strong>Book</strong>
           <p>Request an appointment with your preferred massage therapist. Receive an email/SMS confirmation and helpful reminders before the therapist comes home.</p>
         </div>
       </div>
-
+      <!--
       <div class="col-md-4">
         <div class="promo-box">    
           <i class="fa fa-xlg fa-credit-card"></i>
@@ -113,6 +134,7 @@
           <p>Your credit card will be charged after your service is complete. No need to hunt for checks or run to the ATM for cash.</p>
         </div>
       </div>
+      -->
     </div>
     <!-- End Promo Box -->
   </div>

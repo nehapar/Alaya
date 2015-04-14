@@ -123,7 +123,7 @@
 							<thead align="center">
 								<tr class="info">
 									<th class="text-center"><a href="javascript: weekProviderSchedule(<%= (Date.today - 0.week).strftime('%U, %Y') %>, <%= current_provider.id %>)" id="provider_prev_week_button"><i class="fa fa-chevron-left"></i></a></th>
-									<th colspan="6" class="text-center" id="provider_month_year_display"><%= Date.today.strftime('%Y') %></th>
+									<th colspan="6" class="text-center" id="provider_month_year_display"><%= Date::MONTHNAMES[Date.today.month] + " " + Date.today.strftime('%Y') %></th>
 									<th class="text-center"><a href="javascript: weekProviderSchedule(<%= (Date.today + 2.week).strftime('%U, %Y') %>, <%= current_provider.id %>)" id="provider_next_week_button"><i class="fa fa-chevron-right"></i></a></th>
 								</tr>
 								<tr class="active">
@@ -152,12 +152,20 @@
 									<tr>
 										<td rowspan="2"><%= "#{i.to_s.rjust(2, '0')}:00" %></td>
 										<% (0..6).each do |j| %>
-											<td id="<%= "#{(Date.today.beginning_of_week + (j - 1).day).strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_00" %>" class="<%= current_provider.time_unavailable("#{(Date.today.beginning_of_week + (j - 1).day).strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_00") ? "schedule-blocked danger" : "schedule-free" %>" OnClick="switchProviderTimeAvailability(<%= current_provider.id %>, '<%= "#{(Date.today.beginning_of_week + (j - 1).day).strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_00" %>');"></td>
+											<% if current_provider.time_available("#{(Date.today.beginning_of_week + (j - 1).day).strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_00") %>
+												<td id="<%= "#{(Date.today.beginning_of_week + (j - 1).day).strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_00" %>" class="<%= current_provider.time_unavailable("#{(Date.today.beginning_of_week + (j - 1).day).strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_00") ? "schedule-blocked danger" : "schedule-free" %>" OnClick="switchProviderTimeAvailability(<%= current_provider.id %>, '<%= "#{(Date.today.beginning_of_week + (j - 1).day).strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_00" %>');"></td>
+											<% else %>
+												<td class="schedule-blocked-appointment"></td>	
+											<% end %>
 										<% end %>
 									</tr>
 									<tr>
 										<% (0..6).each do |j| %>
-											<td id="<%= "#{(Date.today.beginning_of_week + (j - 1).day).strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_30" %>" class="<%= current_provider.time_unavailable("#{(Date.today.beginning_of_week + (j - 1).day).strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_30") ? "schedule-blocked danger" : "schedule-free" %>" OnClick="switchProviderTimeAvailability(<%= current_provider.id %>, '<%= "#{(Date.today.beginning_of_week + (j - 1).day).strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_30" %>');"></td>
+											<% if current_provider.time_available("#{(Date.today.beginning_of_week + (j - 1).day).strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_30") %>
+												<td id="<%= "#{(Date.today.beginning_of_week + (j - 1).day).strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_30" %>" class="<%= current_provider.time_unavailable("#{(Date.today.beginning_of_week + (j - 1).day).strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_30") ? "schedule-blocked danger" : "schedule-free" %>" OnClick="switchProviderTimeAvailability(<%= current_provider.id %>, '<%= "#{(Date.today.beginning_of_week + (j - 1).day).strftime('%Y_%m_%d')}_#{j}_#{i.to_s.rjust(2, '0')}_30" %>');"></td>
+											<% else %>
+												<td class="schedule-blocked-appointment"></td>	
+											<% end %>
 										<% end %>
 									</tr>
 								<% end %>

@@ -12,6 +12,10 @@ class Appointment < ActiveRecord::Base
 		return (self.start + 20.minutes).strftime("%H:%M:%S - %A, %B %dth, %Y")
 	end
 	
+	def get_start_adjusted
+		return (self.start + 20.minutes)
+	end
+	
 	def safe
 		return self.slice(:start, :end)
 	end

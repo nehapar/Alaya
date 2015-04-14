@@ -58,9 +58,36 @@ class Provider < ActiveRecord::Base
 	end
 	
 	# this method return if the provider is available for some specific
+	# time received as param, this is for APPOINTMENTS
+	#
+	# @params: [timeid] a string in with the shape YYYY_MM_DD_W_HH:MM where W is the week
+  #          day, sunday = 0
+	#
+	# @author: Thiago Melo
+	# @version: 2015-04-10
+	def time_available(timeid)
+		timeval = DateTime.strptime(timeid,"%Y_%m_%d_%w_%H_%M")
+		time_ini = timeval - 20.minute
+		time_end = timeval + 80.minute
+		
+		appointment = self.appointments.where('start >= ? and end <= ?', time_ini, time_end).first
+		
+		if appointment.nil?
+			time_ini = timeval - 50.minute
+			time_end = timeval + 50.minute
+			appointment = self.appointments.where('start >= ? and end <= ?', time_ini, time_end).first
+			if appointment.nil?
+				return true
+			end
+			return false
+		end
+		return false
+	end
+	
+	# this method return if the provider is available for some specific
 	# time received as param
 	#
-	# @params: [timeid] a string in with the shape W_HH:MM where W is the week
+	# @params: [timeid] a string in with the shape YYYY_MM_DD_W_HH:MM where W is the week
   #          day, sunday = 0
 	#
 	# @author: Thiago Melo

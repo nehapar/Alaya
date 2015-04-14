@@ -1175,16 +1175,64 @@ var weekProviderSchedule = function(week, year, provider_id) {
                 s_available = false;
               }
             });
-            first_row.append(
-              $('<td/>').addClass(f_available ? "schedule-free" : "schedule-blocked danger").css('cursor', 'pointer').prop('id', time_id_f).on('click', function() {
-                switchProviderTimeAvailability(provider_id, time_id_f);
-              })
-            );
-            second_row.append(
-              $('<td/>').addClass(s_available ? "schedule-free" : "schedule-blocked danger").css('cursor', 'pointer').prop('id', time_id_s).on('click', function() {
-                switchProviderTimeAvailability(provider_id, time_id_s);
-              })
-            );
+            
+            var has_appointment_f = false;
+            var has_appointment_s = false;
+            
+            var time_start_f_1 = new Date(other_day.getTime());
+            var time_end_f_1 = new Date(other_day.getTime());
+            var time_start_f_2 = new Date(other_day.getTime());
+            var time_end_f_2 = new Date(other_day.getTime());
+            time_start_f_1.setHours(i - 1, 35, 0);
+            time_start_f_2.setHours(i - 1, 45, 0);
+            time_end_f_1.setHours(i, 45, 0, 0);
+            time_end_f_2.setHours(i, 55, 0, 0);
+            
+            var time_start_s_1 = new Date(other_day.getTime());
+            var time_end_s_1 = new Date(other_day.getTime());
+            var time_start_s_2 = new Date(other_day.getTime());
+            var time_end_s_2 = new Date(other_day.getTime());
+            time_start_s_1.setHours(i, 5, 0);
+            time_start_s_2.setHours(i, 15, 0);
+            time_end_s_1.setHours(i + 1, 15, 0, 0);
+            time_end_s_2.setHours(i + 1, 25, 0, 0);
+            
+            $.each(data.appointments, function(appointment_index, appointment) {
+              
+              var my_appoint = new Appointment(appointment.id, appointment.provider_id, appointment.client_id, appointment.start, appointment.end, appointment.accepted, appointment.client_observation, appointment.created_at, appointment.updated_at);
+              
+              var appointment_start = my_appoint.start;
+              var appointment_end = my_appoint.end;
+              
+              if ((appointment_start >= time_start_f_1 && appointment_start <= time_start_f_2) || (appointment_end >= time_end_f_1 && appointment_end <= time_end_f_2)) {
+                has_appointment_f = true;
+              }
+              
+              if ((appointment_start >= time_start_s_1 && appointment_start <= time_start_s_2) || (appointment_end >= time_end_s_1 && appointment_end <= time_end_s_2)) {
+                has_appointment_s = true;
+              }
+              
+            });
+            
+            if (has_appointment_f) {
+              first_row.append($('<td/>').addClass("schedule-blocked-appointment"));
+            } else {
+              first_row.append(
+                $('<td/>').addClass(f_available ? "schedule-free" : "schedule-blocked danger").css('cursor', 'pointer').prop('id', time_id_f).on('click', function() {
+                  switchProviderTimeAvailability(provider_id, time_id_f);
+                })
+              );
+            }
+            if (has_appointment_s) {
+              second_row.append($('<td/>').addClass("schedule-blocked-appointment"));
+            } else {
+              second_row.append(
+                $('<td/>').addClass(s_available ? "schedule-free" : "schedule-blocked danger").css('cursor', 'pointer').prop('id', time_id_s).on('click', function() {
+                  switchProviderTimeAvailability(provider_id, time_id_s);
+                })
+              );
+            }
+            
             $('#weekday_' + j).empty().append((other_day.getUTCMonth() + 1) + '/' + other_day.getUTCDate());
             other_day.setDate(other_day.getDate() + 1);
           });
@@ -1193,7 +1241,7 @@ var weekProviderSchedule = function(week, year, provider_id) {
 			  
         $('#provider_prev_week_button').prop('href', 'javascript: weekProviderSchedule(' + (week - 1) + ', ' + year + ', ' + provider_id + ')');
         $('#provider_next_week_button').prop('href', 'javascript: weekProviderSchedule(' + (week + 1) + ', ' + year + ', ' + provider_id + ')');
-        $('#provider_month_year_display').empty().append(year);
+        $('#provider_month_year_display').empty().append(monthName(first_day.getUTCMonth() + 1) + ' ' + year);
 			}
 			else if (data.status == "fail") {
 				console.log("rapaz, voce ta fazendo merda em algum lugar ai...");

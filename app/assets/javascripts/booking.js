@@ -316,7 +316,7 @@ Weekly.prototype.print = function() {
 	
 	//content = content + "<div style=\"overflow: scroll; overflow-y: scroll; overflow-x: hidden;\">";
 	
-	content = content + "	<table class=\"table table-striped table-hover text-center table-bordered\">";
+	content = content + "	<table class=\"table table-hover text-center table-bordered\">";
 	content = content + "		<thead>";
 	content = content + "			<tr>";
 	content = content + "				<th class=\"text-center\" style=\"width: 12.5%;\"><a href=\"javascript: lastSchedule();\"><span class=\"glyphicon glyphicon-chevron-left\"></span></a>";
@@ -379,9 +379,11 @@ Weekly.prototype.print = function() {
 					}
 				}
 				
-				
 				if (!has_event && !useless && time_start.getTime() > today.getTime()) {
 					label.push("date_available");
+				}
+				else if (has_event && time_start.getTime() < today.getTime()) {
+					label.push("date_unavailable past_day_white");
 				}
 				else if (has_event) {
 					label.push("date_unavailable");
@@ -390,14 +392,14 @@ Weekly.prototype.print = function() {
 					label.push("date_useless");	
 				}
 				else {
-					label.push("past_day");	
+					label.push("past_day_white");	
 				}
 				cur_day.setDate(cur_day.getDate() + 1);
 			}
 
 			content = content + "		<tr>";
 			if (j == 0 || j  == 0) {
-				content = content + "		<td rowspan=\"2\" style=\"width: 12.5%;\">";
+				content = content + "		<td rowspan=\"2\" style=\"width: 12.5%;\" class=\"active\">";
 				content = content + "			" + (i < 10 ? "0" + i : i) + ":" + (j < 10 ? "0" + j : j);
 				content = content + "		</td>";
 			}
@@ -1002,119 +1004,133 @@ var signin = function(date) {
 	});
 };
 
+var working_on_signup = false;
 var signup = function(date) {
-	clearMessage("schedules_alert");
-
-	if (!validateName($("#first_name").val()) || validAnyNumber($("#first_name").val())) {
-		alertMessage("schedules_alert", "First name empty.", "danger", false);
-		$("#first_name").focus();
-		return;
-	}
-
-	if (!validateName($("#last_name").val()) || validAnyNumber($("#last_name").val())) {
-		alertMessage("schedules_alert", "Last name empty.", "danger", false);
-		$("#last_name").focus();
-		return;
-	}
-
-	if (!validateEmail($("#email").val())) {
-		alertMessage("schedules_alert", "Email invalid.", "danger", false);
-		$("#email").focus();
-		return;
-	}
-
-	if (!validatePhone($("#phone").val())) {
-		alertMessage("schedules_alert", "Phone invalid.", "danger", false);
-		$("#phone").focus();
-		return;
-	}
-
-	if (!validateAddress($("#address").val())) {
-		alertMessage("schedules_alert", "Address empty.", "danger", false);
-		$("#address").focus();
-		return;
-	}
-
-	if (!validateWeeksPregnant($("#weeks_pregnant").val())) {
-		alertMessage("schedules_alert", "Invalid number of weeks pregnant.", "danger", false);
-		$("#weeks_pregnant").focus();
-		return;
-	}
+	if (!working_on_signup) {
+		clearMessage("schedules_alert");
 	
-	if (!validatePassword($("#password").val())) {
-		alertMessage("schedules_alert", "Password empty.", "danger", false);
-		$("#password").focus();
-		return;
-	}
-
-	if (!validatePassword($("#password_confirmation").val())) {
-		alertMessage("schedules_alert", "Password confirmation empty.", "danger", false);
-		$("#password_confirmation").focus();
-		return;
-	}
-
-	if ($("#password").val() != $("#password_confirmation").val()) {
-		$("#password").val("");
-		$("#password_confirmation").val("");
-		alertMessage("schedules_alert", "Passwords don't match.", "danger", false);
-		$("#password").focus();
-		return;
-	}
-
-	if ($("#password").val().length < 6) {
-		$("#password").val("");
-		$("#password_confirmation").val("");
-		alertMessage("schedules_alert", "Password too short (minimum 6 digits).", "danger", false);
-		$("#password").focus();
-		return;
-	}
-
-	$.ajax({
-		type: 'GET',
-		url: '/csignup_ajax',
-		dataType: "json",
-		data: { 
-			'email': $("#email").val(),
-			'client[first_name]': $("#first_name").val(),
-			'client[last_name]': $("#last_name").val(),
-			'client[email]': $("#email").val(),
-			'client[password]': $("#password").val(),
-			'client[password_confirmation]': $("#password_confirmation").val(),
-			'client[phone]': $("#phone").val(),
-			'client[address]': $("#address").val(),
-			'client[weeks_pregnant]': $("#weeks_pregnant").val()
-		},
-		success: function(data) {
-			if (data.status == "success") {
-				$("#c_client_id").val(data.client.id);
-				$("#c_client_first_name").val(data.client.first_name);
-				$("#c_client_last_name").val(data.client.last_name);
-				$("#c_client_address").val(data.client.address);
-				$("#c_client_phone").val(data.client.phone);
-				$("#c_client_weeks_pregnant").val(data.client.weeks_pregnant);
-				clearMessages();
-				changeNavLinksSignedIn(data.client.profile);
-				requestAppointment(date);
-			}
-			else if (data.status == "email_exists") {
-				$("#password").val("");
-				$("#password_confirmation").val("");
-				alertMessage("schedules_alert", "Email already registered. <a href=\"javascript: window.open('/password_recovery');\">Forgot your password?</a>", "warning", false);
-
-			}
-			else if (data.status == "fail") {
-				$("#password").val("");
-				$("#password_confirmation").val("");
-				alertMessage("schedules_alert", "Fail sign in, please try again.", "warning", false);
-			}
-		},
-		error: function(data) {
-			console.log("error");
-			console.log(data);
-			alertMessage("schedules_alert", "Please contact us directly.", "danger", false);
+		if (!validateName($("#first_name").val()) || validAnyNumber($("#first_name").val())) {
+			alertMessage("schedules_alert", "First name empty.", "danger", false);
+			$("#first_name").focus();
+			return;
 		}
-	});
+	
+		if (!validateName($("#last_name").val()) || validAnyNumber($("#last_name").val())) {
+			alertMessage("schedules_alert", "Last name empty.", "danger", false);
+			$("#last_name").focus();
+			return;
+		}
+	
+		if (!validateEmail($("#email").val())) {
+			alertMessage("schedules_alert", "Email invalid.", "danger", false);
+			$("#email").focus();
+			return;
+		}
+	
+		if (!validatePhone($("#phone").val())) {
+			alertMessage("schedules_alert", "Phone invalid.", "danger", false);
+			$("#phone").focus();
+			return;
+		}
+	
+		if (!validateAddress($("#address").val())) {
+			alertMessage("schedules_alert", "Address empty.", "danger", false);
+			$("#address").focus();
+			return;
+		}
+	
+		if (!validateWeeksPregnant($("#weeks_pregnant").val())) {
+			alertMessage("schedules_alert", "Invalid number of weeks pregnant.", "danger", false);
+			$("#weeks_pregnant").focus();
+			return;
+		}
+		
+		if (!validatePassword($("#password").val())) {
+			alertMessage("schedules_alert", "Password empty.", "danger", false);
+			$("#password").focus();
+			return;
+		}
+	
+		if (!validatePassword($("#password_confirmation").val())) {
+			alertMessage("schedules_alert", "Password confirmation empty.", "danger", false);
+			$("#password_confirmation").focus();
+			return;
+		}
+	
+		if ($("#password").val() != $("#password_confirmation").val()) {
+			$("#password").val("");
+			$("#password_confirmation").val("");
+			alertMessage("schedules_alert", "Passwords don't match.", "danger", false);
+			$("#password").focus();
+			return;
+		}
+	
+		if ($("#password").val().length < 6) {
+			$("#password").val("");
+			$("#password_confirmation").val("");
+			alertMessage("schedules_alert", "Password too short (minimum 6 digits).", "danger", false);
+			$("#password").focus();
+			return;
+		}
+	
+		working_on_signup = true;
+		$("#schedules_modal_action").html("<i class=\"fa fa-cog fa-spin\"></i> Processing");
+		$("#schedules_modal_action").blur();
+		$.ajax({
+			type: 'GET',
+			url: '/csignup_ajax',
+			dataType: "json",
+			data: { 
+				'email': $("#email").val(),
+				'client[first_name]': $("#first_name").val(),
+				'client[last_name]': $("#last_name").val(),
+				'client[email]': $("#email").val(),
+				'client[password]': $("#password").val(),
+				'client[password_confirmation]': $("#password_confirmation").val(),
+				'client[phone]': $("#phone").val(),
+				'client[address]': $("#address").val(),
+				'client[weeks_pregnant]': $("#weeks_pregnant").val()
+			},
+			success: function(data) {
+				if (data.status == "success") {
+					
+					//$("#c_client_id").val(data.client.id);
+					//$("#c_client_first_name").val(data.client.first_name);
+					//$("#c_client_last_name").val(data.client.last_name);
+					//$("#c_client_address").val(data.client.address);
+					//$("#c_client_phone").val(data.client.phone);
+					//$("#c_client_weeks_pregnant").val(data.client.weeks_pregnant);
+					clearMessages();
+					//changeNavLinksSignedIn(data.client.profile);
+					
+					//requestAppointment(date);
+					working_on_signup = false;
+					signInUp("signin", date);
+					alertMessage("schedules_alert", "Welcome to CareForMe! Please check your email to proced.", "success", false);
+				}
+				else if (data.status == "email_exists") {
+					$("#password").val("");
+					$("#password_confirmation").val("");
+					alertMessage("schedules_alert", "Email already registered. <a href=\"javascript: window.open('/password_recovery');\">Forgot your password?</a>", "warning", false);
+					working_on_signup = false;
+				}
+				else if (data.status == "fail") {
+					$("#password").val("");
+					$("#password_confirmation").val("");
+					alertMessage("schedules_alert", "Fail sign in, please try again.", "warning", false);
+					working_on_signup = false;
+				}
+			},
+			error: function(data) {
+				console.log("error");
+				console.log(data);
+				alertMessage("schedules_alert", "Please contact us directly.", "danger", false);
+				working_on_signup = false;
+			}
+		});
+	}
 };
+
 
 var updateInfo = function(date) {
 	clearMessage("schedules_alert");

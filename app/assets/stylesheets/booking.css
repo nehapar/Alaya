@@ -51,6 +51,18 @@
   color: #e3bfbf !important;
 }
 
+.past_day_white {
+	cursor: not-allowed;
+	background: #fbfbfb !important;
+  color: #e3bfbf !important;
+}
+
+.past_day_white:hover {
+	cursor: not-allowed;
+	background: #fbfbfb !important;
+  color: #e3bfbf !important;
+}
+
 .today {
 	border: 2px solid #e74c3c !important;
 }
