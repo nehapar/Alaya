@@ -1,4 +1,0 @@
-class ChangeTextIncreaseSizeToReviews < ActiveRecord::Migration
-  def change
-  end
-end

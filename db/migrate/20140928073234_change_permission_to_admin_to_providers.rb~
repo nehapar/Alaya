@@ -1,4 +1,0 @@
-class ChangePermissionToAdminToProviders < ActiveRecord::Migration
-  def change
-  end
-end
