@@ -20,10 +20,13 @@ CareForMe::Application.configure do
   # config.action_dispatch.rack_cache = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this).
-  config.serve_static_assets = false
+  #config.serve_static_assets = false
+  config.serve_static_files = false
 
   # Compress JavaScripts and CSS.
-  config.assets.js_compressor = :uglifier
+  #config.assets.js_compressor = :uglifier
+  config.assets.compress = true
+  config.assets.js_compressor = Uglifier.new(:beautify => true) if defined? Uglifie
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
@@ -43,7 +46,7 @@ CareForMe::Application.configure do
   # config.force_ssl = true
 
   # Set to :debug to see everything in the log.
-  #config.log_level = :info
+  config.log_level = :info
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
