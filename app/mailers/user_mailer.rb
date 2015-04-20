@@ -838,6 +838,7 @@ class UserMailer < ActionMailer::Base
   end
   
   def default_url
-    return "http://alaya-c9-thiagomelo.c9.io"
+    #return "http://alaya-c9-thiagomelo.c9.io"
+    return "http://careforme.co"
   end
 end

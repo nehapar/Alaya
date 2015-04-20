@@ -26,6 +26,7 @@
           <li class=""><a href="#denied" role="tab" data-toggle="tab"><i class="fa fa-ban"></i> Denied</a></li>
           <li class=""><a href="#schedule" role="tab" data-toggle="tab"><i class="fa fa-calendar"></i> Schedule</a></li>
           <li class=""><a href="#providers" role="tab" data-toggle="tab"><i class="fa fa-user-md"></i> Providers</a></li>
+          <li class=""><a href="#zipcodes" role="tab" data-toggle="tab"><i class="fa fa-envelope"></i> Zip Codes</a></li>
           <!--
           <li class=""><a href="#clients" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Clients</a></li>
           <li class=""><a href="#config" role="tab" data-toggle="tab"><i class="fa fa-cog"></i> Configuration</a></li>
@@ -642,10 +643,57 @@
                   </div>
                 </div>
               </div>
-              
+            </div>
+          </div>
+          
+          <div class="tab-pane" id="zipcodes">
+            <br>
+            <h2>Zip Codes</h2>
+            <div class="row">
+              <div class="col-md-4 col-md-offset-4">
+                <table class="table table-striped table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th>Zip Code</th>
+                      <th>Occurrences</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @zip_codes.each_with_index do |zip, index| %>
+                      <tr>
+                        <td><%= zip.zip[0][0] %></td>
+                        <td><%= zip.zip[1][0] %></td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
             </div>
             
+            <br>
+            <h2>Emails</h2>
+            <div class="row">
+              <div class="col-md-4 col-md-offset-4">
+                <table class="table table-striped table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th>Zip Code</th>
+                      <th>Email</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @zip_codes_emails.each_with_index do |zip, index| %>
+                      <tr>
+                        <td><%= zip.zip %></td>
+                        <td><%= zip.email %></td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
+          
           <div class="tab-pane" id="clients">
             
           </div>  

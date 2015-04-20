@@ -103,6 +103,7 @@ CareForMe::Application.routes.draw do
   #match 'password_recovery', :to => 'sessions#password_recovery_ajax', via: 'get'
   
   # web site
+  match 'search_zip', :to => 'web_site#search_zip', via: 'get'
   match 'profile_list_static', :to => 'web_site#profile_list', via: 'get'
   match 'partners', :to => 'web_site#partners', via: 'get'
   match 'about', :to => 'web_site#about', via: 'get'
@@ -110,7 +111,7 @@ CareForMe::Application.routes.draw do
   match 'faq', :to => 'web_site#faq', via: 'get'
   match 'contact_message', :to => 'web_site#contact_message', via: 'get'
   match 'provider_intention_note', :to => 'web_site#provider_intention_note_ajax', via: 'get'
-  
+  match 'alert_me_when_launch', :to => 'web_site#alert_me_when_launch', via: 'patch'
   
   get "web_site/index"
   get "web_site/profile_list"

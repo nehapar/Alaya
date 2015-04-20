@@ -333,4 +333,5 @@ var validateContact = function() {
 		return false;
 	}
 	return true;
-}
+};
+

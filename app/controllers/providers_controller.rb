@@ -1032,6 +1032,10 @@ class ProvidersController < ApplicationController
     @denied_appointments = Appointment.where("accepted = 2").where(['start >= ?', DateTime.now]).order("start desc")
     
     @providers = Provider.where("admin = 0").order("first_name, last_name ASC")
+    
+    @zip_codes = ZipCode.group('zip').order('count_id desc').count('id')
+    @zip_codes_emails = ZipCode.where("email is not null").order('zip')
+    
     #@providers = Provider.order("first_name, last_name ASC")
   end
 

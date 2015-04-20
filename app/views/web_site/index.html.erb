@@ -18,13 +18,14 @@
             </div>
             -->
             
-            
-            <div class="input-group">
-              <input type="text" onclick="document.location.href = '/profile_list';" class="form-control input-lg" placeholder="San Francisco Bay Area" value="San Francisco Bay Area" onfocus="blur()" style="background-color: #fff; color: #000; cursor: pointer; height: 50px;">
-              <div class="input-group-btn">
-                <%= link_to "Browse", profile_list_path, class: "btn-u btn-u-lg ", style: " height: 50px;" %>
-              </div>       
-            </div>
+            <%= form_tag("/search_zip", method: "get") do %>
+              <div class="input-group">
+                <%= text_field_tag(:zip_code, nil, class: "form-control input-lg", placeholder: "Your Zip Code", style: "height: 50px;") %>
+                <div class="input-group-btn">
+                  <%= submit_tag("Browse", class: "btn-u btn-u-lg", style: "height: 50px;") %>
+                </div>
+              </div>
+            <% end %>
             
           </div>
         </div>
