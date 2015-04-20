@@ -27,18 +27,13 @@ test:
 production:
 #  <<: *default
 #  database: db/production.sqlite3
-  adapter: sqlite3
-  database: db/development.sqlite3
-  pool: 5
-  timeout: 5000
-  
-  #adapter: postgresql
-  #encoding: unicode
-  #database: <%= ENV['RDS_DB_NAME'] %>
-  #username: <%= ENV['RDS_USERNAME'] %>
-  #password: <%= ENV['RDS_PASSWORD'] %>
-  #host: <%= ENV['RDS_HOSTNAME'] %>
-  #port: <%= ENV['RDS_PORT'] %>
+  adapter: postgresql
+  encoding: unicode
+  database: <%= ENV['RDS_DB_NAME'] %>
+  username: <%= ENV['RDS_USERNAME'] %>
+  password: <%= ENV['RDS_PASSWORD'] %>
+  host: <%= ENV['RDS_HOSTNAME'] %>
+  port: <%= ENV['RDS_PORT'] %>
   
   #database: morrodacoruja
   #username: morrodacoruja
