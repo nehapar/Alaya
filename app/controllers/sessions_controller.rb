@@ -12,20 +12,16 @@ class SessionsController < ApplicationController
       params[:session][:remember_me] == '1' ? remember(provider) : forget(provider)
       if is_admin?
         redirect_to admin_path
-        return
       else
         redirect_to provider_dashboard_path # eval(provider.profile + '_path')
-        return
       end
     elsif client && client.authenticate(params[:session][:password]) && client.active == 1
       csign_in client
       params[:session][:remember_me] == '1' ? remember(client) : forget(client)
       if client.appointments.where(['start >= ? and (accepted = 0 or accepted = 1)', DateTime.now]).length > 0
         redirect_to eval(client.profile + '_path')
-        return
       else
         redirect_to profile_list_path
-        return
       end
     elsif client && client.authenticate(params[:session][:password]) && client.active == 0
       flash.now[:error] = 'Please, activate your profile through the link in your email.' # Not quite right!
