@@ -998,6 +998,7 @@ class ProvidersController < ApplicationController
   # admin methods
 
   def admin
+    self.reload
     if !signed_in? || !is_admin?
       redirect_to root_url
       return
