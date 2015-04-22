@@ -70,12 +70,12 @@ class Provider < ActiveRecord::Base
 		time_ini = timeval - 20.minute
 		time_end = timeval + 80.minute
 		
-		appointment = self.appointments.where('start >= ? and end <= ?', time_ini, time_end).first
+		appointment = self.appointments.where('time_start >= ? and time_end <= ?', time_ini, time_end).first
 		
 		if appointment.nil?
 			time_ini = timeval - 50.minute
 			time_end = timeval + 50.minute
-			appointment = self.appointments.where('start >= ? and end <= ?', time_ini, time_end).first
+			appointment = self.appointments.where('time_start >= ? and time_end <= ?', time_ini, time_end).first
 			if appointment.nil?
 				return true
 			end
