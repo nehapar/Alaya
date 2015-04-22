@@ -22,26 +22,21 @@ class WebSiteController < ApplicationController
   
   def search_zip
     if params[:zip_code].present?
-      
       is_bay_area = false
       ba_zips = bayAreaZipCodes
-      
       ba_zips.each do |zip|
         if zip == params[:zip_code]
           is_bay_area = true
         end
       end
-      
       @zip_code = ZipCode.new(zip: params[:zip_code])
       @zip_code.save
       if is_bay_area
         redirect_to profile_list_path
       end
-      
     else
       redirect_to profile_list_path
     end
-    
   end
   
   def alert_me_when_launch
@@ -74,7 +69,6 @@ class WebSiteController < ApplicationController
   end
   
   private
-
     def zip_code_params
       params.require(:zip_code).permit(:email)
     end

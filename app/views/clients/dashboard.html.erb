@@ -18,7 +18,7 @@
 							<div class="row">
 								<div class="col-md-12 col-xs-12">
 									<h2 style="padding-left: 0px;">Upcoming appointments <!--<small><strong><a href="#" data-toggle="modal" data-target="#waiting_modal">(See those waiting for acceptance)</a></strong></small>--></h2>
-									<% if @client.appointments.where("accepted = 0 or accepted = 1").where(['start >= ?', DateTime.now]).length > 0 %>
+									<% if @client.appointments.where("accepted = 0 or accepted = 1").where(['time_start >= ?', DateTime.now]).length > 0 %>
 										<table class="table table-striped table-hover">
 											<thead>
 												<tr>
@@ -28,10 +28,10 @@
 												</tr>
 											</thead>
 											<tbody>
-												<% @client.appointments.where("accepted = 0 or accepted = 1").where(['start >= ?', DateTime.now]).order(start: :asc).each_with_index do |appointment, index| %>
+												<% @client.appointments.where("accepted = 0 or accepted = 1").where(['time_start >= ?', DateTime.now]).order(time_start: :asc).each_with_index do |appointment, index| %>
 													<tr id="appointment_<%= appointment.id %>">
 														<td>
-															You have an upcoming <strong><%= appointment_types[appointment.appointment_type] %></strong> appointment with <%= link_to eval("#{appointment.provider.profile}_path"), :target => "_blank" do %><strong><%= appointment.provider.first_name %> <%= appointment.provider.last_name %></strong><% end %> on <strong><%= (appointment.start + 20.minutes).strftime("%A, %m/%d/%Y") %></strong> at <strong><%= (appointment.start + 20.minutes).strftime("%I:%M %p") %></strong> at <strong><%= appointment.client.address %></strong>
+															You have an upcoming <strong><%= appointment_types[appointment.appointment_type] %></strong> appointment with <%= link_to eval("#{appointment.provider.profile}_path"), :target => "_blank" do %><strong><%= appointment.provider.first_name %> <%= appointment.provider.last_name %></strong><% end %> on <strong><%= (appointment.time_start + 20.minutes).strftime("%A, %m/%d/%Y") %></strong> at <strong><%= (appointment.time_start + 20.minutes).strftime("%I:%M %p") %></strong> at <strong><%= appointment.client.address %></strong>
 														</td>
 														<!--	
 														<td><%= appointment.provider.expertise %></td>
@@ -56,7 +56,7 @@
 							<div class="row">
 								<div class="col-md-12 col-xs-12">
 									<h2 style="padding-left: 0px;">Past appointments</h2>
-									<% if @client.appointments.where("accepted = 0 or accepted = 1").where(['start < ?', DateTime.now]).length > 0 %>
+									<% if @client.appointments.where("accepted = 0 or accepted = 1").where(['time_start < ?', DateTime.now]).length > 0 %>
 										<table class="table table-striped table-hover">
 											<thead>
 												<tr>
@@ -67,7 +67,7 @@
 												</tr>
 											</thead>
 											<tbody>
-												<% @client.appointments.where("accepted = 0 or accepted = 1").where(['start < ?', DateTime.now]).order(start: :desc).each_with_index do |appointment, index| %>
+												<% @client.appointments.where("accepted = 0 or accepted = 1").where(['time_start < ?', DateTime.now]).order(time_start: :desc).each_with_index do |appointment, index| %>
 													<tr id="appointment_<%= appointment.id %>">
 														<td>
 															<%= link_to eval("#{appointment.provider.profile}_path"), :target => "_blank" do %>
@@ -78,7 +78,7 @@
 															<%= appointment.provider.expertise %>
 														</td>
 														<td>
-															<strong><%= (appointment.start + 20.minutes).strftime("%A, %B %dth, %Y") %></strong> at <strong><%= (appointment.start + 20.minutes).strftime("%I:%M %p") %></strong>
+															<strong><%= (appointment.time_start + 20.minutes).strftime("%A, %B %dth, %Y") %></strong> at <strong><%= (appointment.time_start + 20.minutes).strftime("%I:%M %p") %></strong>
 														</td>
 														<td align="center">
 															<a href="javascript: reschedule(<%= appointment.id %>);"><i class="fa fa-history fa-flip-horizontal"></i></a>
@@ -119,7 +119,7 @@
 										<div class="modal-body">
 											<div class="row">
 												<div class="col-md-12 col-xs-12">
-													<% if @client.appointments.where("accepted = 0").where(['start >= ?', DateTime.now]).length > 0 %>
+													<% if @client.appointments.where("accepted = 0").where(['time_start >= ?', DateTime.now]).length > 0 %>
 														<table class="table table-striped table-hover">
 															<thead>
 																<tr>
@@ -128,13 +128,13 @@
 																</tr>
 															</thead>
 														<tbody>
-															<% @client.appointments.where("accepted = 0").where(['start >= ?', DateTime.now]).order(start: :asc).each_with_index do |appointment, index| %>
+															<% @client.appointments.where("accepted = 0").where(['time_start >= ?', DateTime.now]).order(time_start: :asc).each_with_index do |appointment, index| %>
 																<tr id="appointment_<%= appointment.id %>">
 																	<td>
 																		<%= link_to eval("#{appointment.provider.profile}_path") do %><strong><%= appointment.provider.first_name %> <%= appointment.provider.last_name %></strong><% end %></strong>
 																	</td>
 																	<td>
-																		<strong><%= (appointment.start + 20.minutes).strftime("%A, %B %dth, %Y") %></strong> at <strong><%= (appointment.start + 20.minutes).strftime("%I:%M %p") %></strong>
+																		<strong><%= (appointment.time_start + 20.minutes).strftime("%A, %B %dth, %Y") %></strong> at <strong><%= (appointment.time_start + 20.minutes).strftime("%I:%M %p") %></strong>
 																	</td>
 																	<!-- <td align="center"><a href="javascript: deleteAppointment(<%= appointment.id %>);"><i class="fa fa-remove"></i></a></td> -->
 																</tr>

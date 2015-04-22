@@ -4,19 +4,19 @@ class Appointment < ActiveRecord::Base
 	#default_scope -> { order('start ASC') }
 	validates :provider_id, presence: true
 	validates :client_id, presence: true
-	validates :start, presence: true
-	validates :end, presence: true
+	validates :time_start, presence: true
+	validates :time_end, presence: true
 	validates :accepted, presence: true
 	
 	def get_start
-		return (self.start + 20.minutes).strftime("%H:%M:%S - %A, %B %dth, %Y")
+		return (self.time_start + 20.minutes).strftime("%H:%M:%S - %A, %B %dth, %Y")
 	end
 	
 	def get_start_adjusted
-		return (self.start + 20.minutes)
+		return (self.time_start + 20.minutes)
 	end
 	
 	def safe
-		return self.slice(:start, :end)
+		return self.slice(:time_start, :time_end)
 	end
 end

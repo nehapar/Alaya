@@ -1,11 +1,11 @@
 /* Appointment */
 
-function Appointment(id, provider_id, client_id, start, end, accepted, client_observation, created_at, updated_at) {
+function Appointment(id, provider_id, client_id, time_start, time_end, accepted, client_observation, created_at, updated_at) {
 	this.id = id;
 	this.provider_id = provider_id;
 	this.client_id = client_id;
-	this.start = this.parseDate(start);
-	this.end = this.parseDate(end);
+	this.time_start = this.parseDate(time_start);
+	this.time_end = this.parseDate(time_end);
 	this.accepted = accepted;
 	this.client_observation = client_observation;
 	this.created_at = created_at;
@@ -101,13 +101,13 @@ Schedule.prototype.get_schedule = function(provider_id, datetime_start, datetime
 		dataType: "json",
 		data: { 
 			'id': provider_id,
-			'start': s_start,
-			'end': s_end
+			'time_start': s_start,
+			'time_end': s_end
 		},
 		success: function(data) {
 			if (data.status == "success") {
 				$.each(data.appointments, function(i, appointment) {
-					var s_appointment = new Appointment(appointment.id, appointment.provider_id, appointment.client_id, appointment.start, appointment.end, appointment.accepted, appointment.client_observation, appointment.created_at, appointment.updated_at);
+					var s_appointment = new Appointment(appointment.id, appointment.provider_id, appointment.client_id, appointment.time_start, appointment.time_end, appointment.accepted, appointment.client_observation, appointment.created_at, appointment.updated_at);
 					appointments.push(s_appointment);
 				});
 				callback(appointments, self);
@@ -251,7 +251,7 @@ Monthly.prototype.print = function() {
 
 			//content = content + "		<td>";
 			for (j = 0; j < a_len; j++) {
-				if (this.appointments[j].start >= dummy_1 && dummy_2 >= this.appointments[j].end) {
+				if (this.appointments[j].time_start >= dummy_1 && dummy_2 >= this.appointments[j].time_end) {
 					how_many++;
 				}
 			}
@@ -368,13 +368,13 @@ Weekly.prototype.print = function() {
 				time_end.setHours(i, j + 30, 0, 0);
 				time_next.setHours(i, j + 60, 0, 0);
 				for (l = 0; l < a_len; l++) {
-					if ((this.appointments[l].start <= time_start && this.appointments[l].end >= time_end) ||
-						(this.appointments[l].start >= time_start && this.appointments[l].start <= time_end) ||
-						(this.appointments[l].end >= time_start && this.appointments[l].end <= time_end)) {
+					if ((this.appointments[l].time_start <= time_start && this.appointments[l].time_end >= time_end) ||
+						(this.appointments[l].time_start >= time_start && this.appointments[l].time_start <= time_end) ||
+						(this.appointments[l].time_end >= time_start && this.appointments[l].time_end <= time_end)) {
 						has_event = true;
 						l = a_len;
 					}
-					else if(this.appointments[l].start >= time_start && this.appointments[l].start >= time_end && this.appointments[l].start <= time_next) {
+					else if(this.appointments[l].time_start >= time_start && this.appointments[l].time_start >= time_end && this.appointments[l].time_start <= time_next) {
 						useless = true;
 					}
 				}
@@ -471,8 +471,8 @@ var invalidNotAvailableSlots = function() {
   		dataType: "json",
   		data: {
   			'provider_id': provider_id,
-  			'start': first_day.getTime(),
-				'end': last_day.getTime()
+  			'time_start': first_day.getTime(),
+				'time_end': last_day.getTime()
   		},
   		success: function(data) {
   			if (data.status == "success") {
@@ -1221,8 +1221,8 @@ var sendRequestPOG = function(date) {
 		url: '/request_appointment_ajax',
 		dataType: "json",
 		data: { 
-			'appointment[start]': d_start,
-			'appointment[end]': d_end,
+			'appointment[time_start]': d_start,
+			'appointment[time_end]': d_end,
 			'appointment[provider_id]': $("#c_provider_id").val(),
 			'appointment[client_id]': $("#c_client_id").val(),
 			'appointment[client_observation]': $("#client_observation").val(),

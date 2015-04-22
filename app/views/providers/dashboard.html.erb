@@ -33,7 +33,7 @@
 								<% @pending_appointments.each_with_index do |appointment, index| %>
 									<tr class="lead">
 										<td><a href="javascript: showAppointmentDetail(<%= appointment.id %>, 1);" class="text-primary"><%= appointment.client.first_name %> <%= appointment.client.last_name %></a></td>
-										<td><%= (appointment.start + 20.minutes).strftime("%H:%M:%S - %A, %B %dth, %Y") %></td>
+										<td><%= (appointment.time_start + 20.minutes).strftime("%H:%M:%S - %A, %B %dth, %Y") %></td>
 										<td align="center"><a href="javascript: acceptAppointmentWizard(<%= appointment.id %>, 1);" class="text-primary"><i class="fa fa-thumbs-o-up"></i></a></td>
 										<td align="center"><a href="javascript: denyAppointmentWizard(<%= appointment.id %>, 1);" class="text-danger"><i class="fa fa-thumbs-o-down"></i></a></td>
 									</tr>
@@ -59,7 +59,7 @@
 								<% @confirmed_appointments.each_with_index do |appointment, index| %>
 									<tr class="lead">
 										<td><a href="javascript: showAppointmentDetail(<%= appointment.id %>, 1);" class="text-primary"><%= appointment.client.first_name %> <%= appointment.client.last_name %></a></td>
-										<td><%= (appointment.start + 20.minutes).strftime("%H:%M:%S - %A, %B %dth, %Y") %></td>
+										<td><%= (appointment.time_start + 20.minutes).strftime("%H:%M:%S - %A, %B %dth, %Y") %></td>
 										<td align="center"><a href="javascript: denyAppointmentWizard(<%= appointment.id %>, 1);" class="text-danger"><i class="fa fa-thumbs-o-down"></i></a></td>
 									</tr>
 								<% end %>
@@ -90,7 +90,7 @@
 								<% @past_appointments.each_with_index do |appointment, index| %>
 									<tr class="lead">
 										<td><a href="javascript: showAppointmentDetail(<%= appointment.id %>, 1, true);" class="text-primary"><%= appointment.client.first_name %> <%= appointment.client.last_name %></a></td>
-										<td><%= (appointment.start + 20.minutes).strftime("%H:%M:%S - %A, %B %dth, %Y") %></td>
+										<td><%= (appointment.time_start + 20.minutes).strftime("%H:%M:%S - %A, %B %dth, %Y") %></td>
 									</tr>
 								<% end %>
 							</tbody>

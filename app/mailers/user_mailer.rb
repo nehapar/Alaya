@@ -286,8 +286,8 @@ class UserMailer < ActionMailer::Base
     ]
     simple_template_email("V3Acknowledgement-Template", appointment.client.first_name, appointment.client.email, "Booking request", text, html, ["booking-request-client"], nil, nil, nil, hash)
     
-    appointment_date = (appointment.start + 20.minutes).strftime("%A, %B %d, %Y")
-    appointment_time = (appointment.start + 20.minutes).strftime("%I:%M %p")
+    appointment_date = (appointment.time_start + 20.minutes).strftime("%A, %B %d, %Y")
+    appointment_time = (appointment.time_start + 20.minutes).strftime("%I:%M %p")
     html = <<-HTML_END
     <p>Hi,</p>
     <p>A booking request has been arraived.</p>
@@ -346,8 +346,8 @@ class UserMailer < ActionMailer::Base
   
   def appointment_accepted_email (appointment)
     
-    appointment_date = (appointment.start + 20.minutes).strftime("%A, %B %d, %Y")
-    appointment_time = (appointment.start + 20.minutes).strftime("%I:%M %p")
+    appointment_date = (appointment.time_start + 20.minutes).strftime("%A, %B %d, %Y")
+    appointment_time = (appointment.time_start + 20.minutes).strftime("%I:%M %p")
     
     html = <<-HTML_END
     <p>Hi #{appointment.client.first_name},</p>
@@ -474,8 +474,8 @@ class UserMailer < ActionMailer::Base
   # @author: Thiago Melo
   # @version: 2015-03-16
   def sendRescheduleRequest (appointment, reschedule_message)
-    appointment_date = (appointment.start + 20.minutes).strftime("%A, %B %d, %Y")
-    appointment_time = (appointment.start + 20.minutes).strftime("%I:%M %p")
+    appointment_date = (appointment.time_start + 20.minutes).strftime("%A, %B %d, %Y")
+    appointment_time = (appointment.time_start + 20.minutes).strftime("%I:%M %p")
     
     html = <<-HTML_END
     <p>Hi Neha,</p>
@@ -570,8 +570,8 @@ class UserMailer < ActionMailer::Base
   # @author: Thiago Melo
   # @version: 2015-03-14
   def sendCancelingBooking(appointment)
-    appointment_date = (appointment.start + 20.minutes).strftime("%A, %B %d, %Y")
-    appointment_time = (appointment.start + 20.minutes).strftime("%I:%M %p")
+    appointment_date = (appointment.time_start + 20.minutes).strftime("%A, %B %d, %Y")
+    appointment_time = (appointment.time_start + 20.minutes).strftime("%I:%M %p")
     
     html = <<-HTML_END
     <p>Hi #{appointment.client.first_name},</p>
@@ -699,8 +699,8 @@ class UserMailer < ActionMailer::Base
   # @version: 2015-03-16
   def appointment_denied_email (appointment, explanation)
     
-    appointment_date = (appointment.start + 20.minutes).strftime("%A, %B %d, %Y")
-    appointment_time = (appointment.start + 20.minutes).strftime("%I:%M %p")
+    appointment_date = (appointment.time_start + 20.minutes).strftime("%A, %B %d, %Y")
+    appointment_time = (appointment.time_start + 20.minutes).strftime("%I:%M %p")
     
     html = <<-HTML_END
     <p>Hi #{appointment.client.first_name},</p>

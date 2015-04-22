@@ -180,10 +180,10 @@ class ProvidersController < ApplicationController
       redirect_to root_url
     end
     
-    @pending_appointments = @provider.appointments.where("accepted = 0").where(['start >= ?', DateTime.now]).order("start asc")
-    @confirmed_appointments = @provider.appointments.where("accepted = 1").where(['start >= ?', DateTime.now]).order("start asc")
-    @past_appointments = @provider.appointments.where(['start < ?', DateTime.now]).order("start desc")
-    @denied_appointments = @provider.appointments.where("accepted = 2").where(['start >= ?', DateTime.now]).order("start desc")
+    @pending_appointments = @provider.appointments.where("accepted = 0").where(['time_start >= ?', DateTime.now]).order("time_start asc")
+    @confirmed_appointments = @provider.appointments.where("accepted = 1").where(['time_start >= ?', DateTime.now]).order("time_start asc")
+    @past_appointments = @provider.appointments.where(['time_start < ?', DateTime.now]).order("time_start desc")
+    @denied_appointments = @provider.appointments.where("accepted = 2").where(['time_start >= ?', DateTime.now]).order("time_start desc")
     
     require 'date'
   end
@@ -596,9 +596,9 @@ class ProvidersController < ApplicationController
   
   def appointments_ajax
     @provider = Provider.find(params[:id])
-    @appointments = @provider.appointments.where("start >= '" + params[:start] + "' AND end <= '" + params[:end] + "'")
+    @appointments = @provider.appointments.where("time_start >= '" + params[:time_start] + "' AND time_end <= '" + params[:time_end] + "'")
     if csigned_in?
-      appointments = current_client.appointments.where("start >= '" + params[:start] + "' AND end <= '" + params[:end] + "'")
+      appointments = current_client.appointments.where("time_start >= '" + params[:time_start] + "' AND time_end <= '" + params[:time_end] + "'")
       @appointments = @appointments.push(*appointments)
     end
     
@@ -777,7 +777,7 @@ class ProvidersController < ApplicationController
     if is_admin?
       provider = Provider.find(params[:provider_id])
       if !provider.nil?
-        provider.active = params[:active] == "true"
+        provider.active = params[:active] == "true" ? 1 : 0
         provider.save
         container = { "status" => "success" }
       else
@@ -873,14 +873,11 @@ class ProvidersController < ApplicationController
   def provider_appointments_ajax
     if is_admin? or (signed_in? && current_provider.id == Integer(params[:provider_id]))
       if is_admin? and params[:provider_id] == "0"
-        #appointments = Appointment.where("accepted = 0 or accepted = 1").where(['start >= ?', DateTime.now]).order("start desc")
-        appointments = Appointment.where(['start >= ?', DateTime.now]).order("start desc")
+        appointments = Appointment.where(['time_start >= ?', DateTime.now]).order("time_start desc")
       elsif is_admin?
-        #appointments = Appointment.where("provider_id = #{params[:provider_id]}").where("accepted = 0 or accepted = 1").where(['start >= ?', DateTime.now]).order("start desc")
-        appointments = Appointment.where("provider_id = #{params[:provider_id]}").where(['start >= ?', DateTime.now]).order("start desc")
+        appointments = Appointment.where("provider_id = #{params[:provider_id]}").where(['time_start >= ?', DateTime.now]).order("time_start desc")
       elsif signed_in?
-        #appointments = current_provider.appointments.where("accepted = 0 or accepted = 1").where(['start >= ?', DateTime.now]).order("start desc")
-        appointments = current_provider.appointments.where(['start >= ?', DateTime.now]).order("start desc")
+        appointments = current_provider.appointments.where(['time_start >= ?', DateTime.now]).order("time_start desc")
       end
       full_clients = Hash.new
       full_providers = Hash.new
@@ -892,7 +889,7 @@ class ProvidersController < ApplicationController
         full_providers[index] = appointment.provider.without_secure_info
         dates[index] = appointment.get_start
       end
-      container = { "status" => "success", "appointments" => appointments.order(start: :asc), "clients" => clients, "dates" => dates, "full_clients" => full_clients, "full_providers" => full_providers }
+      container = { "status" => "success", "appointments" => appointments.order(time_start: :asc), "clients" => clients, "dates" => dates, "full_clients" => full_clients, "full_providers" => full_providers }
     else
       container = { "status" => "fail" }
     end
@@ -946,15 +943,15 @@ class ProvidersController < ApplicationController
   # these method return the time availability for a provider
   #
   # @params: [provider_id] the corresponding provider's id
-  #          [start] usually, the first day of the week
-  #          [end] usually the last day of the week
+  #          [time_start] usually, the first day of the week
+  #          [time_end] usually the last day of the week
   #
   # @author: Thiago Melo
   # @version: 2015-03-21
   def provider_time_availability_ajax
     begin
-      time_start = Time.at((params[:start].to_f)/1000).change({ hour: 0, min: 0, sec: 0 })
-      time_end = Time.at((params[:end].to_f)/1000).change({ hour: 23, min: 59, sec: 59 })
+      time_start = Time.at((params[:time_start].to_f)/1000).change({ hour: 0, min: 0, sec: 0 })
+      time_end = Time.at((params[:time_end].to_f)/1000).change({ hour: 23, min: 59, sec: 59 })
       
       provider = Provider.find(params[:provider_id])
       slots_unavailable = provider.provider_schedules.where("time >= ? and time <= ? and unavailable = ?", time_start, time_end, true)
@@ -970,18 +967,18 @@ class ProvidersController < ApplicationController
   # between to dates including
   #
   # @params: [provider_id] the corresponding provider's id
-  #          [start] the start date
-  #          [end] the end date
+  #          [time_start] the start date
+  #          [time_end] the end date
   #
   # @author: Thiago Melo
   # @version: 2015-04-05
   def provider_schedules_appointments_ajax
-    time_start = Time.at((params[:start].to_f)/1000).change({ hour: 0, min: 0, sec: 0 })
-    time_end = Time.at((params[:end].to_f)/1000).change({ hour: 23, min: 59, sec: 59 })
+    time_start = Time.at((params[:time_start].to_f)/1000).change({ hour: 0, min: 0, sec: 0 })
+    time_end = Time.at((params[:time_end].to_f)/1000).change({ hour: 23, min: 59, sec: 59 })
     
     schedules = ProviderSchedule.where("provider_id = ? and time >= ? and time <= ?", params[:provider_id], time_start, time_end)
     
-    appointments = Appointment.where("provider_id = ? and start >= ? and end <= ?", params[:provider_id], time_start, time_end)
+    appointments = Appointment.where("provider_id = ? and time_start >= ? and time_end <= ?", params[:provider_id], time_start, time_end)
     
     if !is_admin? and !(signed_in? and current_provider.id == Integer(params[:provider_id]))
       appointments.each_with_index do |appointment, index|
@@ -1026,10 +1023,10 @@ class ProvidersController < ApplicationController
     @appointments_not_accepted = Appointment.where("accepted = 0")
     
     
-    @pending_appointments = Appointment.where("accepted = 0").where(['start >= ?', DateTime.now]).order("start asc")
-    @confirmed_appointments = Appointment.where("accepted = 1").where(['start >= ?', DateTime.now]).order("start asc")
-    @past_appointments = Appointment.where(['start < ?', DateTime.now]).order("start desc")
-    @denied_appointments = Appointment.where("accepted = 2").where(['start >= ?', DateTime.now]).order("start desc")
+    @pending_appointments = Appointment.where("accepted = 0").where(['time_start >= ?', DateTime.now]).order("time_start asc")
+    @confirmed_appointments = Appointment.where("accepted = 1").where(['time_start >= ?', DateTime.now]).order("time_start asc")
+    @past_appointments = Appointment.where(['time_start < ?', DateTime.now]).order("time_start desc")
+    @denied_appointments = Appointment.where("accepted = 2").where(['time_start >= ?', DateTime.now]).order("time_start desc")
     
     @providers = Provider.where("admin = 0").order("first_name, last_name ASC")
     

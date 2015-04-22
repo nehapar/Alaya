@@ -1147,8 +1147,8 @@ var weekProviderSchedule = function(week, year, provider_id) {
 		dataType: "json",
 		data: {
 			'provider_id': provider_id,
-			'start': first_day.getTime(),
-			'end': last_day.getTime()
+			'time_start': first_day.getTime(),
+			'time_end': last_day.getTime()
 		},
 		success: function(data) {
 			if (data.status == "success") {
@@ -1199,10 +1199,10 @@ var weekProviderSchedule = function(week, year, provider_id) {
             
             $.each(data.appointments, function(appointment_index, appointment) {
               
-              var my_appoint = new Appointment(appointment.id, appointment.provider_id, appointment.client_id, appointment.start, appointment.end, appointment.accepted, appointment.client_observation, appointment.created_at, appointment.updated_at);
+              var my_appoint = new Appointment(appointment.id, appointment.provider_id, appointment.client_id, appointment.time_start, appointment.time_end, appointment.accepted, appointment.client_observation, appointment.created_at, appointment.updated_at);
               
-              var appointment_start = my_appoint.start;
-              var appointment_end = my_appoint.end;
+              var appointment_start = my_appoint.time_start;
+              var appointment_end = my_appoint.time_end;
               
               if ((appointment_start >= time_start_f_1 && appointment_start <= time_start_f_2) || (appointment_end >= time_end_f_1 && appointment_end <= time_end_f_2)) {
                 has_appointment_f = true;

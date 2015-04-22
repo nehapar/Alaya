@@ -51,10 +51,10 @@
                 </div>
                 <div class="row margin-bottom-20">
                     <div class="col-sm-5 col-sm-offset-1">
-                        <p class="lead"><strong>Date:</strong> <%= (@appointment.start + 20.minutes).strftime("%A, %B %dth, %Y") %></p>
+                        <p class="lead"><strong>Date:</strong> <%= (@appointment.time_start + 20.minutes).strftime("%A, %B %dth, %Y") %></p>
                     </div>
                     <div class="col-sm-5 col-sm-offset-0">
-                        <p class="lead"><strong>Hour:</strong> <%= (@appointment.start + 20.minutes).strftime("%H:%M") %></p>
+                        <p class="lead"><strong>Hour:</strong> <%= (@appointment.time_start + 20.minutes).strftime("%H:%M") %></p>
                     </div>
                 </div>
 

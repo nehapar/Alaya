@@ -3,8 +3,8 @@ class CreateAppointments < ActiveRecord::Migration
     create_table :appointments do |t|
       t.integer :provider_id
       t.integer :client_id
-      t.datetime :start
-      t.datetime :end
+      t.datetime :time_start
+      t.datetime :time_end
       t.integer :accepted
 
       t.timestamps

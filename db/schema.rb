@@ -13,11 +13,11 @@
 
 ActiveRecord::Schema.define(version: 20150419231534) do
 
-  create_table "appointments", force: true do |t|
+  create_table "appointments", force: :cascade do |t|
     t.integer  "provider_id"
     t.integer  "client_id"
-    t.datetime "start"
-    t.datetime "end"
+    t.datetime "time_start"
+    t.datetime "time_end"
     t.integer  "accepted"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -27,21 +27,21 @@ ActiveRecord::Schema.define(version: 20150419231534) do
 
   add_index "appointments", ["provider_id", "created_at"], name: "index_appointments_on_provider_id_and_created_at"
 
-  create_table "areas", force: true do |t|
+  create_table "areas", force: :cascade do |t|
     t.integer  "provider_id"
     t.string   "area"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "certifications", force: true do |t|
+  create_table "certifications", force: :cascade do |t|
     t.integer  "provider_id"
     t.string   "certification"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "clients", force: true do |t|
+  create_table "clients", force: :cascade do |t|
     t.string   "first_name"
     t.string   "last_name"
     t.string   "email"
@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 20150419231534) do
 
   add_index "clients", ["remember_token"], name: "index_clients_on_remember_token"
 
-  create_table "provider_schedules", force: true do |t|
+  create_table "provider_schedules", force: :cascade do |t|
     t.integer  "provider_id"
     t.string   "timeid"
     t.boolean  "unavailable"
@@ -69,7 +69,7 @@ ActiveRecord::Schema.define(version: 20150419231534) do
     t.datetime "time"
   end
 
-  create_table "providers", force: true do |t|
+  create_table "providers", force: :cascade do |t|
     t.string   "first_name"
     t.string   "email"
     t.integer  "admin"
@@ -95,7 +95,7 @@ ActiveRecord::Schema.define(version: 20150419231534) do
   add_index "providers", ["email"], name: "index_providers_on_email", unique: true
   add_index "providers", ["remember_token"], name: "index_providers_on_remember_token"
 
-  create_table "reviews", force: true do |t|
+  create_table "reviews", force: :cascade do |t|
     t.integer  "provider_id"
     t.text     "review"
     t.string   "author"
@@ -103,21 +103,21 @@ ActiveRecord::Schema.define(version: 20150419231534) do
     t.datetime "updated_at"
   end
 
-  create_table "services", force: true do |t|
+  create_table "services", force: :cascade do |t|
     t.integer  "provider_id"
     t.string   "service"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "specialties", force: true do |t|
+  create_table "specialties", force: :cascade do |t|
     t.integer  "provider_id"
     t.string   "specialty"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "zip_codes", force: true do |t|
+  create_table "zip_codes", force: :cascade do |t|
     t.string   "zip"
     t.datetime "created_at"
     t.datetime "updated_at"
