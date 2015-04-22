@@ -7,7 +7,7 @@ $(document).ready(function(){
 
     var gutter = 30;
     var min_width = 300;
-    $container.imagesLoaded( function(){
+    container.imagesLoaded( function(){
         $container.masonry({
             itemSelector : '.grid-boxes-in',
             gutterWidth: gutter,
