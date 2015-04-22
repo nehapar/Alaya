@@ -16,3 +16,13 @@
 //= require jasny-bootstrap
 // require turbolinks
 //= require_tree .
+//= require bootstrap/scrollspy
+//= require bootstrap/modal
+//= require bootstrap/dropdown
+//= require bootstrap/tab
+//= require bootstrap/alert
+//= require bootstrap/scrollspy
+//= require bootstrap/carousel
+//= require bootstrap/button
+//= require bootstrap/collapse
+//= require bootstrap/tooltip

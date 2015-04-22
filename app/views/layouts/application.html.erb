@@ -461,56 +461,36 @@
     </div><!--/End Wrapepr-->
     <!-- JS Global Compulsory -->           
     <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
-    <script type="text/javascript" src="assets/plugins/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="assets/plugins/jquery-migrate-1.2.1.min.js"></script>
-    <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script> 
-    <!-- JS Implementing Plugins -->
-    <script type="text/javascript" src="assets/plugins/back-to-top.js"></script>
-    <script type="text/javascript" src="assets/plugins/jquery.parallax.js"></script>
-    <script type="text/javascript" src="assets/plugins/counter/waypoints.min.js"></script>
-    <script type="text/javascript" src="assets/plugins/counter/jquery.counterup.min.js"></script> 
-    <!-- JS Page Level -->           
-    <script type="text/javascript" src="assets/js/app.js"></script>
-    <script type="text/javascript">
-    $(document).ready(function() {
-    App.init();
-    App.initCounter();
-    //App.initParallaxBg();
-    $('html, body').animate({scrollTop : 0},500);
-      loadSchedule();
-      $("a[data-section]").click(function(e) {
-        e.preventDefault();
-        var offSet = 50;
-        $('html, body').animate({
-          scrollTop: $("#" + $(this).data("section")).offset().top// - offSet
-        }, 1000);
-        $("li.active").toggleClass("active");
-        $(this).parent().toggleClass("active");
-      });
-      
-      <% if yield(:title) == "Profile List" %>
-        var i;
-        for (i = 0; i < profile_images.length; i++) {
-          profile_images[i][2].src = profile_images[i][1];
-          profile_images[i][2].id = "profile-img-" + profile_images[i][0];
-          profile_images[i][2].onload = onloadImage;
-        }
-      <% end %>
-      <% if yield(:title) == "Sign in" %>
-        //$("#signupFromSignModal").modal("show");
-      <% end %>
-    });
     
-    /*
-    $(window).scroll(function(){
-      if($("#booking_calendar").val() !== undefined && !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))) {
-        var scrollTop = $(window).scrollTop();
-        if (scrollTop + $("#booking_calendar").height() < $('#profile_column').position().top + $('#profile_column').outerHeight(true) && scrollTop > $('#profile_column').position().top) {
-          $("#booking_calendar").css('margin-top', $(window).scrollTop() - 115);
-        }
-      }
-  	});
-  	*/
+    <script type="text/javascript">
+      $(document).ready(function() {
+        App.init();
+        App.initCounter();
+        //App.initParallaxBg();
+        $('html, body').animate({scrollTop : 0},500);
+        loadSchedule();
+        $("a[data-section]").click(function(e) {
+          e.preventDefault();
+          var offSet = 50;
+          $('html, body').animate({
+            scrollTop: $("#" + $(this).data("section")).offset().top// - offSet
+          }, 1000);
+          $("li.active").toggleClass("active");
+          $(this).parent().toggleClass("active");
+        });
+        
+        <% if yield(:title) == "Profile List" %>
+          var i;
+          for (i = 0; i < profile_images.length; i++) {
+            profile_images[i][2].src = profile_images[i][1];
+            profile_images[i][2].id = "profile-img-" + profile_images[i][0];
+            profile_images[i][2].onload = onloadImage;
+          }
+        <% end %>
+        <% if yield(:title) == "Sign in" %>
+          //$("#signupFromSignModal").modal("show");
+        <% end %>
+      });
     </script>
     <!--[if lt IE 9]>
     <script src="assets/plugins/respond.js"></script>
