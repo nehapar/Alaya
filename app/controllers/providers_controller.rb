@@ -24,7 +24,7 @@ class ProvidersController < ApplicationController
   end
 
   def profile_list
-  	@providers = Provider.where("active = 1")#.find(:all)
+  	@providers = Provider.where("active = 1 and admin = 0")#.find(:all)
   end
 
   def profile_detail
