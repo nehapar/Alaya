@@ -12,7 +12,7 @@
 @import url(ie8.css);
 
 /*Import CSS Plugins*/
-@import url(plugins/animate.css);
+/*@import url(plugins/animate.css);*/
 @import url(plugins/box-shadows.css);
 
 /*Boxed Layout

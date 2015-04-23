@@ -262,7 +262,7 @@ var saveProviderSpecialtyText = function() {
 		},
 		success: function(data) {
 			if (data.status == "success") {
-				enableEditSpecialties();
+				//enableEditSpecialties();
 			}
 			else if (data.status == "fail") {
 				alertMessage("top_page_message", "Please, try again.", "warning", false);
@@ -299,7 +299,7 @@ var saveProviderServiceText = function() {
 		},
 		success: function(data) {
 			if (data.status == "success") {
-				enableEditServices();
+				//enableEditServices();
 			}
 			else if (data.status == "fail") {
 				alertMessage("top_page_message", "Please, try again.", "warning", false);
@@ -336,7 +336,7 @@ var saveProviderPoliciesText = function() {
 		},
 		success: function(data) {
 			if (data.status == "success") {
-				enableEditPolicies();
+				//enableEditPolicies();
 			}
 			else if (data.status == "fail") {
 				alertMessage("top_page_message", "Please, try again.", "warning", false);

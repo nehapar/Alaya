@@ -143,7 +143,7 @@ class ProvidersController < ApplicationController
   def create
     @provider = Provider.new(provider_minimum_params)
     @provider.admin = 0
-    @provider.active = 0
+    @provider.active = 1
     if @provider.last_name.include? "'"
       @provider.profile = @provider.first_name.downcase + "_" + @provider.last_name.downcase.gsub("'","")
     else
