@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 #ruby-gemset=railstutorial_rails_4_0
 
 gem 'rails', '4.2.0'
-#gem 'bootstrap-sass', '~> 3.3.4'
+gem 'bootstrap-sass', '~> 3.3.4'
 gem 'bcrypt-ruby', '3.1.2'
 gem 'jasny_bootstrap_extension_rails'
 gem 'uglifier', '2.1.1'
