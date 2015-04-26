@@ -47,11 +47,7 @@
             <% @providers.each_with_index do |provider, index| %>
               <div class="col-sm-3" style="height: 300px; margin-bottom: 150px;">
                 <div class="tag-box-v3">
-									<% if !provider.picture_path.nil? %>
-										<div id="profile-img-<%= provider.id %>-container" class="rounded easy-block-v1" align="center" style="cursor: pointer;" data-toggle="modal"data-target="#description_<%= provider.id %>"></div>
-									<% else %>
-									  <div id="profile-img-<%= provider.id %>-container" class="rounded easy-block-v1" align="center" style="cursor: pointer;" data-toggle="modal"data-target="#description_<%= provider.id %>"></div>
-									<% end %>
+									<div id="profile-img-<%= provider.id %>-container" class="rounded easy-block-v1" align="center" style="cursor: pointer;" data-toggle="modal"data-target="#description_<%= provider.id %>"></div>
 									<div id="text_<%= provider.id %>" class=" flip-text">
                     <div class="projects" style="height: 250px;">
   										<h4 align="center" style="cursor: pointer;" data-toggle="modal"data-target="#description_<%= provider.id %>"><%= provider.first_name %> <%= provider.last_name %></h4>

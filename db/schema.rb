@@ -21,40 +21,40 @@ ActiveRecord::Schema.define(version: 20150419231534) do
     t.integer  "accepted"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "client_observation"
-    t.integer  "appointment_type",   default: 0
+    t.string   "client_observation", limit: 255
+    t.integer  "appointment_type",               default: 0
   end
 
   add_index "appointments", ["provider_id", "created_at"], name: "index_appointments_on_provider_id_and_created_at"
 
   create_table "areas", force: :cascade do |t|
     t.integer  "provider_id"
-    t.string   "area"
+    t.string   "area",        limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "certifications", force: :cascade do |t|
     t.integer  "provider_id"
-    t.string   "certification"
+    t.string   "certification", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "clients", force: :cascade do |t|
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "email"
-    t.string   "phone"
-    t.string   "address"
-    t.string   "weeks_pregnant"
+    t.string   "first_name",             limit: 255
+    t.string   "last_name",              limit: 255
+    t.string   "email",                  limit: 255
+    t.string   "phone",                  limit: 255
+    t.string   "address",                limit: 255
+    t.string   "weeks_pregnant",         limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "password_digest"
-    t.string   "remember_token"
+    t.string   "password_digest",        limit: 255
+    t.string   "remember_token",         limit: 255
     t.integer  "active"
-    t.string   "profile"
-    t.string   "password_reset_token"
+    t.string   "profile",                limit: 255
+    t.string   "password_reset_token",   limit: 255
     t.datetime "password_reset_sent_at"
   end
 
@@ -62,7 +62,7 @@ ActiveRecord::Schema.define(version: 20150419231534) do
 
   create_table "provider_schedules", force: :cascade do |t|
     t.integer  "provider_id"
-    t.string   "timeid"
+    t.string   "timeid",      limit: 255
     t.boolean  "unavailable"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -70,25 +70,25 @@ ActiveRecord::Schema.define(version: 20150419231534) do
   end
 
   create_table "providers", force: :cascade do |t|
-    t.string   "first_name"
-    t.string   "email"
+    t.string   "first_name",             limit: 255
+    t.string   "email",                  limit: 255
     t.integer  "admin"
-    t.string   "expertise"
-    t.string   "phone"
-    t.string   "abstract"
-    t.string   "about"
-    t.string   "specialty_text"
+    t.string   "expertise",              limit: 255
+    t.string   "phone",                  limit: 255
+    t.string   "abstract",               limit: 255
+    t.string   "about",                  limit: 255
+    t.string   "specialty_text",         limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "password_digest"
-    t.string   "policies"
-    t.string   "last_name"
+    t.string   "password_digest",        limit: 255
+    t.string   "policies",               limit: 255
+    t.string   "last_name",              limit: 255
     t.integer  "active"
-    t.string   "remember_token"
-    t.string   "picture_path"
-    t.string   "profile"
-    t.string   "service_text"
-    t.string   "password_reset_token"
+    t.string   "remember_token",         limit: 255
+    t.string   "picture_path",           limit: 255
+    t.string   "profile",                limit: 255
+    t.string   "service_text",           limit: 255
+    t.string   "password_reset_token",   limit: 255
     t.datetime "password_reset_sent_at"
   end
 
@@ -98,21 +98,21 @@ ActiveRecord::Schema.define(version: 20150419231534) do
   create_table "reviews", force: :cascade do |t|
     t.integer  "provider_id"
     t.text     "review"
-    t.string   "author"
+    t.string   "author",      limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "services", force: :cascade do |t|
     t.integer  "provider_id"
-    t.string   "service"
+    t.string   "service",     limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "specialties", force: :cascade do |t|
     t.integer  "provider_id"
-    t.string   "specialty"
+    t.string   "specialty",   limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end

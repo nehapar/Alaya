@@ -17,3 +17,4 @@
 
 /public/assets/img/profile_pic/*.png
 /public/assets/img/profile_pic/*.jpg
+!public/assets/img/profile_pic/provider_without_picture.png

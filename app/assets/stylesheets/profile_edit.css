@@ -21,3 +21,18 @@
     margin-right: auto !important;
 }
 
+.schedule-free {
+	cursor: pointer;
+}
+
+.schedule-blocked {
+	cursor: pointer;
+}
+
+.schedule-blocked:hover {
+	background-color: #5bc0de;
+}
+
+.schedule-blocked-appointment {
+	background-color: #eb5046;
+}

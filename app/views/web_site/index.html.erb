@@ -156,16 +156,3 @@
     </div>
   </div>
   <!-- Professional Block -->
-
-  <script>
-		  /* scroll to page */
-  		$("a[data-section]").click(function(e) {
-  			e.preventDefault();
-  			var offSet = 50;
-  			$('html, body').animate({
-  				scrollTop: $("#" + $(this).data("section") + "page").offset().top - offSet
-  			}, 1000);
-  			$("li.active").toggleClass("active");
-  			$(this).parent().toggleClass("active");
-  		});
-	  </script>
