@@ -245,7 +245,7 @@ var fillAvailabilityTable = function(provider_id) {
  * the text to be saved is in a text input with id [provider_specialty_text]
  * Last update: 2015-02-19 by @thiago
  */
-var saveProviderSpecialtyText = function() {
+var saveProviderSpecialtyText = function(is_provider) {
 	var provider_id = $("#providers_list").val();
 	if ($("#provider_specialty_text").val() === "" || $("#provider_specialty_text").val() === undefined || provider_id == "0") {
 		alertMessage("add_specialty_alert", "Please, type the specialty.", "warning", false);
@@ -262,7 +262,9 @@ var saveProviderSpecialtyText = function() {
 		},
 		success: function(data) {
 			if (data.status == "success") {
-				//enableEditSpecialties();
+				if (is_provider !== undefined && is_provider) {
+					enableEditSpecialties();
+				}
 			}
 			else if (data.status == "fail") {
 				alertMessage("top_page_message", "Please, try again.", "warning", false);
@@ -282,7 +284,7 @@ var saveProviderSpecialtyText = function() {
  * the text to be saved is in a text input with id [provider_service_text]
  * Last update: 2015-02-19 by @thiago
  */
-var saveProviderServiceText = function() {
+var saveProviderServiceText = function(is_provider) {
 	var provider_id = $("#providers_list").val();
 	if ($("#provider_service_text").val() === "" || $("#provider_service_text").val() === undefined || provider_id == "0") {
 		alertMessage("add_service_alert", "Please, type the service.", "warning", false);
@@ -299,7 +301,9 @@ var saveProviderServiceText = function() {
 		},
 		success: function(data) {
 			if (data.status == "success") {
-				//enableEditServices();
+				if (is_provider !== undefined && is_provider) {
+					enableEditServices();
+				}
 			}
 			else if (data.status == "fail") {
 				alertMessage("top_page_message", "Please, try again.", "warning", false);
@@ -319,7 +323,7 @@ var saveProviderServiceText = function() {
  * the text to be saved is in a text input with id [provider_policies]
  * Last update: 2015-02-19 by @thiago
  */
-var saveProviderPoliciesText = function() {
+var saveProviderPoliciesText = function(is_provider) {
 	var provider_id = $("#providers_list").val();
 	if ($("#provider_policies").val() === "" || $("#provider_policies").val() === undefined || provider_id == "0") {
 		alertMessage("add_service_alert", "Please, type the payment & policies text.", "warning", false);
@@ -336,7 +340,9 @@ var saveProviderPoliciesText = function() {
 		},
 		success: function(data) {
 			if (data.status == "success") {
-				//enableEditPolicies();
+				if (is_provider !== undefined && is_provider) {
+					enableEditPolicies();
+				}
 			}
 			else if (data.status == "fail") {
 				alertMessage("top_page_message", "Please, try again.", "warning", false);
