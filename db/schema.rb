@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150419231534) do
+ActiveRecord::Schema.define(version: 20150428041259) do
 
   create_table "appointments", force: :cascade do |t|
     t.integer  "provider_id"
@@ -73,21 +73,21 @@ ActiveRecord::Schema.define(version: 20150419231534) do
     t.string   "first_name",             limit: 255
     t.string   "email",                  limit: 255
     t.integer  "admin"
-    t.string   "expertise",              limit: 255
+    t.text     "expertise",              limit: 255
     t.string   "phone",                  limit: 255
-    t.string   "abstract",               limit: 255
-    t.string   "about",                  limit: 255
-    t.string   "specialty_text",         limit: 255
+    t.text     "abstract",               limit: 255
+    t.text     "about",                  limit: 255
+    t.text     "specialty_text",         limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "password_digest",        limit: 255
-    t.string   "policies",               limit: 255
+    t.text     "policies",               limit: 255
     t.string   "last_name",              limit: 255
     t.integer  "active"
     t.string   "remember_token",         limit: 255
     t.string   "picture_path",           limit: 255
     t.string   "profile",                limit: 255
-    t.string   "service_text",           limit: 255
+    t.text     "service_text",           limit: 255
     t.string   "password_reset_token",   limit: 255
     t.datetime "password_reset_sent_at"
   end
