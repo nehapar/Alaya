@@ -429,7 +429,6 @@ var uploadProviderPicture = function() {
 			cache: false,
 			contentType: false,
 			processData: false,
-			beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
 			success: function(response) {
 				if (response.status == "success") {
 					alertMessage("top_page_message", "Provider picture updated.", "success", false);
@@ -610,7 +609,6 @@ var uploadProviderPictureSelfGo = function() {
 			cache: false,
 			contentType: false,
 			processData: false,
-			beforeSend: function(xhr) { xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content')) },
 			success: function(response) {
 				if (response.status == "success") {
 					alertMessage("top_page_message", "Provider picture updated.", "success", false);
