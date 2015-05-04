@@ -11,7 +11,7 @@ var adminShowUpProvider = function() {
     return;
   }
   $.ajax({
-    type: 'GET',
+    type: 'POST',
     url: '/provider_info',
     dataType: "json",
     data: { 
@@ -84,7 +84,7 @@ var adminShowUpProvider = function() {
         	$('<div/>').addClass('btn-group').attr('data-toggle', 'buttons').append(
         		$('<label/>').prop('id', 'provider_active_true').addClass('btn btn-primary ' + (data.provider.active ? 'active' : '')).append(' Active').click(function() {
 							$.ajax({
-								type: 'GET',
+								type: 'POST',
 								url: '/toggle_provider_state',
 								dataType: "json",
 								data: { 
@@ -112,7 +112,7 @@ var adminShowUpProvider = function() {
         	$('<div/>').addClass('btn-group').attr('data-toggle', 'buttons').append(
         		$('<label/>').prop('id', 'provider_active_false').addClass('btn btn-primary ' + (!data.provider.active ? 'active' : '')).append('Disabled').click(function() {
 							$.ajax({
-								type: 'GET',
+								type: 'POST',
 								url: '/toggle_provider_state',
 								dataType: "json",
 								data: { 
@@ -210,7 +210,7 @@ var clearAvailabilityTable = function() {
 var fillAvailabilityTable = function(provider_id) {
 	if (provider_id != "0") {
     $.ajax({
-  		type: 'GET',
+  		type: 'POST',
   		url: '/provider_time_availability',
   		dataType: "json",
   		data: {
@@ -253,7 +253,7 @@ var saveProviderSpecialtyText = function(is_provider) {
 		return;
 	}
   $.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/update_specialty_text',
 		dataType: "json",
 		data: { 
@@ -292,7 +292,7 @@ var saveProviderServiceText = function(is_provider) {
 		return;
 	}
   $.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/update_service_text',
 		dataType: "json",
 		data: { 
@@ -331,7 +331,7 @@ var saveProviderPoliciesText = function(is_provider) {
 		return;
 	}
   $.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/update_policies_text',
 		dataType: "json",
 		data: { 
@@ -462,7 +462,7 @@ var saveProviderPersonalInfo = function() {
   clearMessage("top_page_message");
   if (validateProviderEdit()) {
     $.ajax({
-      type: 'GET',
+      type: 'POST',
       url: '/update_provider_info',
       dataType: "json",
       data: { 
@@ -511,7 +511,7 @@ var changeProviderPassword = function() {
 	}
 	
 	$.ajax({
-    type: 'GET',
+    type: 'POST',
     url: '/change_provider_password',
     dataType: "json",
     data: { 
@@ -640,7 +640,7 @@ var uploadProviderPictureSelfGo = function() {
 
 var showSpecialties = function(provider_id) {
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/provider_specialties',
 		dataType: "json",
 		data: { 
@@ -694,7 +694,7 @@ var addSpecialtyToProvider = function() {
 	var specialty = $("#new_specialty").val();
 	$("#new_specialty").val("");
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/add_specialty_ajax',
 		dataType: "json",
 		data: { 
@@ -720,7 +720,7 @@ var addSpecialtyToProvider = function() {
 var deleteSpecialtyToProvider = function(specialty_id) {
 	var provider_id = $("#providers_list").val();
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/delete_specialty_ajax',
 		dataType: "json",
 		data: { 
@@ -747,7 +747,7 @@ var deleteSpecialtyToProvider = function(specialty_id) {
 
 var showServices = function(provider_id) {
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/provider_services',
 		dataType: "json",
 		data: { 
@@ -801,7 +801,7 @@ var addServiceToProvider = function() {
 	var service = $("#new_service").val();
 	$("#new_service").val("");
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/add_service_ajax',
 		dataType: "json",
 		data: { 
@@ -827,7 +827,7 @@ var addServiceToProvider = function() {
 var deleteServiceToProvider = function(service_id) {
 	var provider_id = $("#providers_list").val();
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/delete_service_ajax',
 		dataType: "json",
 		data: { 
@@ -854,7 +854,7 @@ var deleteServiceToProvider = function(service_id) {
 
 var showCertifications = function(provider_id) {
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/provider_certifications',
 		dataType: "json",
 		data: { 
@@ -908,7 +908,7 @@ var addCertificationToProvider = function() {
 	var certification = $("#new_certification").val();
 	$("#new_certification").val("");
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/add_certification_ajax',
 		dataType: "json",
 		data: { 
@@ -934,7 +934,7 @@ var addCertificationToProvider = function() {
 var deleteCertificationToProvider = function(certification_id) {
 	var provider_id = $("#providers_list").val();
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/delete_certification_ajax',
 		dataType: "json",
 		data: { 
@@ -960,7 +960,7 @@ var deleteCertificationToProvider = function(certification_id) {
 
 var showAreas = function(provider_id) {
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/provider_areas',
 		dataType: "json",
 		data: { 
@@ -1014,7 +1014,7 @@ var addAreaToProvider = function() {
 	var area = $("#new_area").val();
 	$("#new_area").val("");
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/add_area_ajax',
 		dataType: "json",
 		data: { 
@@ -1040,7 +1040,7 @@ var addAreaToProvider = function() {
 var deleteAreaToProvider = function(area_id) {
 	var provider_id = $("#providers_list").val();
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/delete_area_ajax',
 		dataType: "json",
 		data: { 
@@ -1065,7 +1065,7 @@ var deleteAreaToProvider = function(area_id) {
 
 var showReviews = function(provider_id) {
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/provider_reviews',
 		dataType: "json",
 		data: { 
@@ -1133,7 +1133,7 @@ var addReviewToProvider = function() {
 	$("#new_review_author").val("");
 	$("#new_review").val("");
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/add_review_ajax',
 		dataType: "json",
 		data: { 
@@ -1161,7 +1161,7 @@ var addReviewToProvider = function() {
 var deleteReviewToProvider = function(review_id) {
 	var provider_id = $("#providers_list").val();
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/delete_review_ajax',
 		dataType: "json",
 		data: { 
@@ -1193,7 +1193,7 @@ var passwordRecovery = function() {
 	}
 	
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/password_recovery',
 		dataType: "json",
 		data: {

@@ -9,7 +9,7 @@ var resetProviderDashBoard = function() {
 var showAppointmentDetail = function(appointment_id, type, past) {
   past = typeof past !== 'undefined' ? past : false;
   $.ajax({
-    type: 'GET',
+    type: 'POST',
     url: '/appointment_detail',
     dataType: "json",
     data: { 
@@ -201,7 +201,7 @@ var acceptAppointmentWizard = function(appointment_id, type) {
   if (!working_on_accepting) {
     working_on_accepting = true;
     $.ajax({
-      type: 'GET',
+      type: 'POST',
       url: '/accept_appointment',
       dataType: "json",
       data: { 
@@ -265,7 +265,7 @@ var denyAppointment = function(appointment_id, type) {
     if (!working_on_denying) {
       working_on_denying = true;
       $.ajax({
-        type: 'GET',
+        type: 'POST',
         url: '/deny_appointment',
         dataType: "json",
         data: { 
@@ -335,7 +335,7 @@ var rescheduleAppointment = function(appointment_id, type) {
     if (!working_on_rescheduling) {
       working_on_rescheduling = true;
       $.ajax({
-        type: 'GET',
+        type: 'POST',
         url: '/reschedule_appointment',
         dataType: "json",
         data: { 
@@ -384,7 +384,7 @@ var rescheduleAppointment = function(appointment_id, type) {
  */
 var reloadAdminAppointments = function() {
   $.ajax({
-    type: 'GET',
+    type: 'POST',
     url: '/provider_appointments',
     dataType: "json",
     data: { 
@@ -576,7 +576,7 @@ var reloadAdminAppointments = function() {
 
 var reloadProviderAppointments = function() {
   $.ajax({
-    type: 'GET',
+    type: 'POST',
     url: '/provider_appointments',
     dataType: "json",
     data: { 
@@ -694,7 +694,7 @@ var selfChangeProviderPassword = function() {
 	}
 	
 	$.ajax({
-    type: 'GET',
+    type: 'POST',
     url: '/self_change_provider_password',
     dataType: "json",
     data: { 
@@ -804,7 +804,7 @@ var saveEditProvider = function() {
 var resetProviderInfo = function() {
 	if (!$("#provider_first_name").prop("disabled")) {
 		$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/provider_simple_info',
 		dataType: "json",
 		data: {
@@ -865,7 +865,7 @@ var enableEditPolicies = function() {
 var resetPoliciesInfo = function() {
 	if (!$("#provider_policies").prop("disabled")) {
 		$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/provider_simple_info',
 		dataType: "json",
 		data: {
@@ -914,7 +914,7 @@ var enableEditServices = function() {
 var resetServicesInfo = function() {
 	if (!$("#provider_service_text").prop("disabled")) {
 		$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/provider_simple_info',
 		dataType: "json",
 		data: {
@@ -962,7 +962,7 @@ var enableEditSpecialties = function() {
 var resetSpecialtiesInfo = function() {
 	if (!$("#provider_specialty_text").prop("disabled")) {
 		$.ajax({
-  		type: 'GET',
+  		type: 'POST',
   		url: '/provider_simple_info',
   		dataType: "json",
   		data: {
@@ -1043,7 +1043,7 @@ var switchProviderTimeAvailability = function(provider_id, cell_id) {
     $("#" + next).removeClass("schedule-blocked").removeClass("danger");
   }
   $.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/toogle_provider_time_availability',
 		dataType: "json",
 		data: {
@@ -1142,7 +1142,7 @@ var weekProviderSchedule = function(week, year, provider_id) {
   }
   
   $.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/provider_schedules_appointments',
 		dataType: "json",
 		data: {

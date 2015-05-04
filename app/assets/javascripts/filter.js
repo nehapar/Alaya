@@ -2,7 +2,7 @@ var filterAction = function(e) {
   var content = "";
   if (e.value !== "" && e.value !== undefined) {
     $.ajax({
-      type: 'GET',
+      type: 'POST',
       url: '/filter_provider_ajax',
       dataType: "json",
       data: { 

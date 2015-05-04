@@ -96,7 +96,7 @@ Schedule.prototype.get_schedule = function(provider_id, datetime_start, datetime
 	var s_end = datetime_end.getFullYear() + "-" + ("0" + (datetime_end.getMonth() + 1)).slice(-2) + "-" + ("0" + datetime_end.getDate()).slice(-2) + " 23:59:59"
 
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/appointments_ajax',
 		dataType: "json",
 		data: { 
@@ -466,7 +466,7 @@ var invalidNotAvailableSlots = function() {
 	  
 		
 		$.ajax({
-  		type: 'GET',
+  		type: 'POST',
   		url: '/provider_time_availability',
   		dataType: "json",
   		data: {
@@ -969,7 +969,7 @@ var signin = function(date) {
 	}
 
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/csignin_ajax',
 		dataType: "json",
 		data: { 
@@ -1077,7 +1077,7 @@ var signup = function(date) {
 		$("#schedules_modal_action").html("<i class=\"fa fa-cog fa-spin\"></i> Processing");
 		$("#schedules_modal_action").blur();
 		$.ajax({
-			type: 'GET',
+			type: 'POST',
 			url: '/csignup_ajax',
 			dataType: "json",
 			data: { 
@@ -1166,7 +1166,7 @@ var updateInfo = function(date) {
 	}
 
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/update_info_ajax',
 		dataType: "json",
 		data: { 
@@ -1217,7 +1217,7 @@ var sendRequestPOG = function(date) {
 	var d_end = dateend.getFullYear() + "-" + ("0" + (dateend.getMonth() + 1)).slice(-2) + "-" + ("0" + dateend.getDate()).slice(-2) + " " + ("0" + dateend.getHours()).slice(-2) + ":" + ("0" + dateend.getMinutes()).slice(-2) + ":00";
 	var send_confirmation = $('#send_confirmation').prop('checked');
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/request_appointment_ajax',
 		dataType: "json",
 		data: { 
@@ -1264,7 +1264,7 @@ var buildNonClientVersion = function(datetime) {
 	$("#schedules_title").html("Appointment requesting");
 
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/get_clients_ajax',
 		dataType: "json",
 		success: function(data) {
@@ -1319,7 +1319,7 @@ var fetchClientInformation = function() {
 		var content = "";
 
 		$.ajax({
-			type: 'GET',
+			type: 'POST',
 			url: '/get_client_information_ajax',
 			dataType: "json",
 			data: {

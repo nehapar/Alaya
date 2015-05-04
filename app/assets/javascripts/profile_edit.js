@@ -12,17 +12,18 @@ var pictureChange = function(picture_id) {
 	}
 };*/
 
-var readURL = function (input, img_id) {
+var readURL = function (img_id) {
+    var input = document.getElementById('provider_picture_file');
     if (input.files && input.files[0]) {
         var reader = new FileReader();
         reader.onload = function (e) {
             $('#' + img_id).attr('src', e.target.result);
 			$('#' + img_id).removeClass("hidden");
-			uploadProviderPictureSelf($("#provider_id").val());
+			uploadProviderPictureSelf($("#provider_id").val(), input);
         };
         reader.readAsDataURL(input.files[0]);
     }
-    pictureChange(0);
+    //pictureChange(0);
 };
 
 var current_provider_image = "";
@@ -38,7 +39,6 @@ var showImageToProvider = function (input) {
     }
 };
 
-var current_provider_image = "";
 var showImageToProviderModal = function (input) {
     current_provider_image = $('#provider_main_image').attr('src');
     if (input.files && input.files[0]) {

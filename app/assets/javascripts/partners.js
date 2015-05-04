@@ -14,7 +14,7 @@ var sendNoteToBecomePartner = function(field) {
   // this uses a function to validate if the email is a valid email
   if (validEmail(email)) {
     $.ajax({
-      type: 'GET',
+      type: 'POST',
       url: '/provider_intention_note',
       dataType: "json",
       data: { 

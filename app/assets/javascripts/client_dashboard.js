@@ -173,7 +173,7 @@ var cancelAppointment = function(appointment_id) {
 	if (!working_on_canceling_appointment) {
 		working_on_canceling_appointment = true;
 		$.ajax({
-			type: 'GET',
+			type: 'POST',
 			url: '/cancel_appointment_by_client',
 			dataType: "json",
 			data: {
@@ -232,7 +232,7 @@ var sendRescheduleRequest = function(appointment_id) {
 		if (!working_on_reschedule_request) {
 			working_on_reschedule_request = true;
 			$.ajax({
-				type: 'GET',
+				type: 'POST',
 				url: '/reschedule_request_by_client',
 				dataType: "json",
 				data: {
@@ -280,7 +280,7 @@ var changeAppointment = function(appointment_id) {
 var deleteAppointment = function(appointment_id) {
 	
 	$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/client_delete_appointment_ajax',
 		dataType: "json",
 		data: {
@@ -341,7 +341,7 @@ var enableEditClient = function() {
 var saveEditClient = function() {
 	if (!$("#client_address").prop("disabled") && validateClientUpdateInfoShort()) {
 		$.ajax({
-			type: 'GET',
+			type: 'POST',
 			url: '/update_client_information',
 			dataType: "json",
 			data: {
@@ -372,7 +372,7 @@ var saveEditClient = function() {
 var resetClientInfo = function() {
 	if (!$("#client_address").prop("disabled")) {
 		$.ajax({
-		type: 'GET',
+		type: 'POST',
 		url: '/client_simple_info',
 		dataType: "json",
 		data: {

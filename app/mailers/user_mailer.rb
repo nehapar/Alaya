@@ -9,7 +9,7 @@ class UserMailer < ActionMailer::Base
   
   def simple_mail_deliver(to_name, to, subject, text, html, tags, from = nil, from_name = nil, reply_to = nil)
     require 'mandrill'
-    mandrill = Mandrill::API.new '0tRCw5a7xObbw2GseSnHaQ'
+    mandrill = Mandrill::API.new 'zd221qsTtG-5nif9P7TKwQ'
     default_from = from.presence || "admin@careforme.co"
     default_from_name = from_name.presence || "CareForMe Team"
     default_reply_to = reply_to.presence || "contact@careforme.co"
@@ -46,7 +46,7 @@ class UserMailer < ActionMailer::Base
   
   def simple_template_email(template, to_name, to, subject, text, html, tags, from = nil, from_name = nil, reply_to = nil, hash)
     require 'mandrill'
-    mandrill = Mandrill::API.new '0tRCw5a7xObbw2GseSnHaQ'
+    mandrill = Mandrill::API.new 'zd221qsTtG-5nif9P7TKwQ'
     default_from = from.presence || "admin@careforme.co"
     default_from_name = from_name.presence || "CareForMe Team"
     default_reply_to = reply_to.presence || "contact@careforme.co"
