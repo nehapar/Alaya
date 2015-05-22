@@ -421,6 +421,9 @@ var uploadProviderPicture = function() {
 		$("#upload_button").html("<i class=\"fa fa-spinner fa-spin\"></i> Uploading");
 		/* big master pog ever in my life, I've no idea wtf is this */
 		document.getElementById("upload_button").style.left = document.getElementById("upload_button").offsetLeft;
+		
+		// upload ...?
+		
 		$.ajax({
 			url: "/upload_provider_picture",
 			type: 'POST',
