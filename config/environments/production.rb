@@ -37,6 +37,10 @@ CareForMe::Application.configure do
 
   # Version of your assets, change this if you want to expire all your assets.
   config.assets.version = '2.0'
+  
+  #Adding new property to raise run time errors for assests -- tapan 05292015
+  config.assets.raise_runtime_errors = true
+
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
