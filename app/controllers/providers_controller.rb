@@ -3,7 +3,7 @@ class ProvidersController < ApplicationController
   
   def self.load
 	  CareForMe::Application.routes.draw do
-  	  Provider.where("admin = 0").each do |provider|
+  	  Provider.where("active = 1 and admin = 0").each do |provider|
   		  get "/#{provider.profile}", :to => "providers#profile_detail", defaults: { id: provider.id }
   	  end
   	end
