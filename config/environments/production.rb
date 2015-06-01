@@ -21,7 +21,7 @@ CareForMe::Application.configure do
 
   # Disable Rails's static asset server (Apache or nginx will already do this).
   config.serve_static_assets = true
-  config.serve_static_files = true
+  #config.serve_static_files = true
 
   # Compress JavaScripts and CSS.
   #config.assets.js_compressor = :uglifier
@@ -36,7 +36,7 @@ CareForMe::Application.configure do
   config.assets.digest = true
 
   # Version of your assets, change this if you want to expire all your assets.
-  config.assets.version = '2.0'
+  config.assets.version = '1.0'
   
   #Adding new property to raise run time errors for assests -- tapan 05292015
   config.assets.raise_runtime_errors = true
