@@ -19,7 +19,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 
 group :development, :test do
-  gem 'sqlite3', '1.3.8'
+  gem 'sqlite3'
   #gem 'rspec-rails', '2.13.1'
 end
 
