@@ -85,4 +85,21 @@ CareForMe::Application.configure do
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
+  
+  config.action_mailer.default_url_options = { :host => "http://careforme.co" }
+  
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.raise_delivery_errors = true
+  #config.action_mailer.default_options = {
+  #  :reply_to => 'thiago.CareForMe@gmail.com'
+  #},
+  
+  config.action_mailer.smtp_settings = {
+    :user_name => 'tapan.alaya@gmail.com',
+    :password => 'zd221qsTtG-5nif9P7TKwQ',
+    :address => "smtp.mandrillapp.com",
+    :enable_starttls_auto => true,
+    :authentication => "plain",
+    :port => 587,
+  }
 end

@@ -11,7 +11,7 @@
 	<!--=== Filter Block ===-->
 	<div class="purchase">
 		<div class="container">
-			<div class="row">
+			<div class="row">0
 				<div class="col-md-10 col-md-offset-1 fadeInLeft">
 				  <h1 align="center">San Francisco Bay Area</h1>
 					<!--
@@ -37,7 +37,8 @@
         <!--Profile Body-->
         <div class="profile-body">
           <% flash.each do |key, value| %>
-            <div class="alert alert-<%= key == :success ? "success" : "danger" %>" role="alert"><%= value %>
+            <!--<div class="alert alert-<%= key == :success ? "success" : "danger" %>" role="alert"><%= value %>-->
+            <div class="alert alert-success" role="alert"><%= value %>
                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
             </div>
             <br>

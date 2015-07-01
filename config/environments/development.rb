@@ -27,7 +27,7 @@ CareForMe::Application.configure do
   # number of complex assets.
   config.assets.debug = true
   
-  config.action_mailer.default_url_options = { :host => "http://alaya-c9-thiagomelo.c9.io" }
+  config.action_mailer.default_url_options = { :host => "http://careforme-c9-thiagolcmelo.c9.io" }
   
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.raise_delivery_errors = true
@@ -36,7 +36,7 @@ CareForMe::Application.configure do
   #},
   
   config.action_mailer.smtp_settings = {
-    :user_name => 'thiago.CareForMe@gmail.com',
+    :user_name => 'thiago.alaya@gmail.com',
     :password => 'eaacps123',
     :address => "smtp.gmail.com",
     :domain => "gmail.com",
