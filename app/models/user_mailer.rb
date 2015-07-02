@@ -9,8 +9,7 @@ class UserMailer# < ActionMailer::Base
   
   def simple_mail_deliver(to_name, to, subject, text, html, tags, from = nil, from_name = nil, reply_to = nil)
     require 'mandrill'
-    #mandrill = Mandrill::API.new 'zd221qsTtG-5nif9P7TKwQ'
-    mandrill = Mandrill::API.new 'vapXwc0fRPVb600ipyBDpg'
+    mandrill = Mandrill::API.new 'zd221qsTtG-5nif9P7TKwQ'
     default_from = from.presence || "admin@careforme.co"
     default_from_name = from_name.presence || "CareForMe Team"
     default_reply_to = reply_to.presence || "contact@careforme.co"
@@ -47,8 +46,7 @@ class UserMailer# < ActionMailer::Base
   
   def simple_template_email(template, to_name, to, subject, text, html, tags, from = nil, from_name = nil, reply_to = nil, hash)
     require 'mandrill'
-    mandrill = Mandrill::API.new 'vapXwc0fRPVb600ipyBDpg'
-    
+    mandrill = Mandrill::API.new 'zd221qsTtG-5nif9P7TKwQ'
     default_from = from.presence || "admin@careforme.co"
     default_from_name = from_name.presence || "CareForMe Team"
     default_reply_to = reply_to.presence || "contact@careforme.co"
@@ -170,8 +168,7 @@ class UserMailer# < ActionMailer::Base
         "content" => "#{default_url}/client_confirmation?id=#{user.password_reset_token}"
       }
     ]
-    #simple_template_email("V4SignUp-Template", "", user.email, "Welcome", text, html, ["welcome-client"], nil, nil, nil, hash)
-    simple_template_email("signup-client", "", user.email, "Welcome", text, html, ["welcome-client"], nil, nil, nil, hash)
+    simple_template_email("V4SignUp-Template", "", user.email, "Welcome", text, html, ["welcome-client"], nil, nil, nil, hash)
   end
   
   def welcome_client_email_bkp (user)
