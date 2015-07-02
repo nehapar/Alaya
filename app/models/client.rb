@@ -77,8 +77,8 @@ class Client < ActiveRecord::Base
 	  generate_token(:password_reset_token)
 	  self.password_reset_sent_at = Time.zone.now
 	  save!
-	  UserMailer.password_recovery_email(self)
-	  #UserMailer.password_recovery(self).deliver
+	  UserMailer.new.password_recovery_email(self)
+	  #UserMailer.new.password_recovery(self).deliver
   end
 	
 	def generate_token(column)

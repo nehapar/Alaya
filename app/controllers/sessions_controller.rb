@@ -47,8 +47,8 @@ class SessionsController < ApplicationController
       user = Client.find_by(email: params[:email])
     end
     if !user.nil?
-      #UserMailer.password_recovery(user).deliver
-      password_recovery_email(user)
+      #UserMailer.new.password_recovery(user).deliver
+      UserMailer.new.password_recovery_email(user)
       container = { "status" => "success" }
     else
       container = { "status" => "fail" }

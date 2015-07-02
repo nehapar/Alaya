@@ -14,7 +14,7 @@ CareForMe::Application.configure do
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  #config.action_mailer.raise_delivery_errors = false
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -27,23 +27,23 @@ CareForMe::Application.configure do
   # number of complex assets.
   config.assets.debug = true
   
-  config.action_mailer.default_url_options = { :host => "http://careforme-c9-thiagolcmelo.c9.io" }
+  #config.action_mailer.default_url_options = { :host => "http://careforme-c9-thiagolcmelo.c9.io" }
   
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.raise_delivery_errors = true
+  #config.action_mailer.delivery_method = :smtp
+  #config.action_mailer.raise_delivery_errors = true
   #config.action_mailer.default_options = {
   #  :reply_to => 'thiago.CareForMe@gmail.com'
   #},
   
-  config.action_mailer.smtp_settings = {
-    :user_name => 'thiago.alaya@gmail.com',
-    :password => 'eaacps123',
-    :address => "smtp.gmail.com",
-    :domain => "gmail.com",
-    :enable_starttls_auto => true,
-    :authentication => "plain",
-    :port => 587,
-  }
+  #config.action_mailer.smtp_settings = {
+  #  :user_name => 'thiago.alaya@gmail.com',
+  #  :password => 'eaacps123',
+  #  :address => "smtp.gmail.com",
+  #  :domain => "gmail.com",
+  #  :enable_starttls_auto => true,
+  #  :authentication => "plain",
+  #  :port => 587,
+  #}
   
   #config.action_mailer.delivery_method = :smtp
   #config.action_mailer.smtp_settings = {

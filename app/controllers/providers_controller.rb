@@ -160,7 +160,7 @@ class ProvidersController < ApplicationController
     @provider.generate_token(:password_reset_token)
     if @provider.save
       flash.now[:success] = "Welcome to CareForMe! Please check your email for validation."
-  	  UserMailer.welcome_provider_email(@provider)
+  	  UserMailer.new.welcome_provider_email(@provider)
   	  redirect_to signin_path, :flash => { :success => "Welcome to CareForMe! Please check your email for validation." } #profile_list_path #csignup_helper_path
     else
   	  if Provider.where("email = '" + @provider.email + "'").length > 0
@@ -812,7 +812,7 @@ class ProvidersController < ApplicationController
       if is_admin? or (signed_in? && current_provider.id == appointment.provider_id)
         appointment.accepted = 1
         if appointment.save
-          UserMailer.appointment_accepted_email(appointment)
+          UserMailer.new.appointment_accepted_email(appointment)
           container = { "status" => "success" }
         else
           container = { "status" => "fail" }
@@ -833,7 +833,7 @@ class ProvidersController < ApplicationController
         appointment.accepted = 2
         # something must be done with params[:deny_explanation]
         if appointment.save
-          UserMailer.appointment_denied_email(appointment, params[:deny_explanation])
+          UserMailer.new.appointment_denied_email(appointment, params[:deny_explanation])
           container = { "status" => "success" }
         else
           container = { "status" => "fail" }

@@ -53,8 +53,8 @@ class Provider < ActiveRecord::Base
 	  generate_token(:password_reset_token)
 	  self.password_reset_sent_at = Time.zone.now
 	  save!
-	  #UserMailer.password_recovery(self).deliver
-	  UserMailer.password_recovery_email(self)
+	  #UserMailer.new.password_recovery(self).deliver
+	  UserMailer.new.password_recovery_email(self)
 	end
 	
 	# this method return if the provider is available for some specific

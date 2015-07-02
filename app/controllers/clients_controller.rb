@@ -30,7 +30,7 @@ class ClientsController < ApplicationController
     @client.create_adjusts
     if @client.save
   	  flash.now[:success] = "Welcome to CareForMe! Please check your email for validation."
-  	  UserMailer.welcome_client_email(@client)
+  	  UserMailer.new.welcome_client_email(@client)
   	  #csign_in @client
   	  # for any reason, the sign up process is not finished at this point
   	  # so, it forces a redirect to another method that takes care of
@@ -135,7 +135,7 @@ class ClientsController < ApplicationController
       client = Client.new(client_params)
       client.create_adjusts
       if client.save
-        UserMailer.welcome_client_email(client)
+        UserMailer.new.welcome_client_email(client)
         container = { "status" => "success", "complete" => client.complete? }
       else
         container = { "client" => nil, "status" => "fail"}
@@ -178,7 +178,7 @@ class ClientsController < ApplicationController
     if appointment.length == 0
       appointments = Appointment.new(appointment_params)
       if appointments.save
-        UserMailer.appointment_booked_email(appointments)
+        UserMailer.new.appointment_booked_email(appointments)
         container = { "status" => "success"}
       else
         container = { "appointments" => appointments.errors, "status" => "fail"}
@@ -282,7 +282,7 @@ class ClientsController < ApplicationController
     if !appointment.nil?
       if csigned_in? and current_client.id == appointment.client_id
         begin
-          UserMailer.sendRescheduleRequest appointment, params[:reschedule_message]
+          UserMailer.new.sendRescheduleRequest appointment, params[:reschedule_message]
           container = { "status" => "success" }
         rescue
           container = { "status" => "fail" }
@@ -310,7 +310,7 @@ class ClientsController < ApplicationController
       if csigned_in? and current_client.id == appointment.client_id
         begin
           appointment.update_attribute(:accepted, 2)
-          UserMailer.sendCancelingBooking appointment
+          UserMailer.new.sendCancelingBooking appointment
           container = { "status" => "success" }
         rescue
           container = { "status" => "fail" }

@@ -46,7 +46,7 @@ class WebSiteController < ApplicationController
   
   def contact_message
     begin
-      UserMailer.contact_message_email(params[:name], params[:email], params[:message])
+      UserMailer.new.contact_message_email(params[:name], params[:email], params[:message])
       redirect_to contact_path, :flash => { "success" => "Your message has been sent. Thank you so much for contacting us." }
     rescue
       redirect_to contact_path, :flash => { "danger" => "Sorry, we have a problem, your message has not been sent." }
@@ -60,7 +60,7 @@ class WebSiteController < ApplicationController
   #   get: [email]
   def provider_intention_note_ajax
     begin
-      UserMailer.sendNoteToBecomePartner(params[:email])
+      UserMailer.new.sendNoteToBecomePartner(params[:email])
       container = { "status" => "success" }
     rescue
       container = { "status" => "fail" }
