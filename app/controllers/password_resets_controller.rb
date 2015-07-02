@@ -42,7 +42,7 @@ class PasswordResetsController < ApplicationController
       @user = Provider.find_by_password_reset_token(params[:id])
       client = false
     end
-    if @user.active == 0
+    if @user.presence and @user.active == 0
       @user.active = 1
       @user.save!
       
