@@ -597,6 +597,8 @@ var loadSchedule = function() {
 	m_current_date = m_current_date === undefined ? new Date() : m_current_date;
 	var provider_id = $("#c_provider_id").val();
 	var periodicity = parseInt($("input[name=periodicity]:checked", "#schedules_periodicity").val(), 10);
+	
+	//console.log('data: ' + m_current_date + ', period: ' + periodicity);
 	switch (periodicity) {
 		case 1:
 			$("#periodicity_options").hide();
@@ -655,6 +657,7 @@ var lastSchedule = function() {
 var showDate = function(date) {
 	m_current_date = new Date(date);
 	$('#p_weekly').attr('checked',true);
+	$('#p_weekly').prop('checked',true);
 	loadSchedule();
 };
 
@@ -979,7 +982,7 @@ var signin = function(date) {
 		success: function(data) {
 			if (data.status == "success") {
 				
-				console.log(data);
+				//console.log(data);
 				$("#c_client_id").val(data.client.id);
 				$("#c_client_first_name").val(data.client.first_name);
 				$("#c_client_last_name").val(data.client.last_name);
@@ -1269,7 +1272,7 @@ var buildNonClientVersion = function(datetime) {
 		dataType: "json",
 		success: function(data) {
 			if (data.status == "success") {
-				console.log(data);
+				//console.log(data);
 				content = content + "        <div class=\"row margin-bottom-30\">";
 				content = content + "            <div class=\"col-md-10 col-md-offset-1 mb-margin-bottom-30\">";
 				content = content + "                <div class=\"headline\"><h2>Select the client</h2></div>";
